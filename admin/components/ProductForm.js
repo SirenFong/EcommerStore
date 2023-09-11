@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function ProductForm({
+  _id,
   title: existingTitle,
   description: existingDescription,
   price: existingPrice,
@@ -12,11 +13,21 @@ export default function ProductForm({
   const [price, setPrice] = useState(existingPrice || "");
   const router = useRouter();
   const [goToProducts, setGoToProducts] = useState(false);
-
-  async function createProduct(ev) {
+  
+//Giá trị nhận vào title,des,price
+//Xác định bởi _id qua phương thức PUT để cập nhật 1 sản phẩm
+//Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm hoặc trả về tạo mới sản phẩm
+  async function saveProduct(ev) {
     ev.preventDefault();
     const data = { title, description, price };
-    await axios.post("/api/products", data);
+    if(_id){
+      //update product
+      await axios.put('/api/products', {...data,_id})
+    }
+    else{
+      //create new product
+      await axios.post("/api/products", data);
+    }
     setGoToProducts(true);
   }
   /**router dùng để redirect về trang products sau khi thêm mới 1 sản phẩm */
@@ -29,7 +40,7 @@ export default function ProductForm({
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
     /**Thằng setTitle sẽ thay đổi thành 1 trạng thái mới của thằng title */
     /**Dùng axios để xử lý các vấn đề liên quan đến API */
-    <form onSubmit={createProduct}>
+    <form onSubmit={saveProduct}>
       <label>Tên sản phẩm</label>
       <input
         type="text"
