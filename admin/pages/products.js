@@ -5,12 +5,18 @@ import { useEffect, useState } from "react";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
+
+  /**useEffect gọi tới cái API cũng như trả về data */
+  /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
+  /**hiển thị danh sách sản phẩm trong hàm useState */
   useEffect(() => {
     axios.get("/api/products").then((response) => {
       setProducts(response.data);
     });
   }, []);
+
   /**Đường link /products/newProduct (10) phải trùng với tên file đã đặt */
+  /**Tên file ở đây là newProduct bên trong pages/products/newProduct */
   return (
     <Layout>
       <Link
