@@ -14,7 +14,7 @@ export default function Products() {
       setProducts(response.data);
     });
   }, []);
-
+  console.log(products)
   /**Đường link /products/newProduct (10) phải trùng với tên file đã đặt */
   /**Tên file ở đây là newProduct bên trong pages/products/newProduct */
   return (
@@ -30,14 +30,16 @@ export default function Products() {
         <thead>
           <tr>
             <td>Tên Sản Phẩm</td>
+
             <td></td>
           </tr>
         </thead>
 
         <tbody>
           {products.map((product) => (
-            <tr>
+            <tr key={product._id}>
               <td>{product.title}</td>
+
               <td>
                 <Link href={"/products/edit/" + product._id}>
                   <svg

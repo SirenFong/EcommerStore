@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+img {
+  max-height: 100%;
+}
 input,
 textarea {
   @apply border-2 border-gray-300 rounded-md px-1 w-full;
@@ -42,6 +45,17 @@ table.basic tr td {
   @apply border border-blue-200 p-1;
 }
 
-table.basic a{
+table.basic a {
   @apply bg-blue-500 text-white text-sm py-1 px-2 rounded-md inline-flex gap-1 mr-2;
+}
+/* style button */
+.btn-default,
+.btn-red {
+  @apply px-4 py-1 rounded-md;
+}
+.btn-red {
+  @apply bg-red-800 text-white;
+}
+.btn-default {
+  @apply bg-gray-200 text-white;
 }

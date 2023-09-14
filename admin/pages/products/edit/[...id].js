@@ -8,6 +8,7 @@ export default function EditProductPage() {
   const [productInfo, setProductInfo] = useState(null);
   const router = useRouter();
   const { id } = router.query;
+  console.log(router);
   //Nhận API từ id
   useEffect(() => {
     if (!id) {

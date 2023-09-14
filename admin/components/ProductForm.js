@@ -1,30 +1,37 @@
+import { images } from "@/next.config";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
-
+import Spinner from "./Spinner";
+import { ReactSortable } from "react-sortablejs";
 export default function ProductForm({
   _id,
   title: existingTitle,
   description: existingDescription,
   price: existingPrice,
+  images: existingImages,
+
 }) {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
+  const [images, setImages] = useState(existingImages || []);
   const router = useRouter();
   const [goToProducts, setGoToProducts] = useState(false);
-  
-//Giá trị nhận vào title,des,price
-//Xác định bởi _id qua phương thức PUT để cập nhật 1 sản phẩm
-//Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm hoặc trả về tạo mới sản phẩm
+  const [isUploading, setIsUploading] = useState(false);
+
+  //Giá trị nhận vào title,des,price
+  //Xác định bởi _id qua phương thức PUT để cập nhật 1 sản phẩm
+  //Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm hoặc trả về tạo mới sản phẩm
   async function saveProduct(ev) {
     ev.preventDefault();
-    const data = { title, description, price };
-    if(_id){
+    const data = { title, description, price, images };
+    if (_id) {
       //update product
-      await axios.put('/api/products', {...data,_id})
+      await axios.put('/api/products', { ...data, _id })
+
     }
-    else{
+    else {
       //create new product
       await axios.post("/api/products", data);
     }
@@ -35,7 +42,36 @@ export default function ProductForm({
   if (goToProducts) {
     router.push("/products");
   }
+  //update photo to aws và lưu link ảnh vào monggo
+  async function uploadImage(ev) {
+    const files = ev.target?.files
+    if (files?.length > 0) {
+      setIsUploading(true)
+      const data = new FormData();
+      for (const file of files) {
+        data.append('file', file)
+      }
+      // files.forEach(file => data.append('file', file));
+      const res = await axios.post('/api/upload', data)
+      setImages(oldImages => {
+        return [...oldImages, ...res.data.links]
+      })
+      setIsUploading(false)
 
+      // console.log(res.data)
+      // for (const file of files) {
+      //   data.append('file', file)
+      // }
+
+      // const res = await axios.post('/api/upload', data)
+      // console.log(res.data)
+    }
+  }
+  //set image cho form theem
+  function uploadImagesOrder() {
+
+    setImages(images)
+  }
   return (
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
     /**Thằng setTitle sẽ thay đổi thành 1 trạng thái mới của thằng title */
@@ -48,7 +84,32 @@ export default function ProductForm({
         value={title}
         onChange={(ev) => setTitle(ev.target.value)}
       />
+      <label>Hình ảnh</label>
+      <div className="mb-2 flex flex-wrap gap-1">
+        <ReactSortable list={images} className="flex flex-wrap gap-1" setList={uploadImagesOrder}>
+          {!!images?.length && images.map(link => (
+            <div key={link} className=" h-24">
 
+              <img src={link} alt="" className="rounded-lg" />
+            </div>
+          ))}
+        </ReactSortable>
+        {isUploading && (
+          <div className="h-24 p-1  flex items-center">
+            <Spinner />
+          </div>
+        )}
+        <label className="i w-24 h-24 cursor-pointer border text-center flex items-center justify-center text-sm gap-1 text-gray-500 rounded-lg bg-gray-200">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+          <div>upload</div>
+          <input type="file" onChange={uploadImage} className="hidden" />
+        </label>
+        {/* {!images?.length && (
+          <div>Không có hình ảnh cho sản phẩm này</div>
+        )}* */}
+      </div>
       <label>Mô tả chi tiết</label>
       <textarea
         placeholder="Nhập mô tả sản phẩm"
@@ -66,6 +127,6 @@ export default function ProductForm({
       <button type="submit" className="btn-primary">
         Lưu
       </button>
-    </form>
+    </form >
   );
 }
