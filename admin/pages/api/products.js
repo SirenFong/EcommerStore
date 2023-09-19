@@ -4,10 +4,7 @@ import { Product } from "@/models/Product";
 export default async function handle(req, res) {
   const { method } = req;
   await mongooseConnect();
-  //Hàm lấy giá trị "Get" của HTTP xác nhận giá trị của tất cả  sản phẩm
-  //Product.findone để tìm 1  sản phẩm thông qua id
-  //Product.find tìm tất cả sản phẩm có trong cửa hàng
-  //res.json để xác định hàm update  sản phẩm có thành công hay không
+
   if (method === "GET") {
     if (req.query?.id) {
       res.json(await Product.findOne({ _id: req.query.id }));
@@ -15,9 +12,7 @@ export default async function handle(req, res) {
       res.json(await Product.find());
     }
   }
-  //Hàm nhập vào "POST" của HTTP dùng để tạo 1  sản phẩm mới với 
-  //Product.create để tạo  sản phẩm mới
-  //res.json để xác định hàm POST  sản phẩm có thành công hay không
+
   if (method === "POST") {
     const { title, description, price, images } = req.body;
     const productDoc = await Product.create({
@@ -36,9 +31,6 @@ export default async function handle(req, res) {
     await Product.updateOne({ _id }, { title, description, price, images });
     res.json(true);
   }
-  //Hàm nhập vào "DELETE" của HTTP xác nhận giá trị thông qua _id của 1 sản phẩm
-  //Product.deleteOne để xóa 1 sản phẩm theo id 
-  //res.json để xác định hàm delete  sản phẩm có thành công hay không
   if (method === "DELETE") {
     if (req.query?.id) {
       await Product.deleteOne({ _id: req.query?.id })

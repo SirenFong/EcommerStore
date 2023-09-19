@@ -6,8 +6,7 @@ img {
   max-height: 100%;
 }
 input,
-textarea,
-select {
+textarea {
   @apply border-2 border-gray-300 rounded-md px-1 w-full;
   @apply mb-2;
 }
@@ -18,10 +17,6 @@ input:focus {
 }
 
 textarea:focus {
-  border: 2px solid blue;
-  outline: none;
-}
-select:focus {
   border: 2px solid blue;
   outline: none;
 }

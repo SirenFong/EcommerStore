@@ -67,7 +67,7 @@ export default function ProductForm({
       // console.log(res.data)
     }
   }
-  //set image cho form thêm
+  //set image cho form theem
   function uploadImagesOrder() {
 
     setImages(images)

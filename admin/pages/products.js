@@ -14,7 +14,7 @@ export default function Products() {
       setProducts(response.data);
     });
   }, []);
-
+  console.log(products)
   /**Đường link /products/newProduct (10) phải trùng với tên file đã đặt */
   /**Tên file ở đây là newProduct bên trong pages/products/newProduct */
   return (
