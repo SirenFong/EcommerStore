@@ -57,7 +57,7 @@ export default function ProductForm({
       const res = await axios.post('/api/upload', data)
       setImages(oldImages => {
         return [...oldImages, ...res.data.links]
-      })
+      });
       setIsUploading(false)
 
       // console.log(res.data)
@@ -70,8 +70,7 @@ export default function ProductForm({
     }
   }
   //set image cho form thêm
-  function uploadImagesOrder() {
-
+  function uploadImagesOrder(images) {
     setImages(images)
   }
   return (
@@ -91,7 +90,6 @@ export default function ProductForm({
         <ReactSortable list={images} className="flex flex-wrap gap-1" setList={uploadImagesOrder}>
           {!!images?.length && images.map(link => (
             <div key={link} className=" h-24">
-
               <img src={link} alt="" className="rounded-lg" />
             </div>
           ))}

@@ -12,7 +12,7 @@ export default function DeleteProductPage() {
     if (!id) {
       return;
     }
-    axios.get('/api/products?id=' + id).then((response) => {
+    axios.get("/api/products?id=" + id).then((response) => {
       setProductInfo(response.data);
     });
   }, [id]);
@@ -20,18 +20,22 @@ export default function DeleteProductPage() {
     router.push("/products");
   }
   async function deleteProduct() {
-    await axios.delete('/api/products?id=' + id)
+    await axios.delete("/api/products?id=" + id);
     goBack();
   }
   return (
     <Layout>
-      <h1 className="text-center">Xác nhận xóa sản phẩm
-        &nbsp;"{productInfo?.title}" ?</h1>
+      <h1 className="text-center">
+        Xóa sản phẩm &nbsp;"{productInfo?.title}" ?
+      </h1>
       <div className="flex gap-2 justify-center">
-        <button onClick={deleteProduct} className="btn-red">Đồng ý</button>
-        <button className="btn-default" onClick={goBack}>Hủy bỏ</button>
+        <button onClick={deleteProduct} className="btn-red">
+          Đồng ý
+        </button>
+        <button className="btn-default" onClick={goBack}>
+          Hủy bỏ
+        </button>
       </div>
-
     </Layout>
   );
 }
