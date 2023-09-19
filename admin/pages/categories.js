@@ -1,10 +1,11 @@
 import Layout from "@/components/Layout";
 import axios from "axios";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Categories() {
+  const [editedCategory, setEditedCategory] = useState(null);
   const [name, setName] = useState("");
+  const [parentCategory, setParentCategory] = useState("");
   const [categories, setCategories] = useState([]);
   /**useEffect gọi tới cái API cũng như trả về data của loại sản phẩm*/
   /**dưới đây là trả về api lấy thông tin loại sản phẩm để hiển thị */
@@ -22,14 +23,23 @@ export default function Categories() {
   /**Tên file ở đây là categories bên trong pages/categories */
   async function saveCategory(ev) {
     ev.preventDefault;
-    axios.post("/api/categories", { name });
+    axios.post("/api/categories", { name, parentCategory });
     setName("");
     fetchCategories();
   }
+
+  function editCategory(category) {
+    setEditedCategory(category);
+  }
+
   return (
     <Layout>
       <h1>Loại sản phẩm</h1>
-      <label>Tên loại sản phẩm mới</label>
+      <label>
+        {editedCategory
+          ? `Sửa loại sản phẩm ${editedCategory.name}`
+          : "Tạo loại sản phẩm"}
+      </label>
       <form onSubmit={saveCategory} className="flex gap-1">
         <input
           className="mb-0"
@@ -38,7 +48,11 @@ export default function Categories() {
           value={name}
           placeholder={"Tên loại sản phẩm"}
         />
-        <select className="mb-0">
+        <select
+          className="mb-0"
+          onChange={(ev) => setParentCategory(ev.target.value)}
+          value={parentCategory}
+        >
           <option value="0">No parent category</option>
           {categories.length > 0 &&
             categories.map((category) => (
@@ -51,8 +65,10 @@ export default function Categories() {
       </form>
       <table className="basic mt-2">
         <thead>
-          <tr>  
+          <tr>
             <td>Loại Sản Phẩm</td>
+            <td>Sản phẩm</td>
+            <td></td>
           </tr>
         </thead>
 
@@ -61,6 +77,16 @@ export default function Categories() {
             categories.map((category) => (
               <tr key={category._id}>
                 <td>{category.name}</td>
+                <td>{category?.parent?.name}</td>
+                <td>
+                  <button
+                    onClick={() => editCategory(category)}
+                    className="btn-primary mr-2"
+                  >
+                    Edit
+                  </button>
+                  <button className="btn-primary">Delete</button>
+                </td>
               </tr>
             ))}
         </tbody>

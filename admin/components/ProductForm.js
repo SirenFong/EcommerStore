@@ -108,7 +108,6 @@ export default function ProductForm({
                 <img src={link} alt="" className="rounded-lg" />
                 <div>
                   <button className="btn-default" onClick={() => deleteByIndex(index)}>
-                    /**Here */
                     Delete</button>
                 </div>
               </div>
