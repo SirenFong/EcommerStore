@@ -1,3 +1,4 @@
+//hiệu ứng loading khi tải ảnh lên
 import { BounceLoader } from "react-spinners"
 export default function Spinner() {
     return (
