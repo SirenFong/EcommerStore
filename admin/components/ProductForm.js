@@ -11,7 +11,6 @@ export default function ProductForm({
   qty: existingQty,
   price: existingPrice,
   images: existingImages,
-
 }) {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
@@ -22,6 +21,19 @@ export default function ProductForm({
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
+  // const deleteById = (id) => {
+  //   setImages((oldValues) => {
+  //     return oldValues.filter((images) => images.id !== id);
+  //   });
+  // };
+
+  //Copy code trên mạng :v
+  const deleteByIndex = (index) => {
+    setImages((oldValues) => {
+      return oldValues.filter((_, i) => i !== index);
+    });
+  };
+
   //Giá trị nhận vào title,des,price
   //Xác định bởi _id qua phương thức PUT để cập nhật 1 sản phẩm
   //Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm hoặc trả về tạo mới sản phẩm
@@ -30,10 +42,8 @@ export default function ProductForm({
     const data = { title, description, price, qty, images };
     if (_id) {
       //update product
-      await axios.put('/api/products', { ...data, _id })
-
-    }
-    else {
+      await axios.put("/api/products", { ...data, _id });
+    } else {
       //create new product
       await axios.post("/api/products", data);
     }
@@ -46,18 +56,18 @@ export default function ProductForm({
   }
   //update photo to aws và lưu link ảnh vào monggo
   async function uploadImage(ev) {
-    const files = ev.target?.files
+    const files = ev.target?.files;
     if (files?.length > 0) {
-      setIsUploading(true)
+      setIsUploading(true);
       const data = new FormData();
       for (const file of files) {
-        data.append('file', file)
+        data.append("file", file);
       }
       // files.forEach(file => data.append('file', file));
       const res = await axios.post('/api/upload', data)
       setImages(oldImages => {
         return [...oldImages, ...res.data.links]
-      });
+      })
       setIsUploading(false)
 
       // console.log(res.data)
@@ -70,7 +80,8 @@ export default function ProductForm({
     }
   }
   //set image cho form thêm
-  function uploadImagesOrder(images) {
+  function uploadImagesOrder() {
+
     setImages(images)
   }
   return (
@@ -90,20 +101,32 @@ export default function ProductForm({
         <ReactSortable list={images} className="flex flex-wrap gap-1" setList={uploadImagesOrder}>
           {!!images?.length && images.map(link => (
             <div key={link} className=" h-24">
+
               <img src={link} alt="" className="rounded-lg" />
             </div>
           ))}
         </ReactSortable>
         {isUploading && (
-          <div className="h-24 p-1  flex items-center">
+          <div className="h-24 p-1 flex items-center">
             <Spinner />
           </div>
         )}
         <label className="i w-24 h-24 cursor-pointer border text-center flex items-center justify-center text-sm gap-1 text-gray-500 rounded-lg bg-gray-200">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+            />
           </svg>
-          <div>upload</div>
+          <div>Upload</div>
           <input type="file" onChange={uploadImage} className="hidden" />
         </label>
         {/* {!images?.length && (
@@ -134,6 +157,6 @@ export default function ProductForm({
       <button type="submit" className="btn-primary">
         Lưu
       </button>
-    </form >
+    </form>
   );
 }
