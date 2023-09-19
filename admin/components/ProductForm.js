@@ -97,14 +97,22 @@ export default function ProductForm({
         onChange={(ev) => setTitle(ev.target.value)}
       />
       <label>Hình ảnh</label>
-      <div className="mb-2 flex flex-wrap gap-1">
-        <ReactSortable list={images} className="flex flex-wrap gap-1" setList={uploadImagesOrder}>
-          {!!images?.length && images.map(link => (
-            <div key={link} className=" h-24">
-
-              <img src={link} alt="" className="rounded-lg" />
-            </div>
-          ))}
+      <div className="mb-8 flex flex-wrap gap-2">
+        <ReactSortable
+          list={images}
+          className="flex flex-wrap gap-1"
+          setList={uploadImagesOrder}
+        >
+          {!!images?.length &&
+            images.map((link, index) => (
+              <div key={link} className=" h-24">
+                <img src={link} alt="" className="rounded-lg" />
+                <div>
+                  <button className="btn-default" onClick={() => deleteByIndex(index)}>
+                    Delete</button>
+                </div>
+              </div>
+            ))}
         </ReactSortable>
         {isUploading && (
           <div className="h-24 p-1 flex items-center">
