@@ -1,4 +1,3 @@
-import { images } from "@/next.config";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useState } from "react";
@@ -8,6 +7,7 @@ export default function ProductForm({
   _id,
   title: existingTitle,
   description: existingDescription,
+  qty: existingQty,
   price: existingPrice,
   images: existingImages,
 
@@ -15,6 +15,7 @@ export default function ProductForm({
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
+  const [qty, setQty] = useState(existingQty || "");
   const [images, setImages] = useState(existingImages || []);
   const router = useRouter();
   const [goToProducts, setGoToProducts] = useState(false);
@@ -25,7 +26,7 @@ export default function ProductForm({
   //Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm hoặc trả về tạo mới sản phẩm
   async function saveProduct(ev) {
     ev.preventDefault();
-    const data = { title, description, price, images };
+    const data = { title, description, price, qty, images };
     if (_id) {
       //update product
       await axios.put('/api/products', { ...data, _id })
@@ -123,6 +124,13 @@ export default function ProductForm({
         placeholder="Giá tiền"
         value={price}
         onChange={(ev) => setPrice(ev.target.value)}
+      />
+      <label>Số lượng sản phẩm</label>
+      <input
+        type="number"
+        placeholder="Số lượng sản phẩm"
+        value={qty}
+        onChange={(ev) => setQty(ev.target.value)}
       />
       <button type="submit" className="btn-primary">
         Lưu

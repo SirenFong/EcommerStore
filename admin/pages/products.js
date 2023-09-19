@@ -26,20 +26,19 @@ export default function Products() {
         Thêm mới sản phẩm
       </Link>
 
-      <table className="basic mt-2">
+      <table className="basic mt-2 py-1 px-2 ">
         <thead>
           <tr>
             <td>Tên Sản Phẩm</td>
-
-            <td></td>
+            <td>Số lượng</td>
+            <td>Chức năng</td>
           </tr>
         </thead>
-
         <tbody>
           {products.map((product) => (
             <tr key={product._id}>
               <td>{product.title}</td>
-
+              <td>{product.qty}</td>
               <td>
                 <Link href={"/products/edit/" + product._id}>
                   <svg
