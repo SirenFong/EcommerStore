@@ -30,7 +30,8 @@ export default function Products() {
         <thead>
           <tr>
             <td>Tên Sản Phẩm</td>
-
+            <td>Số lượng </td>
+            <td>Mô tả</td>
             <td></td>
           </tr>
         </thead>
@@ -39,7 +40,8 @@ export default function Products() {
           {products.map((product) => (
             <tr key={product._id}>
               <td>{product.title}</td>
-
+              <td></td>
+              <td></td>
               <td>
                 <Link href={"/products/edit/" + product._id}>
                   <svg
