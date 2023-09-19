@@ -23,23 +23,14 @@ export default function Categories() {
   /**Tên file ở đây là categories bên trong pages/categories */
   async function saveCategory(ev) {
     ev.preventDefault;
-    axios.post("/api/categories", { name, parentCategory });
+    axios.post("/api/categories", { name });
     setName("");
     fetchCategories();
   }
-
-  function editCategory(category) {
-    setEditedCategory(category);
-  }
-
   return (
     <Layout>
       <h1>Loại sản phẩm</h1>
-      <label>
-        {editedCategory
-          ? `Sửa loại sản phẩm ${editedCategory.name}`
-          : "Tạo loại sản phẩm"}
-      </label>
+      <label>Tên loại sản phẩm mới</label>
       <form onSubmit={saveCategory} className="flex gap-1">
         <input
           className="mb-0"
@@ -48,11 +39,7 @@ export default function Categories() {
           value={name}
           placeholder={"Tên loại sản phẩm"}
         />
-        <select
-          className="mb-0"
-          onChange={(ev) => setParentCategory(ev.target.value)}
-          value={parentCategory}
-        >
+        <select className="mb-0">
           <option value="0">No parent category</option>
           {categories.length > 0 &&
             categories.map((category) => (
@@ -65,10 +52,8 @@ export default function Categories() {
       </form>
       <table className="basic mt-2">
         <thead>
-          <tr>
+          <tr>  
             <td>Loại Sản Phẩm</td>
-            <td>Sản phẩm</td>
-            <td></td>
           </tr>
         </thead>
 

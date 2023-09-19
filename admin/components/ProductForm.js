@@ -64,11 +64,11 @@ export default function ProductForm({
         data.append("file", file);
       }
       // files.forEach(file => data.append('file', file));
-      const res = await axios.post("/api/upload", data);
-      setImages((oldImages) => {
-        return [...oldImages, ...res.data.links];
-      });
-      setIsUploading(false);
+      const res = await axios.post('/api/upload', data)
+      setImages(oldImages => {
+        return [...oldImages, ...res.data.links]
+      })
+      setIsUploading(false)
 
       // console.log(res.data)
       // for (const file of files) {
@@ -80,8 +80,9 @@ export default function ProductForm({
     }
   }
   //set image cho form thêm
-  function uploadImagesOrder(images) {
-    setImages(images);
+  function uploadImagesOrder() {
+
+    setImages(images)
   }
   return (
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
