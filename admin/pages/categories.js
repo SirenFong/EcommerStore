@@ -27,10 +27,20 @@ export default function Categories() {
     setName("");
     fetchCategories();
   }
+
+  function editCategory(category) {
+    setEditedCategory(category);
+    setName(category.name);
+    setParentCategory(category.parent);
+  }
   return (
     <Layout>
       <h1>Loại sản phẩm</h1>
-      <label>Tên loại sản phẩm mới</label>
+      <label>
+        {editedCategory
+          ? `Sửa loại sản phẩm ${editedCategory.name}`
+          : "Tên loại sản phẩm mới"}
+      </label>
       <form onSubmit={saveCategory} className="flex gap-1">
         <input
           className="mb-0"
@@ -52,7 +62,7 @@ export default function Categories() {
       </form>
       <table className="basic mt-2">
         <thead>
-          <tr>  
+          <tr>
             <td>Loại Sản Phẩm</td>
           </tr>
         </thead>
