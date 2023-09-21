@@ -12,10 +12,12 @@ export default function ProductForm({
   price: existingPrice,
   images: existingImages,
   category: assignedCategory,
+  properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
+  const [productProperties, setProductProperties] = useState(assignedProperties || {});
   const [description, setDescription] = useState(existingDescription || "");
-  const [category, setCategory] = useState(assignedCategory || '');
+  const [category, setCategory] = useState(assignedCategory || "");
   const [price, setPrice] = useState(existingPrice || "");
   const [qty, setQty] = useState(existingQty || "");
   const [images, setImages] = useState(existingImages || []);
@@ -26,11 +28,10 @@ export default function ProductForm({
   ////load loại sản phẩm lên thanh select
 
   useEffect(() => {
-    axios.get("/api/categories").then(result => {
-      setCategories(result.data)
-    })
-  }, [])
-
+    axios.get("/api/categories").then((result) => {
+      setCategories(result.data);
+    });
+  }, []);
 
   ////
 
@@ -52,7 +53,15 @@ export default function ProductForm({
   //Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm hoặc trả về tạo mới sản phẩm
   async function saveProduct(ev) {
     ev.preventDefault();
-    const data = { title, description, price, qty, images, category };
+    const data = {
+      title,
+      description,
+      price,
+      qty,
+      images,
+      category,
+      properties: productProperties,
+    };
     if (_id) {
       //update product
       await axios.put("/api/products", { ...data, _id });
@@ -77,11 +86,11 @@ export default function ProductForm({
         data.append("file", file);
       }
       // files.forEach(file => data.append('file', file));
-      const res = await axios.post('/api/upload', data)
-      setImages(oldImages => {
-        return [...oldImages, ...res.data.links]
-      })
-      setIsUploading(false)
+      const res = await axios.post("/api/upload", data);
+      setImages((oldImages) => {
+        return [...oldImages, ...res.data.links];
+      });
+      setIsUploading(false);
 
       // console.log(res.data)
       // for (const file of files) {
@@ -94,8 +103,28 @@ export default function ProductForm({
   }
   //set image cho form thêm
   function uploadImagesOrder() {
+    setImages(images);
+  }
 
-    setImages(images)
+  const propertiesToFill = [];
+  if (categories.length > 0 && category) {
+    let categoryInfo = categories.find(({ _id }) => _id === category);
+    propertiesToFill.push(...categoryInfo.properties);
+    while (categoryInfo?.parent?._id) {
+      const parentCat = categories.find(
+        ({ _id }) => _id === categoryInfo?.parent?._id
+      );
+      propertiesToFill.push(...parentCat.properties);
+      categoryInfo = parentCat;
+    }
+  }
+
+  function setProductProp(propName, value) {
+    setProductProperties((prev) => {
+      const newProductProps = { ...prev };
+      newProductProps[propName] = value;
+      return newProductProps;
+    });
   }
   return (
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
@@ -110,15 +139,36 @@ export default function ProductForm({
         onChange={(ev) => setTitle(ev.target.value)}
       />
       <label>Loại sản phẩm</label>
-      <select value={category}
-        onChange={ev => setCategory(ev.target.value)}>
+
+      <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
         <option value="">Chưa chọn loại sản phẩm</option>
         {categories.length > 0 &&
-          categories.map(
-            (category) => (
-              <option value={category._id}>{category.name}</option>
-            ))}
+          categories.map((category) => (
+            <option value={category._id}>{category.name}</option>
+          ))}
       </select>
+
+      {/* {propertiesToFill.length > 0 && propertiesToFill.map(p => (
+        <div className="flex gap-1">
+          {p.name}
+        </div>
+      ))} */}
+
+      {propertiesToFill.length > 0 &&
+        propertiesToFill.map((p) => (
+          <div className="flex gap-1">
+            {p.name}
+            <select
+              value={productProperties[p.name]}
+              onChange={(ev) => setProductProp(p.name, ev.target.value)}
+            >
+              {p.values.map((v) => (
+                <option value={v}>{v}</option>
+              ))}
+            </select>
+          </div>
+        ))}
+
       <label>Hình ảnh</label>
       <div className="mb-8 flex flex-wrap gap-2">
         <ReactSortable
@@ -131,8 +181,12 @@ export default function ProductForm({
               <div key={link} className=" h-24">
                 <img src={link} alt="" className="rounded-lg" />
                 <div>
-                  <button className="btn-default" onClick={() => deleteByIndex(index)}>
-                    Delete</button>
+                  <button
+                    className="btn-default"
+                    onClick={() => deleteByIndex(index)}
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}

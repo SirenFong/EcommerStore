@@ -8,33 +8,35 @@ export default async function handle(req, res) {
   //Category.findone để tìm 1 loại sản phẩm thông qua id
   //Category.find tìm tất cả sản phẩm có trong cửa hàng
   if (method === "GET") {
-
-    res.json(await Category.find().populate('parent'));
-
+    res.json(await Category.find().populate("parent"));
   }
   //Hàm nhập vào "POST" của HTTP dùng để tạo 1 loại sản phẩm mới với
   //Category.create để tạo loại sản phẩm mới
   if (method === "POST") {
-    const { name, parentCategory } = req.body;
+    const { name, parentCategory, properties } = req.body;
     const categoryDoc = await Category.create({
       name,
-      parent: parentCategory,
+      parent: parentCategory || undefined,
+      properties,
     });
     res.json(categoryDoc);
   }
   if (method === "PUT") {
-    const { name, parentCategory, _id } = req.body;
-    const categoryDoc = await Category.updateOne({ _id }, {
-      name,
-      parent: parentCategory,
-    });
+    const { name, parentCategory, properties, _id } = req.body;
+    const categoryDoc = await Category.updateOne(
+      { _id },
+      {
+        name,
+        parent: parentCategory || undefined,
+        properties,
+      }
+    );
     res.json(categoryDoc);
   }
   if (method === "DELETE") {
-    const { _id } = req.query
-    await Category.deleteOne({ _id })
+    const { _id } = req.query;
+    await Category.deleteOne({ _id });
 
-    res.json('ok');
+    res.json("ok");
   }
 }
-
