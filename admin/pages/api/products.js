@@ -19,7 +19,7 @@ export default async function handle(req, res) {
   //Product.create để tạo  sản phẩm mới
   //res.json để xác định hàm POST  sản phẩm có thành công hay không
   if (method === "POST") {
-    const { title, description, price, qty, images } = req.body;
+    const { title, description, price, qty, images, category } = req.body;
     const productDoc = await Product.create({
       title,
       description,
@@ -33,8 +33,8 @@ export default async function handle(req, res) {
   //Product.updateOne để cập nhật 1 sản phẩm theo id và các biến giá trị title,des,price
   //res.json để xác định hàm update sản phẩm có thành công hay không
   if (method === "PUT") {
-    const { title, description, price, qty, images, _id } = req.body;
-    await Product.updateOne({ _id }, { title, description, price, qty, images });
+    const { title, description, price, qty, images, category, _id } = req.body;
+    await Product.updateOne({ _id }, { title, description, price, qty, images, category });
     res.json(true);
   }
   //Hàm nhập vào "DELETE" của HTTP xác nhận giá trị thông qua _id của 1 sản phẩm
