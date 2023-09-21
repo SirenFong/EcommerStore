@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
 
@@ -11,15 +11,28 @@ export default function ProductForm({
   qty: existingQty,
   price: existingPrice,
   images: existingImages,
+  category: assignedCategory,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
+  const [category, setCategory] = useState(assignedCategory || '');
   const [price, setPrice] = useState(existingPrice || "");
   const [qty, setQty] = useState(existingQty || "");
   const [images, setImages] = useState(existingImages || []);
+  const [categories, setCategories] = useState([]);
   const router = useRouter();
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  ////load loại sản phẩm lên thanh select
+
+  useEffect(() => {
+    axios.get("/api/categories").then(result => {
+      setCategories(result.data)
+    })
+  }, [])
+
+
+  ////
 
   // const deleteById = (id) => {
   //   setImages((oldValues) => {
@@ -39,7 +52,7 @@ export default function ProductForm({
   //Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm hoặc trả về tạo mới sản phẩm
   async function saveProduct(ev) {
     ev.preventDefault();
-    const data = { title, description, price, qty, images };
+    const data = { title, description, price, qty, images, category };
     if (_id) {
       //update product
       await axios.put("/api/products", { ...data, _id });
@@ -96,6 +109,16 @@ export default function ProductForm({
         value={title}
         onChange={(ev) => setTitle(ev.target.value)}
       />
+      <label>Loại sản phẩm</label>
+      <select value={category}
+        onChange={ev => setCategory(ev.target.value)}>
+        <option value="">Chưa chọn loại sản phẩm</option>
+        {categories.length > 0 &&
+          categories.map(
+            (category) => (
+              <option value={category._id}>{category.name}</option>
+            ))}
+      </select>
       <label>Hình ảnh</label>
       <div className="mb-8 flex flex-wrap gap-2">
         <ReactSortable
