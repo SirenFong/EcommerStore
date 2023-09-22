@@ -6,6 +6,11 @@ import fs from 'fs'
 import mime from 'mime-types'
 const bucketName = 'ecommerstore'
 export default async function handle(req, res) {
+    ////Câu lệnh thêm vô ở admin security
+    await mongooseConnect();
+
+    await isAdminRequest(req, res)
+
 
     //tạo form cho tệp tải lên
     const form = new multiparty.Form()
