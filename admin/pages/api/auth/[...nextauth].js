@@ -19,7 +19,7 @@ export const authOptions = {
   // sử lý đăng nhập cho admin
   callbacks: {
     session: ({ session, token, user }) => {
-      if (adminEmails.includes(session?.user?.email) || adminEmails2.includes(session?.user?.email)) {
+      if (adminEmails.includes(session?.user?.email)) {
         return session
       } else {
         return false
