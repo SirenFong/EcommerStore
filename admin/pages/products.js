@@ -20,7 +20,7 @@ export default function Products() {
   return (
     <Layout>
       <Link
-        className="bg-blue-900 text-white rounded-md py-1 px-2"
+        className="bg-primary text-white rounded-md py-1 px-2"
         href={"/products/newProduct"}
       >
         Thêm mới sản phẩm
@@ -40,7 +40,9 @@ export default function Products() {
               <td>{product.title}</td>
               <td>{product.qty}</td>
               <td>
-                <Link href={"/products/edit/" + product._id}>
+                <Link
+                  className="btn-default"
+                  href={"/products/edit/" + product._id}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -57,7 +59,9 @@ export default function Products() {
                   </svg>
                   Edit Product
                 </Link>
-                <Link href={"/products/delete/" + product._id}>
+                <Link
+                  className="btn-red"
+                  href={"/products/delete/" + product._id}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
