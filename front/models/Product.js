@@ -12,6 +12,9 @@ const ProductSchema = new Schema({
     ref: "Category",
   },
   properties: { type: Object },
+}, {
+  //Thuộc tính mới thêm vào ở V9
+  timestamps: true,
 });
 
 export const Product = models.Product || model("Product", ProductSchema);
