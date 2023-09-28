@@ -11,7 +11,7 @@ export const ButtonStyle = css`
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  font-weight:500;
+  font-weight: 500;
   svg {
     height: 16px;
     margin-right: 5px;
@@ -34,14 +34,16 @@ export const ButtonStyle = css`
     `}
 
 ${(props) =>
-    props.primary && !props.outline &&
+    props.primary &&
+    !props.outline &&
     css`
       background-color: ${primary};
       border: 1px solid ${primary};
       color: #fff;
     `}
    ${(props) =>
-    props.primary && props.outline &&
+    props.primary &&
+    props.outline &&
     css`
       background-color: transparent;
       border: 1px solid ${primary};
