@@ -16,7 +16,7 @@ export default function NewProducts({ products }) {
 
     return (
         <Center>
-            <Title> New Arrivals</Title>
+            <Title>Sản phẩm mới</Title>
             <ProductsGrid>
                 {products?.length > 0 && products.map(product => (
                     <ProductBox  {...product} />

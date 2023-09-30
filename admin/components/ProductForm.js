@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
+import numeral from 'numeral'
 
 export default function ProductForm({
   _id,
@@ -15,7 +16,9 @@ export default function ProductForm({
   properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
-  const [productProperties, setProductProperties] = useState(assignedProperties || {});
+  const [productProperties, setProductProperties] = useState(
+    assignedProperties || {}
+  );
   const [description, setDescription] = useState(existingDescription || "");
   const [category, setCategory] = useState(assignedCategory || "");
   const [price, setPrice] = useState(existingPrice || "");
@@ -26,7 +29,7 @@ export default function ProductForm({
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   ////load loại sản phẩm lên thanh select
-
+  const numeral = require("numeral");
   useEffect(() => {
     axios.get("/api/categories").then((result) => {
       setCategories(result.data);
@@ -157,7 +160,7 @@ export default function ProductForm({
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((p) => (
           <div className="">
-            <label >{p.name[0].toUpperCase() + p.name.substring(1)}</label>
+            <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
 
             <div>
               <select
@@ -169,7 +172,6 @@ export default function ProductForm({
                 ))}
               </select>
             </div>
-
           </div>
         ))}
 
@@ -182,8 +184,11 @@ export default function ProductForm({
         >
           {!!images?.length &&
             images.map((link, index) => (
-              <div key={link} className=" h-24 bg-white p-4 shadow-sm rounded-sm
-              border border-gray-200">
+              <div
+                key={link}
+                className=" h-24 bg-white p-4 shadow-sm rounded-sm
+              border border-gray-200"
+              >
                 <img src={link} alt="" className="rounded-lg" />
                 <div>
                   <button
@@ -232,10 +237,13 @@ export default function ProductForm({
 
       <label>Giá tiền ( VNĐ )</label>
       <input
-        type="number"
+        type="text"
         placeholder="Giá tiền"
-        value={price}
-        onChange={(ev) => setPrice(ev.target.value)}
+        value={numeral(price).format("0,0")}
+        onChange={(ev) => {
+          const formattedPrice = numeral(ev.target.value).value();
+          setPrice(formattedPrice);
+        }}
       />
       <label>Số lượng sản phẩm</label>
       <input
