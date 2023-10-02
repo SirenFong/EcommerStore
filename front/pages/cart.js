@@ -10,9 +10,27 @@ import styled from "styled-components";
 
 const ColumnsWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1fr;
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
   gap: 40px;
   margin-top: 40px;
+  margin-bottom: 40px;
+  table thead tr th:nth-child(3),
+  table tbody tr td:nth-child(3),
+  table tbody tr.subtotal td:nth-child(2) {
+    text-align: right;
+  }
+  table tr.subtotal td {
+    padding: 15px 0;
+  }
+  table tbody tr.subtotal td:nth-child(2) {
+    font-size: 1.4rem;
+  }
+  tr.total td {
+    font-weight: bold;
+  }
 `;
 
 const Box = styled.div`
@@ -50,13 +68,15 @@ const AddressHolder = styled.div`
 `;
 
 export default function CartPage() {
-  const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
+  const { cartProducts, addProduct, removeProduct, clearCart } =
+    useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [mail, setMail] = useState("");
   const [postalcode, setPostalcode] = useState("");
   const [address, setAddress] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post("/api/cart", { ids: cartProducts }).then((response) => {
@@ -66,7 +86,16 @@ export default function CartPage() {
       setProducts([]);
     }
   }, [cartProducts]);
-
+  ///sử dụng useEffect để chuyển cửa sổ về trang chủ đồng thời thực thi trạng thái  trống cho giỏ hàng
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    if (window?.location.href.includes("success")) {
+      setIsSuccess(true);
+      clearCart();
+    }
+  }, []);
   //Hàm gọi thêm sản phẩm vào giỏ hàng
   function moreOfThisProduct(id) {
     addProduct(id);
@@ -81,6 +110,40 @@ export default function CartPage() {
   for (const productId of cartProducts) {
     const price = products.find((p) => p._id === productId)?.price || 0;
     total += price;
+  }
+  ////Đi tới trang web thanh toán
+  async function goToPayment() {
+    const response = await axios.post("/api/checkout", {
+      name,
+      phone,
+      mail,
+      postalcode,
+      address,
+      cartProducts,
+    });
+    if (response.data.url) {
+      window.location = response.data.url;
+    }
+  }
+  ////Lấy giá trị từ url của cửa sổ thanh toán nếu succes trả về thông báo
+
+  if (isSuccess) {
+    return (
+      <>
+        <Header />
+        <Center>
+          <ColumnsWrapper>
+            <Box>
+              <h1>Cảm ơn bạn đã đặt hàng</h1>
+              <p>
+                chúng tôi sẽ gửi email cho bạn khi đơn đặt hàng của bạn sẽ được
+                gửi
+              </p>
+            </Box>
+          </ColumnsWrapper>
+        </Center>
+      </>
+    );
   }
 
   return (
@@ -147,48 +210,47 @@ export default function CartPage() {
           {!!cartProducts?.length && (
             <Box>
               <h2>NGƯỜI MUA/NHẬN HÀNG</h2>
-              <form method="post" action="/api/checkout">
-                <AddressHolder>
-                  <Input
-                    type="text"
-                    placeholder="Tên người nhận"
-                    name="name"
-                    value={name}
-                    onChange={(ev) => setName(ev.target.value)}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="Số điện thoại"
-                    name="phone"
-                    value={phone}
-                    onChange={(ev) => setPhone(ev.target.value)}
-                  />
-                </AddressHolder>
+
+              <AddressHolder>
                 <Input
                   type="text"
-                  placeholder="Địa chỉ E-mail"
-                  name="mail"
-                  value={mail}
-                  onChange={(ev) => setMail(ev.target.value)}
+                  placeholder="Tên người nhận"
+                  name="name"
+                  value={name}
+                  onChange={(ev) => setName(ev.target.value)}
                 />
                 <Input
                   type="text"
-                  placeholder="Postal Code"
-                  name="postalcode"
-                  value={postalcode}
-                  onChange={(ev) => setPostalcode(ev.target.value)}
+                  placeholder="Số điện thoại"
+                  name="phone"
+                  value={phone}
+                  onChange={(ev) => setPhone(ev.target.value)}
                 />
-                <Input
-                  type="text"
-                  placeholder="Địa chỉ nhận hàng"
-                  name="address"
-                  value={address}
-                  onChange={(ev) => setAddress(ev.target.value)}
-                />
-                <Button black block type="submit">
-                  Đặt hàng
-                </Button>
-              </form>
+              </AddressHolder>
+              <Input
+                type="text"
+                placeholder="Địa chỉ E-mail"
+                name="mail"
+                value={mail}
+                onChange={(ev) => setMail(ev.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="Postal Code"
+                name="postalcode"
+                value={postalcode}
+                onChange={(ev) => setPostalcode(ev.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="Địa chỉ nhận hàng"
+                name="address"
+                value={address}
+                onChange={(ev) => setAddress(ev.target.value)}
+              />
+              <Button black block onClick={goToPayment}>
+                Đặt hàng
+              </Button>
             </Box>
           )}
         </ColumnsWrapper>

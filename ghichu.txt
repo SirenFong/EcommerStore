@@ -1,0 +1,10 @@
+chạy stripe bằng cmd ở ngoài vị trí tệp 
+C://.../vitri để tệp stripe
+gõ stripe.exe để cài 
+gõ stripe login để đăng nhập 
+sau đó cmd có đường dẫn url copy tìm trên gg
+sử dụng 
+Your pairing code is: well-loved-elite-sharp
+This pairing code verifies your authentication with Stripe.sau đó ok
+tiếp đến nhập 
+stripe listen --forward-to localhost:3001/api/webhook trong cmd để cháapi
