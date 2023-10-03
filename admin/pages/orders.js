@@ -21,7 +21,7 @@ export default function OrdersPage() {
           <tr>
             <th>Date</th>
             <th>Paid</th>
-            <th>Recipient</th>
+            <th>Customer Name</th>
             <th>Products</th>
           </tr>
         </thead>
@@ -43,11 +43,13 @@ export default function OrdersPage() {
                   {order.paid ? "YES" : "NO"}
                 </td>
                 <td>
-                  {order.name} {order.mail}
+                  {order.name}
                   <br />
-                  {order.city} {order.postalCode} {order.country}
+                  {order.mail}
                   <br />
-                  {order.streetAddress}
+                  {order.phone} <br /> {order.postalcode}
+                  <br />
+                  {order.address}
                 </td>
                 <td>
                   {order.line_items.map((l) => (

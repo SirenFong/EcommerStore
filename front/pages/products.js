@@ -11,7 +11,7 @@ export default function ProductsPage({ products, wishedProducts }) {
         <>
             <Header />
             <Center>
-                <Title>All products</Title>
+                <Title>Xem tất cả</Title>
                 <ProductsGrid products={products} />
             </Center>
         </>

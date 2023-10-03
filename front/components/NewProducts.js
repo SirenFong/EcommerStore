@@ -13,7 +13,7 @@ export default function NewProducts({ products }) {
 
     return (
         <Center>
-            <Title>New Arrivals</Title>
+            <Title>HOT ITEMS</Title>
             <ProductsGrid products={products} />
         </Center>
 

@@ -44,11 +44,17 @@ export function CartContextProvider({ children }) {
 
   ////Hàm xóa danh sách giỏ hàng khi đã đặt hàng
   function clearCart() {
-    setCartProducts([])
+    setCartProducts([]);
   }
   return (
     <CartContext.Provider
-      value={{ cartProducts, setCartProducts, addProduct, removeProduct, clearCart }}
+      value={{
+        cartProducts,
+        setCartProducts,
+        addProduct,
+        removeProduct,
+        clearCart,
+      }}
     >
       {children}
     </CartContext.Provider>

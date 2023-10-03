@@ -86,7 +86,9 @@ export default function CartPage() {
       setProducts([]);
     }
   }, [cartProducts]);
-  ///sử dụng useEffect để chuyển cửa sổ về trang chủ đồng thời thực thi trạng thái  trống cho giỏ hàng
+
+  ///sử dụng useEffect để chuyển cửa sổ về trang chủ đồng thời thực thi trạng thái
+  //trống cho giỏ hàng
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
@@ -136,8 +138,8 @@ export default function CartPage() {
             <Box>
               <h1>Cảm ơn bạn đã đặt hàng</h1>
               <p>
-                chúng tôi sẽ gửi email cho bạn khi đơn đặt hàng của bạn sẽ được
-                gửi
+                Chúng tôi sẽ gọi điện thoại cho bạn khi đơn đặt hàng của bạn
+                được giao tới.
               </p>
             </Box>
           </ColumnsWrapper>
@@ -210,7 +212,6 @@ export default function CartPage() {
           {!!cartProducts?.length && (
             <Box>
               <h2>NGƯỜI MUA/NHẬN HÀNG</h2>
-
               <AddressHolder>
                 <Input
                   type="text"

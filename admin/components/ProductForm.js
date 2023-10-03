@@ -236,6 +236,17 @@ export default function ProductForm({
       ></textarea>
 
       <label>Giá tiền ( VNĐ )</label>
+      {/* <input
+        type="text"
+        placeholder="Giá tiền"
+        value={numeral(price).format("0,0")}
+        onChange={(ev) => {
+          const formattedPrice = numeral(
+            ev.target.value.replace(".","")
+          ).value();
+          setPrice(formattedPrice);
+        }}
+      /> */}
       <input
         type="text"
         placeholder="Giá tiền"
@@ -245,6 +256,12 @@ export default function ProductForm({
           setPrice(formattedPrice);
         }}
       />
+      {/* <input
+        type="number"
+        placeholder="price"
+        value={price.toLocaleString("vi-VN")} // Sử dụng 'vi-VN' để định dạng số tiền theo định dạng của Việt Nam
+        onChange={(ev) => setPrice(ev.target.value)}
+      /> */}
       <label>Số lượng sản phẩm</label>
       <input
         type="number"
