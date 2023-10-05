@@ -94,7 +94,7 @@ export default function Featured({ product }) {
 
           <Column>
             <img
-              src="https://ecommerstore.s3.amazonaws.com/1695286697557-.jpg"
+              src="https://ecommerstore.s3.amazonaws.com/1696487249570-.jpg"
               alt=""
             />
           </Column>

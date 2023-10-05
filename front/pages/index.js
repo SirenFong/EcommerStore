@@ -15,7 +15,7 @@ export default function HomePage({ featuredProduct, newProducts }) {
 }
 //Connect tới admin để hiển thị sản phẩm theo id
 export async function getServerSideProps() {
-  const featuredProductId = "650c05b6225196fe6d3664b1";
+  const featuredProductId = "651e55a0e339dab8742ca88a";
   await mongooseConnect();
   const featuredProduct = await Product.findById(featuredProductId);
   const newProducts = await Product.find({}, null, {

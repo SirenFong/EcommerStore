@@ -66,6 +66,11 @@ export default function CategoryPage({
       return;
     }
     setLoadingProducts(true);
+    
+    //... trước subCategories cho phép truyền số lượng phần tử không xác định vào
+    //mảng cho dù mảng đó có bao nhiêu phần tử đi nữa. Nếu subCategories 
+    //tồn tại và không null, mảng subCategories sẽ được 
+    //lặp qua và các giá trị _id của từng phần tử sẽ được thêm vào mảng catIds.
     const catIds = [category._id, ...(subCategories?.map((c) => c._id) || [])];
     const params = new URLSearchParams();
     params.set("categories", catIds.join(","));
@@ -115,10 +120,10 @@ export default function CategoryPage({
                   setFiltersChanged(true);
                 }}
               >
-                <option value="price-asc">price, lowest first</option>
-                <option value="price-desc">price, highest first</option>
-                <option value="_id-desc">newest first</option>
-                <option value="_id-asc">oldest first</option>
+                <option value="price-asc">Từ giá thấp</option>
+                <option value="price-desc">Từ giá cao</option>
+                <option value="_id-desc">Sản phẩm mới nhất</option>
+                <option value="_id-asc">Sản phẩm cũ</option>
               </select>
             </Filter>
           </FiltersWrapper>
@@ -127,7 +132,9 @@ export default function CategoryPage({
         {!loadingProducts && (
           <div>
             {products.length > 0 && <ProductsGrid products={products} />}
-            {products.length === 0 && <div>Sorry, no products found</div>}
+            {products.length === 0 && (
+              <div>Xin lỗi, Không tìm thấy sản phẩm</div>
+            )}
           </div>
         )}
       </Center>
