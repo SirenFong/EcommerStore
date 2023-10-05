@@ -4,7 +4,6 @@ import ProductsGrid from "@component/components/ProductsGrid";
 import Title from "@component/components/Title";
 import { mongooseConnect } from "@component/lib/mongoose";
 import { Product } from "@component/models/Product";
-import styled from "styled-components";
 
 export default function ProductsPage({ products, wishedProducts }) {
     return (

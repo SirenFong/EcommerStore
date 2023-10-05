@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@headlessui/react": "^1.7.17",
+    "@mui/material": "^5.14.12",
     "@types/numeral": "^2.0.3",
     "axios": "^1.5.1",
     "buffer": "^6.0.3",
@@ -17,11 +21,20 @@
     "micro": "^10.0.1",
     "mongoose": "^7.5.2",
     "next": "13.2.4",
+<<<<<<< HEAD
     "next-reveal": "^1.0.6",
     "numeral": "^2.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-flying-item": "^1.1.2",
+=======
+    "next-i18next": "^14.0.3",
+    "next-intl": "^3.0.0-beta.19",
+    "numeral": "^2.0.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-intl": "^6.4.7",
+>>>>>>> 3418cf57815ca77cc704269e90d2c6cd2ba44d89
     "react-spinners": "^0.13.8",
     "spinner": "^0.3.4",
     "stripe": "^13.8.0",
