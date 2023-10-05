@@ -3,6 +3,7 @@ import Header from "@component/components/Header";
 import ProductBox from "@component/components/ProductBox";
 import { Category } from "@component/models/Category";
 import { Product } from "@component/models/Product";
+import { RevealWrapper } from "next-reveal";
 import Link from "next/link";
 import styled from "styled-components";
 
@@ -61,12 +62,18 @@ export default function CategoriesPage({ mainCategories, categoriesProducts }) {
             </CategoryTitle>
 
             <CategoryGrid>
-              {categoriesProducts[cat._id].map((p) => (
-                <ProductBox {...p} />
+              {categoriesProducts[cat._id].map((p, index) => (
+                <RevealWrapper delay={index * 50}>
+                  <ProductBox {...p} />
+                </RevealWrapper>
+
               ))}
-              <ShowAllSquare href={"/category/" + cat._id}>
-                Show All &rarr;
-              </ShowAllSquare>
+              <RevealWrapper delay={categoriesProducts[cat._id].length*50}>
+                <ShowAllSquare href={"/category/" + cat._id}>
+                  Show All &rarr;
+                </ShowAllSquare>
+              </RevealWrapper>
+
             </CategoryGrid>
           </CategoryWrapper>
         ))}

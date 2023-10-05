@@ -5,6 +5,8 @@ import ButtonLink from "./ButtonLink";
 import CartIcon from "./icons/CartIcon";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+import FlyingButton from "./FlyingButton";
+import { RevealWrapper } from "next-reveal";
 
 const Bg = styled.div`
   background-color: #222;
@@ -63,7 +65,7 @@ const ButtonsWrapper = styled.div`
 `;
 
 export default function Featured({ product }) {
-  const { addProduct } = useContext(CartContext);
+
 
   function addFeaturedToCart() {
     addProduct((prev) => [product._id]);
@@ -74,29 +76,36 @@ export default function Featured({ product }) {
         <ColumnsWrapper>
           <Column>
             <div>
-              <Title>{product.title}</Title>
-              <Desc>{product.description}</Desc>
-              <ButtonsWrapper>
-                <ButtonLink
-                  href={"/product/" + product._id}
-                  outline={1}
-                  white={1}
-                >
-                  Khám phá ngay
-                </ButtonLink>
-                <Button white onClick={addFeaturedToCart}>
-                  <CartIcon />
-                  Thêm vào giỏ hàng
-                </Button>
-              </ButtonsWrapper>
+
+              <RevealWrapper origin={'left'} delay={0}>
+                <Title>{product.title}</Title>
+                <Desc>{product.description}</Desc>
+                <ButtonsWrapper>
+                  <ButtonLink
+                    href={"/product/" + product._id}
+                    outline={1}
+                    white={1}
+                  >
+                    Khám phá ngay
+                  </ButtonLink>
+                  <FlyingButton white={5} _id={product._id} src={product.images?.[0]}>
+                    <CartIcon />
+                    Thêm vào giỏ hàng
+                  </FlyingButton>
+                </ButtonsWrapper>
+              </RevealWrapper>
+
             </div>
           </Column>
 
           <Column>
-            <img
-              src="https://ecommerstore.s3.amazonaws.com/1696487249570-.jpg"
-              alt=""
-            />
+            <RevealWrapper delay={0}>
+              <img
+                src="https://ecommerstore.s3.amazonaws.com/1696487249570-.jpg"
+                alt=""
+              />
+            </RevealWrapper>
+
           </Column>
         </ColumnsWrapper>
       </Center>

@@ -10,12 +10,13 @@ import CartIcon from "@component/components/icons/CartIcon";
 import { mongooseConnect } from "@component/lib/mongoose";
 import { Product } from "@component/models/Product";
 import styled from "styled-components";
+import FlyingButton from "@component/components/FlyingButton";
 
 const ColWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   @media screen and (min-width: 768px) {
-    grid-template-columns: 0.8fr 1.2fr;
+    grid-template-columns: .8fr 1.2fr;
   }
   gap: 40px;
   margin: 40px 0;
@@ -28,11 +29,8 @@ const PriceRow = styled.div`
 const Price = styled.span`
   font-size: 1.4rem;
 `;
-const Currency = styled.span`
-  font-size: 1.2rem;
-`;
-export default function ProductPage({ product, price }) {
-  const { addProduct } = useContext(CartContext);
+
+export default function ProductPage({ product }) {
   return (
     <>
       <Header />
@@ -46,25 +44,22 @@ export default function ProductPage({ product, price }) {
             <p>{product.description}</p>
             <PriceRow>
               <div>
-                <PriceRow>
-                  <Price>
-                    {product.price.toLocaleString()} <Currency>đ</Currency>
-                  </Price>
-                </PriceRow>
+                <Price>${product.price}</Price>
               </div>
               <div>
-                <Button primary onClick={() => addProduct(product._id)}>
-                  <CartIcon />
-                  Add to cart
-                </Button>
+                <FlyingButton main _id={product._id} src={product.images?.[0]}>
+                  <CartIcon />Add to cart
+                </FlyingButton>
               </div>
             </PriceRow>
           </div>
         </ColWrapper>
+
       </Center>
     </>
   );
 }
+
 export async function getServerSideProps(context) {
   await mongooseConnect();
   const { id } = context.query;
@@ -72,6 +67,6 @@ export async function getServerSideProps(context) {
   return {
     props: {
       product: JSON.parse(JSON.stringify(product)),
-    },
-  };
+    }
+  }
 }

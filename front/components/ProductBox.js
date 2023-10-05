@@ -1,9 +1,12 @@
 import styled from "styled-components";
-import Button from "./Button";
+import Button, { ButtonStyle } from "./Button";
 import CartIcon from "./icons/CartIcon";
 import Link from "next/link";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+
+import { primary } from "@component/lib/color";
+import FlyingButton from "./FlyingButton";
 const ProductWrapper = styled.div``;
 const WhiteBox = styled(Link)`
   background-color: #fff;
@@ -52,7 +55,7 @@ const Price = styled.div`
 
 export default function ProductBox({ _id, title, description, price, images }) {
   const url = "/product/" + _id;
-  const { addProduct } = useContext(CartContext);
+
   const formatter = new Intl.NumberFormat("en-US");
   const formattedPrice = formatter.format(price);
   return (
@@ -66,9 +69,7 @@ export default function ProductBox({ _id, title, description, price, images }) {
         <Title href={url}>{title}</Title>
         <PriceRow>
           <Price>{formattedPrice} đ</Price>
-          <Button primary outline onClick={() => addProduct(_id)}>
-            Thêm vào giỏ hàng
-          </Button>
+          <FlyingButton _id={_id} src={images?.[0]}>Thêm vào giỏ hàng</FlyingButton>
         </PriceRow>
       </ProductInfoBox>
     </ProductWrapper>

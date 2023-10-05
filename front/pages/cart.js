@@ -5,6 +5,7 @@ import Header from "@component/components/Header";
 import Input from "@component/components/Input";
 import Table from "@component/components/Table";
 import axios from "axios";
+import { RevealWrapper } from "next-reveal";
 import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -153,106 +154,112 @@ export default function CartPage() {
       <Header />
       <Center>
         <ColumnsWrapper>
-          <Box>
-            <h2>Đơn hàng của bạn</h2>
-            {!cartProducts?.length && <div>Bạn chưa chọn sản phẩm</div>}
-            {products?.length > 0 && (
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Tên sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Đơn giá</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((product) => (
-                    <tr>
-                      <ProductInfoCell>
-                        <ProductImageBox>
-                          <img src={product.images[0]} alt="" />
-                        </ProductImageBox>
-                        {product.title}
-                      </ProductInfoCell>
-
-                      <td>
-                        <Button onClick={() => lessOfThisProduct(product._id)}>
-                          -
-                        </Button>
-                        <QuantityLabel>
-                          {" "}
-                          {
-                            cartProducts.filter((id) => id === product._id)
-                              .length
-                          }
-                        </QuantityLabel>{" "}
-                        <Button onClick={() => moreOfThisProduct(product._id)}>
-                          +
-                        </Button>
-                      </td>
-                      <td>
-                        {" "}
-                        {(
-                          cartProducts.filter((id) => id === product._id)
-                            .length * product.price
-                        ).toLocaleString()}{" "}
-                        đ
-                      </td>
-                    </tr>
-                  ))}
-
-                  <tr>
-                    <td></td>
-                    <td></td> <td>{total.toLocaleString()} đ</td>
-                  </tr>
-                </tbody>
-              </Table>
-            )}
-          </Box>
-          {!!cartProducts?.length && (
+          <RevealWrapper delay={0}>
             <Box>
-              <h2>NGƯỜI MUA/NHẬN HÀNG</h2>
-              <AddressHolder>
-                <Input
-                  type="text"
-                  placeholder="Tên người nhận"
-                  name="name"
-                  value={name}
-                  onChange={(ev) => setName(ev.target.value)}
-                />
-                <Input
-                  type="text"
-                  placeholder="Số điện thoại"
-                  name="phone"
-                  value={phone}
-                  onChange={(ev) => setPhone(ev.target.value)}
-                />
-              </AddressHolder>
-              <Input
-                type="text"
-                placeholder="Địa chỉ E-mail"
-                name="mail"
-                value={mail}
-                onChange={(ev) => setMail(ev.target.value)}
-              />
-              <Input
-                type="text"
-                placeholder="Postal Code"
-                name="postalcode"
-                value={postalcode}
-                onChange={(ev) => setPostalcode(ev.target.value)}
-              />
-              <Input
-                type="text"
-                placeholder="Địa chỉ nhận hàng"
-                name="address"
-                value={address}
-                onChange={(ev) => setAddress(ev.target.value)}
-              />
-              <Button black block onClick={goToPayment}>
-                Đặt hàng
-              </Button>
+              <h2>Đơn hàng của bạn</h2>
+              {!cartProducts?.length && <div>Bạn chưa chọn sản phẩm</div>}
+              {products?.length > 0 && (
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Tên sản phẩm</th>
+                      <th>Số lượng</th>
+                      <th>Đơn giá</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((product) => (
+                      <tr>
+                        <ProductInfoCell>
+                          <ProductImageBox>
+                            <img src={product.images[0]} alt="" />
+                          </ProductImageBox>
+                          {product.title}
+                        </ProductInfoCell>
+
+                        <td>
+                          <Button onClick={() => lessOfThisProduct(product._id)}>
+                            -
+                          </Button>
+                          <QuantityLabel>
+                            {" "}
+                            {
+                              cartProducts.filter((id) => id === product._id)
+                                .length
+                            }
+                          </QuantityLabel>{" "}
+                          <Button onClick={() => moreOfThisProduct(product._id)}>
+                            +
+                          </Button>
+                        </td>
+                        <td>
+                          {" "}
+                          {(
+                            cartProducts.filter((id) => id === product._id)
+                              .length * product.price
+                          ).toLocaleString()}{" "}
+                          đ
+                        </td>
+                      </tr>
+                    ))}
+
+                    <tr>
+                      <td></td>
+                      <td></td> <td>{total.toLocaleString()} đ</td>
+                    </tr>
+                  </tbody>
+                </Table>
+              )}
             </Box>
+          </RevealWrapper>
+
+          {!!cartProducts?.length && (
+            <RevealWrapper delay={200}>
+              <Box>
+                <h2>NGƯỜI MUA/NHẬN HÀNG</h2>
+                <AddressHolder>
+                  <Input
+                    type="text"
+                    placeholder="Tên người nhận"
+                    name="name"
+                    value={name}
+                    onChange={(ev) => setName(ev.target.value)}
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Số điện thoại"
+                    name="phone"
+                    value={phone}
+                    onChange={(ev) => setPhone(ev.target.value)}
+                  />
+                </AddressHolder>
+                <Input
+                  type="text"
+                  placeholder="Địa chỉ E-mail"
+                  name="mail"
+                  value={mail}
+                  onChange={(ev) => setMail(ev.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="Postal Code"
+                  name="postalcode"
+                  value={postalcode}
+                  onChange={(ev) => setPostalcode(ev.target.value)}
+                />
+                <Input
+                  type="text"
+                  placeholder="Địa chỉ nhận hàng"
+                  name="address"
+                  value={address}
+                  onChange={(ev) => setAddress(ev.target.value)}
+                />
+                <Button black block onClick={goToPayment}>
+                  Đặt hàng
+                </Button>
+              </Box>
+            </RevealWrapper>
+
           )}
         </ColumnsWrapper>
       </Center>

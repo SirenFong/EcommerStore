@@ -3,7 +3,6 @@ import styled, { css } from "styled-components";
 
 export const ButtonStyle = css`
   border: 0;
-
   padding: 5px 15px;
   border-radius: 5px;
   cursor: pointer;
@@ -12,6 +11,7 @@ export const ButtonStyle = css`
   align-items: center;
   text-decoration: none;
   font-weight: 500;
+  font-size:15px
   svg {
     height: 16px;
     margin-right: 5px;
