@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
-import numeral from 'numeral'
+import numeral from "numeral";
 
 export default function ProductForm({
   _id,
@@ -28,23 +28,15 @@ export default function ProductForm({
   const router = useRouter();
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  ////load loại sản phẩm lên thanh select
   const numeral = require("numeral");
+  ////load loại sản phẩm lên thanh select
   useEffect(() => {
     axios.get("/api/categories").then((result) => {
       setCategories(result.data);
     });
   }, []);
 
-  ////
-
-  // const deleteById = (id) => {
-  //   setImages((oldValues) => {
-  //     return oldValues.filter((images) => images.id !== id);
-  //   });
-  // };
-
-  //Copy code trên mạng :v
+  //Xóa theo index :v
   const deleteByIndex = (index) => {
     setImages((oldValues) => {
       return oldValues.filter((_, i) => i !== index);
@@ -53,7 +45,8 @@ export default function ProductForm({
 
   //Giá trị nhận vào title,des,price
   //Xác định bởi _id qua phương thức PUT để cập nhật 1 sản phẩm
-  //Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm hoặc trả về tạo mới sản phẩm
+  //Kiểm tra nếu _id tồn tại sẽ tiến hành cập nhật sản phẩm 
+  //Nếu không sẽ tạo mới sản phẩm
   async function saveProduct(ev) {
     ev.preventDefault();
     const data = {
