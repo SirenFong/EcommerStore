@@ -21,7 +21,16 @@ export default function OrdersPage() {
           <tr>
             <th>Date</th>
             <th>Paid</th>
-            <th>Customer Name</th>
+            <th>Customer Info
+              <tr>
+                <th>Name</th>
+                <th>Mail</th>
+                <th>Phone</th>
+                <th>Address</th>
+              </tr>
+
+
+            </th>
             <th>Products</th>
           </tr>
         </thead>
@@ -42,14 +51,25 @@ export default function OrdersPage() {
                 <td className={order.paid ? "text-green-600" : "text-red-600"}>
                   {order.paid ? "YES" : "NO"}
                 </td>
+
                 <td>
-                  {order.name}
+                  <tr>
+                    <td>{order.name}</td>
+                    <td> {order.mail}</td>
+                    <td>{order.phone}</td>
+                    <td>  {order.postalcode}</td>
+
+                    <td> {order.address}</td>
+
+
+                  </tr>
+
                   <br />
-                  {order.mail}
+
                   <br />
-                  {order.phone} <br /> {order.postalcode}
                   <br />
-                  {order.address}
+                  <br />
+
                 </td>
                 <td>
                   {order.line_items.map((l) => (
