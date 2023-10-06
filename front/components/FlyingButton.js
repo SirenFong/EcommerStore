@@ -27,11 +27,11 @@ const FlyingButtonWrapper = styled.div`
       font-weight:500;
     `}
   }
-  //keyframe dùng để chỉnh hiệu ứng khi thêm vào giỏ hàng
+
   @keyframes fly{
     100%{
       top:0;
-      left:85%;
+      left:65%;
       opacity: 0;
       display:none;
       max-width: 50px;

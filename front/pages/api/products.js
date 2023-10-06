@@ -12,6 +12,7 @@ export default async function handle(req, res) {
   if (categories) {
     productsQuery.category = categories.split(",");
   }
+  ////tìm kiếm sản phẩm
   if (phrase) {
     productsQuery["$or"] = [
       { title: { $regex: phrase, $options: "i" } },

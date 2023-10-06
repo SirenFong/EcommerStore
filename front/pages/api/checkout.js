@@ -13,7 +13,7 @@ export default async function handle(req, res) {
     return;
   }
   //Hàm nhận các thông tin truyền vào từ form điền ở trang thanh toán
-  const { name, phone, mail, postalcode, address, cartProducts } = req.body;
+  const { name, phone, email, postalcode, address, cartProducts } = req.body;
   // await mongooseConnect();
 
   //Lấy thông tin sản phẩm từ cơ sở dữ liệu sau đó hiện danh sách sản phẩm và
@@ -50,7 +50,7 @@ export default async function handle(req, res) {
     line_items,
     name,
     phone,
-    mail,
+    email,
     postalcode,
     address,
     paid: false,
@@ -62,7 +62,7 @@ export default async function handle(req, res) {
   const session = await stripe.checkout.sessions.create({
     line_items,
     mode: "payment",
-    customer_email: mail,
+    customer_email: email,
     success_url: process.env.PUBLIC_URL + "/cart?success=1",
     cancel_url: process.env.PUBLIC_URL + "/cart?canceled=1",
     metadata: { orderId: orderDoc._id.toString() },

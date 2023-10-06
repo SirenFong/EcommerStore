@@ -74,7 +74,7 @@ export default function CartPage() {
   const [products, setProducts] = useState([]);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [mail, setMail] = useState("");
+  const [email, setEmail] = useState("");
   const [postalcode, setPostalcode] = useState("");
   const [address, setAddress] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -119,7 +119,7 @@ export default function CartPage() {
     const response = await axios.post("/api/checkout", {
       name,
       phone,
-      mail,
+      email,
       postalcode,
       address,
       cartProducts,
@@ -236,9 +236,9 @@ export default function CartPage() {
                 <Input
                   type="text"
                   placeholder="Địa chỉ E-mail"
-                  name="mail"
-                  value={mail}
-                  onChange={(ev) => setMail(ev.target.value)}
+                  name="email"
+                  value={email}
+                  onChange={(ev) => setEmail(ev.target.value)}
                 />
                 <Input
                   type="text"

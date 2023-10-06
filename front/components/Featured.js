@@ -7,32 +7,28 @@ import { useContext } from "react";
 import { CartContext } from "./CartContext";
 import FlyingButton from "./FlyingButton";
 import { RevealWrapper } from "next-reveal";
-
 const Bg = styled.div`
   background-color: #222;
-  color: #fff;
+  color:#fff;
   padding: 50px 0;
 `;
-
 const Title = styled.h1`
-  margin: 0;
-  font-weight: normal;
-  font-size: 1.5rem;
+  margin:0;
+  font-weight:normal;
+  font-size:1.5rem;
   @media screen and (min-width: 768px) {
-    font-size: 3rem;
+    font-size:3rem;
   }
 `;
-
 const Desc = styled.p`
-  color: #aaa;
-  font-size: 0.9rem;
+  color:#aaa;
+  font-size:.8rem;
 `;
-
 const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 40px;
-  img {
+  img.main{
     max-width: 100%;
     max-height: 200px;
     display: block;
@@ -40,75 +36,76 @@ const ColumnsWrapper = styled.div`
   }
   div:nth-child(1) {
     order: 2;
+    margin-left: auto;
+    margin-right: auto;
   }
-
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.1fr 0.9fr;
-    div:nth-child(1) {
+    & > div:nth-child(1) {
       order: 0;
     }
-    img {
+    img{
       max-width: 100%;
     }
   }
 `;
-
 const Column = styled.div`
   display: flex;
   align-items: center;
 `;
-
 const ButtonsWrapper = styled.div`
   display: flex;
-  gap: 10px;
-  margin-top: 25px;
+  gap:10px;
+  margin-top:25px;
+`;
+const CenterImg = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const ImgColumn = styled(Column)`
+  & > div{
+    width: 100%;
+  }
+`;
+
+const ContentWrapper = styled.div`
 `;
 
 export default function Featured({ product }) {
-
-
-  function addFeaturedToCart() {
-    addProduct((prev) => [product._id]);
-  }
   return (
     <Bg>
       <Center>
         <ColumnsWrapper>
           <Column>
             <div>
-
               <RevealWrapper origin={'left'} delay={0}>
-                <Title>{product.title}</Title>
-                <Desc>{product.description}</Desc>
-                <ButtonsWrapper>
-                  <ButtonLink
-                    href={"/product/" + product._id}
-                    outline={1}
-                    white={1}
-                  >
-                    Khám phá ngay
-                  </ButtonLink>
-                  <FlyingButton white={5} _id={product._id} src={product.images?.[0]}>
-                    <CartIcon />
-                    Thêm vào giỏ hàng
-                  </FlyingButton>
-                </ButtonsWrapper>
+                <ContentWrapper>
+                  <Title>{product.title}</Title>
+                  <Desc>{product.description}</Desc>
+                  <ButtonsWrapper>
+                    <ButtonLink href={'/product/' + product._id} outline={1} white={1}>Read more</ButtonLink>
+                    <FlyingButton white={1} _id={product._id} src={product.images?.[0]}>
+                      <CartIcon />
+                      Add to cart
+                    </FlyingButton>
+                  </ButtonsWrapper>
+                </ContentWrapper>
               </RevealWrapper>
-
             </div>
           </Column>
-
-          <Column>
+          <ImgColumn>
             <RevealWrapper delay={0}>
-              <img
-                src="https://ecommerstore.s3.amazonaws.com/1696487249570-.jpg"
-                alt=""
-              />
+              <CenterImg>
+                <img className={'main'} src={product.images?.[0]} alt="" />
+              </CenterImg>
             </RevealWrapper>
-
-          </Column>
+          </ImgColumn>
         </ColumnsWrapper>
       </Center>
+
     </Bg>
   );
 }

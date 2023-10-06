@@ -4,7 +4,6 @@ import CartIcon from "./icons/CartIcon";
 import Link from "next/link";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
-
 import { primary } from "@component/lib/color";
 import FlyingButton from "./FlyingButton";
 const ProductWrapper = styled.div``;
