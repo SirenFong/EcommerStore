@@ -98,6 +98,15 @@ export default function CartPage() {
       setIsSuccess(true);
       clearCart();
     }
+    ///load thông tin tk 
+    axios.get('/api/address').then(response => {
+      setName(response.data.name);
+      setPhone(response.data.phone);
+      setEmail(response.data.email);
+      setPostalcode(response.data.postalCode);
+      setAddress(response.data.address);
+
+    });
   }, []);
   //Hàm gọi thêm sản phẩm vào giỏ hàng
   function moreOfThisProduct(id) {
