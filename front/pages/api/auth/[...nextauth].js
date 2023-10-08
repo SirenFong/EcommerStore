@@ -1,7 +1,7 @@
-import NextAuth from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from '@component/lib/mongodb';
+import clientPromise from "@component/lib/mongodb";
 
 
 export const authOptions = {
@@ -12,6 +12,7 @@ export const authOptions = {
     }),
   ],
   adapter: MongoDBAdapter(clientPromise),
+  // sử lý đăng nhập cho admin
 };
 
 export default NextAuth(authOptions);

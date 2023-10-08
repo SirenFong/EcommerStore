@@ -2,15 +2,14 @@ import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
 import Input from "@component/components/Input";
+import ProductBox from "@component/components/ProductBox";
 import Spinner from "@component/components/Spinner";
-import Tabs from "@component/components/Tabs";
 import Title from "@component/components/Title";
 import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const ColsWrapper = styled.div`
@@ -23,15 +22,15 @@ const ColsWrapper = styled.div`
   }
 `;
 
-const AddressHolder = styled.div`
-  display: flex;
-  gap: 5px;
-`;
-
 const WishedProductsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
+`;
+
+const AddressHolder = styled.div`
+  display: flex;
+  gap: 5px;
 `;
 
 export default function AccountPage() {
@@ -41,21 +40,24 @@ export default function AccountPage() {
   const [email, setEmail] = useState("");
   const [postalcode, setPostalcode] = useState("");
   const [address, setAddress] = useState("");
-  const [loaded, setLoaded] = useState(false);
+  const [addressLoaded, setAddressLoaded] = useState(false);
+  const [wishlistLoaded, setWishListLoaded] = useState(false);
+  const [wishedProducts, setWishedProducts] = useState([]);
+
   async function logout() {
     await signOut({
       callbackUrl: process.env.NEXT_PUBLIC_URL,
     });
   }
+
   async function login() {
     await signIn("google");
   }
-
   function saveAddress() {
-    const data = { name, email, phone, postalcode, address };
+    const data = { name, phone, email, postalcode, address };
     axios.put("/api/address", data);
   }
-  //lất thông tin từ monggo lên các thanh input
+
   useEffect(() => {
     axios.get("/api/address").then((response) => {
       setName(response.data.name);
@@ -63,83 +65,107 @@ export default function AccountPage() {
       setEmail(response.data.email);
       setPostalcode(response.data.postalcode);
       setAddress(response.data.address);
-      setLoaded(true);
+      setAddressLoaded(true);
+    });
+    axios.get("/api/wishlist").then((response) => {
+      setWishedProducts(response.data.map((wp) => wp.product));
+      setWishListLoaded(true);
     });
   }, []);
+
+  function productRemovedFromWishList(idToRemove) {
+    setWishedProducts((products) => {
+      return [...products.filter((p) => p._id.toString() !== idToRemove)];
+    });
+  }
   return (
     <>
       <Header />
       <Center>
         <ColsWrapper>
           <div>
-            <RevealWrapper delay={0}>
-              <WhiteBox>
-                <h2>Danh sách</h2>
-              </WhiteBox>
-            </RevealWrapper>
+            <WhiteBox>
+              <RevealWrapper delay={0}>
+                <h2>Danh mục yêu thích</h2>
+                {!wishlistLoaded && <Spinner fullWidth={true} />}
+                {wishlistLoaded && (
+                  <WishedProductsGrid>
+                    {wishedProducts.length > 0 &&
+                      wishedProducts.map((wp) => (
+                        <ProductBox
+                          {...wp}
+                          wished={true}
+                          onRemoveFromWishlist={productRemovedFromWishList}
+                        />
+                      ))}
+                  </WishedProductsGrid>
+                )}
+              </RevealWrapper>
+            </WhiteBox>
           </div>
           <div>
-            <RevealWrapper delay={100}>
-              <WhiteBox>
-                <h2> tài khoản</h2>
-
-                {!loaded && <Spinner fullWidth={true} />}
-                <>
-                  <AddressHolder>
+            <WhiteBox>
+              <RevealWrapper delay={100}>
+                <h2>Thông tin tài khoản</h2>
+                {!addressLoaded && <Spinner fullWidth={true} />}
+                {addressLoaded && (
+                  <>
+                    <AddressHolder>
+                      <Input
+                        type="text"
+                        placeholder="Tên người nhận"
+                        name="name"
+                        value={name}
+                        onChange={(ev) => setName(ev.target.value)}
+                      />
+                      <Input
+                        type="text"
+                        placeholder="Số điện thoại"
+                        name="phone"
+                        value={phone}
+                        onChange={(ev) => setPhone(ev.target.value)}
+                      />
+                    </AddressHolder>
                     <Input
                       type="text"
-                      placeholder="Tên người nhận"
-                      name="name"
-                      value={name}
-                      onChange={(ev) => setName(ev.target.value)}
+                      placeholder="Địa chỉ E-mail"
+                      name="email"
+                      value={email}
+                      onChange={(ev) => setEmail(ev.target.value)}
                     />
                     <Input
                       type="text"
-                      placeholder="Số điện thoại"
-                      name="phone"
-                      value={phone}
-                      onChange={(ev) => setPhone(ev.target.value)}
+                      placeholder="Postal Code"
+                      name="postalcode"
+                      value={postalcode}
+                      onChange={(ev) => setPostalcode(ev.target.value)}
                     />
-                  </AddressHolder>
-                  <Input
-                    type="text"
-                    placeholder="Địa chỉ E-mail"
-                    name="email"
-                    value={email}
-                    onChange={(ev) => setEmail(ev.target.value)}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="Postal Code"
-                    name="postalcode"
-                    value={postalcode}
-                    onChange={(ev) => setPostalcode(ev.target.value)}
-                  />
-                  <Input
-                    type="text"
-                    placeholder="Địa chỉ nhận hàng"
-                    name="address"
-                    value={address}
-                    onChange={(ev) => setAddress(ev.target.value)}
-                  />
-                  <Button black block onClick={saveAddress}>
-                    Lưu
-                  </Button>
-                  <hr />
-                </>
+                    <Input
+                      type="text"
+                      placeholder="Địa chỉ nhận hàng"
+                      name="address"
+                      value={address}
+                      onChange={(ev) => setAddress(ev.target.value)}
+                    />
+                    <Button primary block onClick={saveAddress}>
+                      Lưu thông tin
+                    </Button>
+                  </>
+                )}
 
-                {session && (
-                  <Button primary onClick={logout}>
+                <hr />
+                {session && ( //Nếu tồn tại session thì hiện logout
+                  <Button black onClick={logout}>
                     Logout
                   </Button>
                 )}
-                {!session && (
+                {!session && ( //nếu không thì sẽ login
                   <Button primary onClick={login}>
-                    Login with Google
+                    Login
                   </Button>
                 )}
-              </WhiteBox>
-            </RevealWrapper>
+              </RevealWrapper>
+            </WhiteBox>
           </div>
         </ColsWrapper>
       </Center>

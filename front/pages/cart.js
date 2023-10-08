@@ -98,14 +98,13 @@ export default function CartPage() {
       setIsSuccess(true);
       clearCart();
     }
-    ///load thông tin tk 
-    axios.get('/api/address').then(response => {
+    ///load thông tin tk
+    axios.get("/api/address").then((response) => {
       setName(response.data.name);
       setPhone(response.data.phone);
       setEmail(response.data.email);
-      setPostalcode(response.data.postalCode);
+      setPostalcode(response.data.postalcode);
       setAddress(response.data.address);
-
     });
   }, []);
   //Hàm gọi thêm sản phẩm vào giỏ hàng
@@ -123,7 +122,7 @@ export default function CartPage() {
     const price = products.find((p) => p._id === productId)?.price || 0;
     total += price;
   }
-  ////Đi tới trang web thanh toán
+  //Đi tới trang web thanh toán
   async function goToPayment() {
     const response = await axios.post("/api/checkout", {
       name,
@@ -137,7 +136,7 @@ export default function CartPage() {
       window.location = response.data.url;
     }
   }
-  ////Lấy giá trị từ url của cửa sổ thanh toán nếu succes trả về thông báo
+  //Lấy giá trị từ url của cửa sổ thanh toán nếu succes trả về thông báo
 
   if (isSuccess) {
     return (
@@ -187,7 +186,9 @@ export default function CartPage() {
                         </ProductInfoCell>
 
                         <td>
-                          <Button onClick={() => lessOfThisProduct(product._id)}>
+                          <Button
+                            onClick={() => lessOfThisProduct(product._id)}
+                          >
                             -
                           </Button>
                           <QuantityLabel>
@@ -197,7 +198,9 @@ export default function CartPage() {
                                 .length
                             }
                           </QuantityLabel>{" "}
-                          <Button onClick={() => moreOfThisProduct(product._id)}>
+                          <Button
+                            onClick={() => moreOfThisProduct(product._id)}
+                          >
                             +
                           </Button>
                         </td>
@@ -268,7 +271,6 @@ export default function CartPage() {
                 </Button>
               </Box>
             </RevealWrapper>
-
           )}
         </ColumnsWrapper>
       </Center>
