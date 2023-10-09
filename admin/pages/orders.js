@@ -21,15 +21,14 @@ export default function OrdersPage() {
           <tr>
             <th>Date</th>
             <th>Paid</th>
-            <th>Customer Info
-              <tr>
+            <th>
+              Customer Info
+              {/* <tr>
                 <th>Name</th>
                 <th>Mail</th>
                 <th>Phone</th>
                 <th>Address</th>
-              </tr>
-
-
+              </tr> */}
             </th>
             <th>Products</th>
           </tr>
@@ -54,23 +53,12 @@ export default function OrdersPage() {
 
                 <td>
                   <tr>
-                    <td>{order.name}</td>
-                    <td> {order.mail}</td>
-                    <td>{order.phone}</td>
-                    <td>  {order.postalcode}</td>
-
-                    <td> {order.address}</td>
-
-
+                    <td>Name: {order.name}</td>
+                    <td>Email: {order.email}</td>
+                    <td>Phone: {order.phone}</td>
                   </tr>
-
-                  <br />
-
-                  <br />
-                  <br />
-                  <br />
-
                 </td>
+
                 <td>
                   {order.line_items.map((l) => (
                     <>

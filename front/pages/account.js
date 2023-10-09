@@ -11,6 +11,8 @@ import Spinner from "@component/components/Spinner";
 import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
 import styled from "styled-components";
+import Tabs from "@component/components/Tabs";
+import SingleOrder from "@component/components/SingleOrder";
 
 const ColsWrapper = styled.div`
   display: grid;
@@ -67,7 +69,10 @@ export default function AccountPage() {
   const [address, setAddress] = useState("");
   const [addressLoaded, setAddressLoaded] = useState(true);
   const [wishlistLoaded, setWishListLoaded] = useState(true);
+  const [orderLoaded, setOrderLoaded] = useState(true);
   const [wishedProducts, setWishedProducts] = useState([]);
+  const [activeTab, setActivetab] = useState("Danh sách yêu thích");
+  const [orders, setOrders] = useState([]);
 
   async function logout() {
     await signOut({
@@ -87,8 +92,11 @@ export default function AccountPage() {
     if (!session) {
       return;
     }
+
     setAddressLoaded(false);
     setWishListLoaded(false);
+    setOrderLoaded(false);
+
     axios.get("/api/address").then((response) => {
       setName(response.data.name);
       setPhone(response.data.phone);
@@ -100,6 +108,10 @@ export default function AccountPage() {
     axios.get("/api/wishlist").then((response) => {
       setWishedProducts(response.data.map((wp) => wp.product));
       setWishListLoaded(true);
+    });
+    axios.get("/api/orders").then((response) => {
+      setOrders(response.data);
+      setOrderLoaded(true);
     });
   }, [session]);
 
@@ -116,31 +128,56 @@ export default function AccountPage() {
           <div>
             <WhiteBox>
               <RevealWrapper delay={0}>
-                <h2>Danh mục yêu thích</h2>
-                {!wishlistLoaded && <Spinner fullWidth={true} />}
-                {wishlistLoaded && (
+                <Tabs
+                  tabs={["Danh sách yêu thích", "Đơn đặt hàng"]}
+                  active={activeTab}
+                  onChange={setActivetab}
+                />
+                {activeTab === "Đơn đặt hàng" && (
                   <>
-                    <WishedProductsGrid>
-                      {wishedProducts.length > 0 &&
-                        wishedProducts.map((wp) => (
-                          <ProductBox
-                            key={wp._id}
-                            {...wp}
-                            wished={true}
-                            onRemoveFromWishlist={productRemovedFromWishList}
-                          />
-                        ))}
-                    </WishedProductsGrid>
+                    {!orderLoaded && <Spinner fullWidth={true} />}
 
-                    {wishedProducts.length === 0 && (
-                      <>
-                        {session && (
-                          <>
-                            <p>Bạn chưa thích sản phẩm nào !!</p>
-                          </>
+                    {orderLoaded && (
+                      <div>
+                        {orders.length === 0 && (
+                          <p>Đăng nhập để tạo đơn hàng !!</p>
                         )}
-                        {!session && (
-                          <p>Đăng nhập để thêm sản phẩm yêu thích</p>
+                        {orders.length > 0 &&
+                          orders.map((o) => <SingleOrder {...o} />)}
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "Danh sách yêu thích" && (
+                  <>
+                    {!wishlistLoaded && <Spinner fullWidth={true} />}
+                    {wishlistLoaded && (
+                      <>
+                        <WishedProductsGrid>
+                          {wishedProducts.length > 0 &&
+                            wishedProducts.map((wp) => (
+                              <ProductBox
+                                key={wp._id}
+                                {...wp}
+                                wished={true}
+                                onRemoveFromWishlist={
+                                  productRemovedFromWishList
+                                }
+                              />
+                            ))}
+                        </WishedProductsGrid>
+
+                        {wishedProducts.length === 0 && (
+                          <>
+                            {session && (
+                              <>
+                                <p>Bạn chưa thích sản phẩm nào !!</p>
+                              </>
+                            )}
+                            {!session && (
+                              <p>Đăng nhập để thêm sản phẩm yêu thích</p>
+                            )}
+                          </>
                         )}
                       </>
                     )}

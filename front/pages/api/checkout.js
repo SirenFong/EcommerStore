@@ -3,6 +3,8 @@ import { mongooseConnect } from "@component/lib/mongoose";
 //2 cái import đại diện cho models trong cơ sở dữ liệu
 import { Order } from "@component/models/Order";
 import { Product } from "@component/models/Product";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./auth/[...nextauth]";
 
 const stripe = require("stripe")(process.env.STRIPE_SK);
 
@@ -36,13 +38,15 @@ export default async function handle(req, res) {
       line_items.push({
         quantity,
         price_data: {
-          currency: "vnd",
+          currency: "VND",
           product_data: { name: productInfo.title },
           unit_amount: productInfo.price,
         },
       });
     }
   }
+
+  const session = await getServerSession(req, res, authOptions);
 
   //Tạo một đơn hàng mới trong
   //cơ sở dữ liệu với thông tin của người mua và danh sách các mặt hàng (line_items):
@@ -54,12 +58,15 @@ export default async function handle(req, res) {
     postalcode,
     address,
     paid: false,
+    userEmail: session?.user?.email,
   });
 
-  //Tạo một session chuyển đến trang thanh toán với Stripe dựa trên thông tin đơn hàng:
+  //session theo thông tin tài khoản đang đăng nhập
+  //Nếu không có session thì sẽ không thanh toán được
   //Lưu thông tin email của khách hàng đã điền
   //link thành công và thất bại sẽ được hiển thị khi thanh toán
-  const session = await stripe.checkout.sessions.create({
+  //session stripe
+  const stripeSession = await stripe.checkout.sessions.create({
     line_items,
     mode: "payment",
     customer_email: email,
@@ -70,6 +77,6 @@ export default async function handle(req, res) {
 
   //Trả về URL đến trang thanh toán của Stripe cho client:
   res.json({
-    url: session.url,
+    url: stripeSession.url,
   });
 }
