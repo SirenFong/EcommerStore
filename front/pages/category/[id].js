@@ -1,11 +1,10 @@
+import { Category } from "@component/models/Category";
+import { Product } from "@component/models/Product";
+import { useEffect, useState } from "react";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
 import ProductsGrid from "@component/components/ProductsGrid";
-import Title from "@component/components/Title";
-import { Category } from "@component/models/Category";
-import { Product } from "@component/models/Product";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "@component/components/Spinner";
 

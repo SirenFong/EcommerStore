@@ -1,14 +1,14 @@
-import Center from "@component/components/Center";
-import Header from "@component/components/Header";
-import ProductBox from "@component/components/ProductBox";
 import { Category } from "@component/models/Category";
 import { Product } from "@component/models/Product";
 import { getServerSession } from "next-auth";
 import { RevealWrapper } from "next-reveal";
-import Link from "next/link";
-import styled from "styled-components";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { WishedProduct } from "@component/models/WishedProduct";
+import Center from "@component/components/Center";
+import Header from "@component/components/Header";
+import ProductBox from "@component/components/ProductBox";
+import Link from "next/link";
+import styled from "styled-components";
 
 const CategoryGrid = styled.div`
   display: grid;

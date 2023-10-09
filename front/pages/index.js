@@ -1,11 +1,11 @@
-import Header from "@component/components/Header";
-import Featured from "./../components/Featured";
-import { mongooseConnect } from "@component/lib/mongoose";
-import { Product } from "@component/models/Product";
-import NewProducts from "@component/components/NewProducts";
 import { WishedProduct } from "@component/models/WishedProduct";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./api/auth/[...nextauth]";
+import { mongooseConnect } from "@component/lib/mongoose";
+import { Product } from "@component/models/Product";
+import Header from "@component/components/Header";
+import Featured from "./../components/Featured";
+import NewProducts from "@component/components/NewProducts";
 
 export default function HomePage({
   featuredProduct,

@@ -1,17 +1,16 @@
+import { signIn, signOut, useSession } from "next-auth/react";
+import { RevealWrapper } from "next-reveal";
+import { useEffect, useState } from "react";
+import { FaGoogle } from "react-icons/fa";
 import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
 import Input from "@component/components/Input";
 import ProductBox from "@component/components/ProductBox";
 import Spinner from "@component/components/Spinner";
-import Title from "@component/components/Title";
 import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { RevealWrapper } from "next-reveal";
-import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { FaGoogle } from "react-icons/fa";
 
 const ColsWrapper = styled.div`
   display: grid;

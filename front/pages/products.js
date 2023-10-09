@@ -1,12 +1,12 @@
-import Center from "@component/components/Center";
-import Header from "@component/components/Header";
-import ProductsGrid from "@component/components/ProductsGrid";
-import Title from "@component/components/Title";
 import { mongooseConnect } from "@component/lib/mongoose";
 import { Product } from "@component/models/Product";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { WishedProduct } from "@component/models/WishedProduct";
 import { getServerSession } from "next-auth";
+import Center from "@component/components/Center";
+import Header from "@component/components/Header";
+import ProductsGrid from "@component/components/ProductsGrid";
+import Title from "@component/components/Title";
 
 export default function ProductsPage({ products, wishedProducts }) {
   return (

@@ -1,14 +1,12 @@
-import Button from "@component/components/Button";
-import { CartContext } from "@component/components/CartContext";
-import { useContext } from "react";
+import { mongooseConnect } from "@component/lib/mongoose";
+import { Product } from "@component/models/Product";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
 import ProductImages from "@component/components/ProductImages";
 import Title from "@component/components/Title";
 import WhiteBox from "@component/components/WhiteBox";
 import CartIcon from "@component/components/icons/CartIcon";
-import { mongooseConnect } from "@component/lib/mongoose";
-import { Product } from "@component/models/Product";
+
 import styled from "styled-components";
 import FlyingButton from "@component/components/FlyingButton";
 
@@ -16,7 +14,7 @@ const ColWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   @media screen and (min-width: 768px) {
-    grid-template-columns: .8fr 1.2fr;
+    grid-template-columns: 0.8fr 1.2fr;
   }
   gap: 40px;
   margin: 40px 0;
@@ -44,17 +42,17 @@ export default function ProductPage({ product }) {
             <p>{product.description}</p>
             <PriceRow>
               <div>
-                <Price>{(product.price).toLocaleString()} đ</Price>
+                <Price>{product.price.toLocaleString()} đ</Price>
               </div>
               <div>
                 <FlyingButton main _id={product._id} src={product.images?.[0]}>
-                  <CartIcon />Thêm vào giỏ 
+                  <CartIcon />
+                  Thêm vào giỏ
                 </FlyingButton>
               </div>
             </PriceRow>
           </div>
         </ColWrapper>
-
       </Center>
     </>
   );
@@ -67,6 +65,6 @@ export async function getServerSideProps(context) {
   return {
     props: {
       product: JSON.parse(JSON.stringify(product)),
-    }
-  }
+    },
+  };
 }
