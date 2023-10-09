@@ -44,11 +44,11 @@ export default function ProductPage({ product }) {
             <p>{product.description}</p>
             <PriceRow>
               <div>
-                <Price>${product.price}</Price>
+                <Price>{(product.price).toLocaleString()} đ</Price>
               </div>
               <div>
                 <FlyingButton main _id={product._id} src={product.images?.[0]}>
-                  <CartIcon />Add to cart
+                  <CartIcon />Thêm vào giỏ 
                 </FlyingButton>
               </div>
             </PriceRow>

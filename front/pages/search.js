@@ -26,6 +26,7 @@ export default function SearchPage() {
   const [phrase, setPhrase] = useState('');
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  
   ///Được sử dụng để delay việc thực thi một hàm nào đó. Ví dụ khi user nhập vào ô search, chúng ta không thực thi ngay câu lệnh tìm kiếm mà đợi một khoảng thời gian sau khi user đã ngừng việc nhập.
   const debouncedSearch = useCallback(
     debounce(searchProducts, 500), []

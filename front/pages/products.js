@@ -8,13 +8,13 @@ import { authOptions } from "./api/auth/[...nextauth]";
 import { WishedProduct } from "@component/models/WishedProduct";
 import { getServerSession } from "next-auth";
 
-export default function ProductsPage({ products, wishedProduct }) {
+export default function ProductsPage({ products, wishedProducts }) {
   return (
     <>
       <Header />
       <Center>
         <Title>Xem tất cả</Title>
-        <ProductsGrid products={products} wishedProduct={wishedProduct} />
+        <ProductsGrid products={products} wishedProducts={wishedProducts} />
       </Center>
     </>
   );
@@ -25,23 +25,17 @@ export async function getServerSideProps(ctx) {
   const products = await Product.find({}, null, { sort: { _id: -1 } });
 
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
-  // const { user } = await getServerSession(ctx.req, ctx.res, authOptions);
-
-  const wishedNewProducts = session?.user
+  const wishedProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session.user.email,
-        product: newProducts.map((p) => p._id.toString()),
+        userEmail: session?.user.email,
+        product: products.map((p) => p._id.toString()),
       })
     : [];
-  //   const wishedProducts = await WishedProduct.find({
-  //     userEmail: user.email,
-  //     product: products.map((p) => p._id.toString()),
-  //   });
 
   return {
     props: {
       products: JSON.parse(JSON.stringify(products)),
-      wishedProduct: wishedProducts.map((i) => i.product.toString()),
+      wishedProducts: wishedProducts.map((i) => i.product.toString()),
     },
   };
 }

@@ -22,6 +22,31 @@ const ColsWrapper = styled.div`
   }
 `;
 
+const ColumnsWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1.2fr 0.8fr;
+  }
+  gap: 40px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  table thead tr th:nth-child(3),
+  table tbody tr td:nth-child(3),
+  table tbody tr.subtotal td:nth-child(2) {
+    text-align: right;
+  }
+  table tr.subtotal td {
+    padding: 15px 0;
+  }
+  table tbody tr.subtotal td:nth-child(2) {
+    font-size: 1.4rem;
+  }
+  tr.total td {
+    font-weight: bold;
+  }
+`;
+
 const WishedProductsGrid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -40,8 +65,8 @@ export default function AccountPage() {
   const [email, setEmail] = useState("");
   const [postalcode, setPostalcode] = useState("");
   const [address, setAddress] = useState("");
-  const [addressLoaded, setAddressLoaded] = useState(false);
-  const [wishlistLoaded, setWishListLoaded] = useState(false);
+  const [addressLoaded, setAddressLoaded] = useState(true);
+  const [wishlistLoaded, setWishListLoaded] = useState(true);
   const [wishedProducts, setWishedProducts] = useState([]);
 
   async function logout() {
@@ -59,6 +84,11 @@ export default function AccountPage() {
   }
 
   useEffect(() => {
+    if (!session) {
+      return;
+    }
+    setAddressLoaded(false);
+    setWishListLoaded(false);
     axios.get("/api/address").then((response) => {
       setName(response.data.name);
       setPhone(response.data.phone);
@@ -71,7 +101,7 @@ export default function AccountPage() {
       setWishedProducts(response.data.map((wp) => wp.product));
       setWishListLoaded(true);
     });
-  }, []);
+  }, [session]);
 
   function productRemovedFromWishList(idToRemove) {
     setWishedProducts((products) => {
@@ -89,16 +119,32 @@ export default function AccountPage() {
                 <h2>Danh mục yêu thích</h2>
                 {!wishlistLoaded && <Spinner fullWidth={true} />}
                 {wishlistLoaded && (
-                  <WishedProductsGrid>
-                    {wishedProducts.length > 0 &&
-                      wishedProducts.map((wp) => (
-                        <ProductBox
-                          {...wp}
-                          wished={true}
-                          onRemoveFromWishlist={productRemovedFromWishList}
-                        />
-                      ))}
-                  </WishedProductsGrid>
+                  <>
+                    <WishedProductsGrid>
+                      {wishedProducts.length > 0 &&
+                        wishedProducts.map((wp) => (
+                          <ProductBox
+                            key={wp._id}
+                            {...wp}
+                            wished={true}
+                            onRemoveFromWishlist={productRemovedFromWishList}
+                          />
+                        ))}
+                    </WishedProductsGrid>
+
+                    {wishedProducts.length === 0 && (
+                      <>
+                        {session && (
+                          <>
+                            <p>Bạn chưa thích sản phẩm nào !!</p>
+                          </>
+                        )}
+                        {!session && (
+                          <p>Đăng nhập để thêm sản phẩm yêu thích</p>
+                        )}
+                      </>
+                    )}
+                  </>
                 )}
               </RevealWrapper>
             </WhiteBox>
@@ -106,9 +152,9 @@ export default function AccountPage() {
           <div>
             <WhiteBox>
               <RevealWrapper delay={100}>
-                <h2>Thông tin tài khoản</h2>
+                <h2>{session ? "Thông tin tài khoản" : "Đăng nhập"}</h2>
                 {!addressLoaded && <Spinner fullWidth={true} />}
-                {addressLoaded && (
+                {addressLoaded && session && (
                   <>
                     <AddressHolder>
                       <Input
@@ -152,16 +198,15 @@ export default function AccountPage() {
                     </Button>
                   </>
                 )}
-
                 <hr />
                 {session && ( //Nếu tồn tại session thì hiện logout
                   <Button black onClick={logout}>
-                    Logout
+                    Đăng xuất
                   </Button>
                 )}
                 {!session && ( //nếu không thì sẽ login
                   <Button primary onClick={login}>
-                    Login
+                    Đăng nhập với Google
                   </Button>
                 )}
               </RevealWrapper>
