@@ -11,6 +11,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { FaGoogle } from "react-icons/fa";
 
 const ColsWrapper = styled.div`
   display: grid;
@@ -206,7 +207,7 @@ export default function AccountPage() {
                 )}
                 {!session && ( //nếu không thì sẽ login
                   <Button primary onClick={login}>
-                    Đăng nhập với Google
+                    <FaGoogle /> Đăng nhập với Google
                   </Button>
                 )}
               </RevealWrapper>
