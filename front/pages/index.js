@@ -6,6 +6,7 @@ import { Product } from "@component/models/Product";
 import Header from "@component/components/Header";
 import Featured from "./../components/Featured";
 import NewProducts from "@component/components/NewProducts";
+import { Setting } from "@component/models/Setting";
 
 export default function HomePage({
   featuredProduct,
@@ -23,7 +24,10 @@ export default function HomePage({
 //Connect tới admin để hiển thị sản phẩm theo id
 export async function getServerSideProps(ctx) {
   await mongooseConnect();
-  const featuredProductId = "651e57a55303da6a212ef2f4";
+  const featuredProductSetting = await Setting.findOne({
+    name: "featuredProductId",
+  });
+  const featuredProductId = featuredProductSetting.value;
   const featuredProduct = await Product.findById(featuredProductId);
   const newProducts = await Product.find({}, null, {
     sort: { _id: -1 },
