@@ -28,12 +28,15 @@ export default function ProductForm({
   const router = useRouter();
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
   const numeral = require("numeral");
   ////load loại sản phẩm lên thanh select
   useEffect(() => {
-    axios.get("/api/categories").then((result) => {
+    setCategoriesLoading(true);
+    axios.get('/api/categories').then(result => {
       setCategories(result.data);
-    });
+      setCategoriesLoading(false);
+    })
   }, []);
 
   //Xóa theo index :v
@@ -144,11 +147,9 @@ export default function ProductForm({
           ))}
       </select>
 
-      {/* {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-        <div className="flex gap-1">
-          {p.name}
-        </div>
-      ))} */}
+      {categoriesLoading && (
+        <Spinner />
+      )}
 
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((p) => (

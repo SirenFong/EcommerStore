@@ -1,17 +1,20 @@
 import Layout from "@/components/Layout";
+import Spinner from "@/components/Spinner";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   /**useEffect gọi tới cái API cũng như trả về data */
   /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
   /**hiển thị danh sách sản phẩm trong hàm useState */
   useEffect(() => {
+    setIsLoading(true)
     axios.get("/api/products").then((response) => {
       setProducts(response.data);
+      setIsLoading(false)
     });
   }, []);
 
@@ -35,6 +38,18 @@ export default function Products() {
           </tr>
         </thead>
         <tbody>
+          {isLoading && (
+            <tr>
+              <td colSpan={2} >
+                <div className="py-4">
+                  <Spinner fullWidth={true} />
+                </div>
+
+              </td>
+            </tr>
+
+          )}
+
           {products.map((product) => (
             <tr key={product._id}>
               <td>{product.title}</td>

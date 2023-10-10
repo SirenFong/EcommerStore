@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { withSwal } from "react-sweetalert2";
@@ -9,7 +10,7 @@ function Categories({ swal }) {
   const [parentCategory, setParentCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const [properties, setProperties] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false);
   /**useEffect gọi tới cái API cũng như trả về data của loại sản phẩm*/
   /**dưới đây là trả về api lấy thông tin loại sản phẩm để hiển thị */
   /**hiển thị danh sách loại sản phẩm trong hàm useState */
@@ -17,8 +18,10 @@ function Categories({ swal }) {
     fetchCategories();
   }, []);
   function fetchCategories() {
+    setIsLoading(true);
     axios.get("/api/categories").then((response) => {
       setCategories(response.data);
+      setIsLoading(false);
     });
   }
 
@@ -214,6 +217,17 @@ function Categories({ swal }) {
             </tr>
           </thead>
           <tbody>
+            {isLoading && (
+              <tr>
+                <td colSpan={4} >
+                  <div className="py-4">
+                    <Spinner fullWidth={true} />
+                  </div>
+
+                </td>
+              </tr>
+
+            )}
             {categories.length > 0 &&
               categories.map((category, properties) => (
                 <tr key={category._id}>
