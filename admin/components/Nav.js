@@ -8,20 +8,24 @@ export default function Nav({ show }) {
   const inactiveLink = "flex gap-1 p-1";
   const activeLink = inactiveLink + " bg-highlight text-black rounded-sm ";
   //Được sử dụng như tạo 1 đường dẫn tới cho trang web đồng thời kích thoạt hiệu ứng khi đang ở trang web đó
-  const inactiveIcon = 'w-6 h-6';
-  const activeIcon = inactiveIcon + ' text-primary';
+  const inactiveIcon = "w-6 h-6";
+  const activeIcon = inactiveIcon + " text-primary";
   //Hiệu ứng màu khi đang ở trang được chọn
   const router = useRouter();
   //Direction tới đường dẫn dựa theo pathname
   const { pathname } = router;
   //hàm đăng xuất và đẩy về localhost
   async function logout() {
-    await router.push('/')
-    await signOut()
+    await router.push("/");
+    await signOut();
   }
   return (
-    <aside className={(show ? 'left-0' : '-left-full') + " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"}>
-
+    <aside
+      className={
+        (show ? "left-0" : "-left-full") +
+        " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"
+      }
+    >
       <div className="mb-4 mr-4">
         <Logo />
       </div>
@@ -37,7 +41,7 @@ export default function Nav({ show }) {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            className={pathname === '/' ? activeIcon : inactiveIcon}
+            className={pathname === "/" ? activeIcon : inactiveIcon}
           >
             <path
               stroke-linecap="round"
@@ -58,7 +62,9 @@ export default function Nav({ show }) {
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            className={pathname.includes('/products') ? activeIcon : inactiveIcon}
+            className={
+              pathname.includes("/products") ? activeIcon : inactiveIcon
+            }
           >
             <path
               stroke-linecap="round"
@@ -69,25 +75,40 @@ export default function Nav({ show }) {
           Sản phẩm
         </Link>
         <Link
-          className={pathname.includes("/categories") ? activeLink : inactiveLink}
+          className={
+            pathname.includes("/categories") ? activeLink : inactiveLink
+          }
           href={"/categories"}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke-width="1.5" stroke="currentColor"
-            className={pathname.includes('/categories') ? activeIcon : inactiveIcon}>
-            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-          </svg>
-
-          Loại Sản phẩm
-        </Link>
-        <Link className={pathname.includes("/orders") ? activeLink : inactiveLink} href={"/orders"}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
-            className={pathname.includes('/orders') ? activeIcon : inactiveIcon}
+            className={
+              pathname.includes("/categories") ? activeIcon : inactiveIcon
+            }
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+            />
+          </svg>
+          Loại Sản phẩm
+        </Link>
+        <Link
+          className={pathname.includes("/orders") ? activeLink : inactiveLink}
+          href={"/orders"}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            className={pathname.includes("/orders") ? activeIcon : inactiveIcon}
           >
             <path
               stroke-linecap="round"
@@ -97,18 +118,47 @@ export default function Nav({ show }) {
           </svg>
           Đơn đặt hàng
         </Link>
-        <button onClick={logout} className={inactiveLink} >
-          <svg xmlns="http://www.w3.org/2000/svg"
-            fill="none" viewBox="0 0 24 24"
+
+        <Link
+          className={pathname.includes("/admins") ? activeLink : inactiveLink}
+          href={"/admins"}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            className={pathname.includes("/admins") ? activeIcon : inactiveIcon}
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+            />
+          </svg>
+          Tài khoản
+        </Link>
+        <button onClick={logout} className={inactiveLink}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
             strokeWidth={1.5}
             stroke="currentColor"
-            className={pathname.includes('/settings') ? activeIcon : inactiveIcon}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+            className={
+              pathname.includes("/settings") ? activeIcon : inactiveIcon
+            }
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+            />
           </svg>
-
           Đăng xuất
         </button>
       </nav>
-    </ aside>
+    </aside>
   );
 }

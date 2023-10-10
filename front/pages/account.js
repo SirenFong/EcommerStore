@@ -139,8 +139,11 @@ export default function AccountPage() {
 
                     {orderLoaded && (
                       <div>
-                        {orders.length === 0 && (
-                          <p>Đăng nhập để tạo đơn hàng !!</p>
+                        {orders.length === 0 && !session &&(
+                          <p>Đăng nhập để xem đơn hàng !!</p>
+                        )}
+                      {orders.length === 0 && session &&(
+                          <p>Bạn chưa có đơn hàng nào !!</p>
                         )}
                         {orders.length > 0 &&
                           orders.map((o) => <SingleOrder {...o} />)}
