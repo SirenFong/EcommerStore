@@ -2,7 +2,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
-
 import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
@@ -13,14 +12,7 @@ import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
 import styled from "styled-components";
 import Tabs from "@component/components/Tabs";
-import { withSwal } from "react-sweetalert2";
 import SingleOrder from "@component/components/SingleOrder";
-
-const ErrorMessage = styled.p`
-  color: red;
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
-`;
 
 const ColsWrapper = styled.div`
   display: grid;
@@ -68,7 +60,7 @@ const AddressHolder = styled.div`
   gap: 5px;
 `;
 
-function AccountPage({ swal }) {
+export default function AccountPage() {
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -81,7 +73,6 @@ function AccountPage({ swal }) {
   const [wishedProducts, setWishedProducts] = useState([]);
   const [activeTab, setActivetab] = useState("Danh sách yêu thích");
   const [orders, setOrders] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   async function logout() {
     await signOut({
@@ -92,15 +83,9 @@ function AccountPage({ swal }) {
   async function login() {
     await signIn("google");
   }
-  async function saveAddress() {
-    setIsLoading(true);
-    const data = { name, email, phone, postalcode, address };
+  function saveAddress() {
+    const data = { name, phone, email, postalcode, address };
     axios.put("/api/address", data);
-    setIsLoading(false);
-    await swal.fire({
-      title: "Cập nhật thành công",
-      icon: "success",
-    });
   }
 
   useEffect(() => {
@@ -141,7 +126,7 @@ function AccountPage({ swal }) {
       <Center>
         <ColsWrapper>
           <div>
-            <WhiteBox onSubmit={saveAddress}>
+            <WhiteBox>
               <RevealWrapper delay={0}>
                 <Tabs
                   tabs={["Danh sách yêu thích", "Đơn đặt hàng"]}
@@ -232,8 +217,7 @@ function AccountPage({ swal }) {
                       placeholder="Địa chỉ E-mail"
                       name="email"
                       value={email}
-                      readOnly
-                      style={{ color: "darkgrey" }}
+                      onChange={(ev) => setEmail(ev.target.value)}
                     />
                     <Input
                       type="text"
@@ -249,7 +233,6 @@ function AccountPage({ swal }) {
                       value={address}
                       onChange={(ev) => setAddress(ev.target.value)}
                     />
-
                     <Button primary block onClick={saveAddress}>
                       Cập nhật
                     </Button>
@@ -274,5 +257,3 @@ function AccountPage({ swal }) {
     </>
   );
 }
-
-export default withSwal(({ swal }) => <AccountPage swal={swal} />);
