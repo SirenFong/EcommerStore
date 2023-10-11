@@ -2,6 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
+
 import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
@@ -91,15 +92,16 @@ function AccountPage({ swal }) {
   async function login() {
     await signIn("google");
   }
-  const saveAddress = handleSubmit(async (data) => {
+  async function saveAddress() {
     setIsLoading(true);
+    const data = { name, email, phone, postalcode, address };
     axios.put("/api/address", data);
     setIsLoading(false);
     await swal.fire({
       title: "Cập nhật thành công",
       icon: "success",
     });
-  });
+  }
 
   useEffect(() => {
     if (!session) {
@@ -247,6 +249,7 @@ function AccountPage({ swal }) {
                       value={address}
                       onChange={(ev) => setAddress(ev.target.value)}
                     />
+
                     <Button primary block onClick={saveAddress}>
                       Cập nhật
                     </Button>
