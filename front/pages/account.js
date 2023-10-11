@@ -2,6 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
+import { useForm, Controller } from "react-hook-form";
 import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
@@ -12,7 +13,14 @@ import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
 import styled from "styled-components";
 import Tabs from "@component/components/Tabs";
+import { withSwal } from "react-sweetalert2";
 import SingleOrder from "@component/components/SingleOrder";
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+`;
 
 const ColsWrapper = styled.div`
   display: grid;
@@ -60,7 +68,12 @@ const AddressHolder = styled.div`
   gap: 5px;
 `;
 
-export default function AccountPage() {
+function AccountPage({ swal }) {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -73,6 +86,7 @@ export default function AccountPage() {
   const [wishedProducts, setWishedProducts] = useState([]);
   const [activeTab, setActivetab] = useState("Danh sách yêu thích");
   const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function logout() {
     await signOut({
@@ -83,10 +97,15 @@ export default function AccountPage() {
   async function login() {
     await signIn("google");
   }
-  function saveAddress() {
-    const data = { name, phone, email, postalcode, address };
+  const saveAddress = handleSubmit(async (data) => {
+    setIsLoading(true);
     axios.put("/api/address", data);
-  }
+    setIsLoading(false);
+    await swal.fire({
+      title: "Cập nhật thành công",
+      icon: "success",
+    });
+  });
 
   useEffect(() => {
     if (!session) {
@@ -126,7 +145,7 @@ export default function AccountPage() {
       <Center>
         <ColsWrapper>
           <div>
-            <WhiteBox>
+            <WhiteBox onSubmit={saveAddress}>
               <RevealWrapper delay={0}>
                 <Tabs
                   tabs={["Danh sách yêu thích", "Đơn đặt hàng"]}
@@ -197,27 +216,49 @@ export default function AccountPage() {
                 {addressLoaded && session && (
                   <>
                     <AddressHolder>
-                      <Input
-                        type="text"
-                        placeholder="Tên người nhận"
+                      <Controller
+                        control={control}
+                        defaultValue=""
+                        rules={{ required: "Tên không được trống" }}
                         name="name"
-                        value={name}
-                        onChange={(ev) => setName(ev.target.value)}
+                        render={({ field }) => (
+                          <Input
+                            type="text"
+                            placeholder="Tên người nhận"
+                            name="name"
+                            value={field.value}
+                            onChange={(ev) => field.onChange(ev.target.value)}
+                          />
+                        )}
                       />
-                      <Input
-                        type="text"
-                        placeholder="Số điện thoại"
+
+                      <Controller
+                        control={control}
+                        defaultValue=""
+                        rules={{ required: "SĐT không được trống" }}
                         name="phone"
-                        value={phone}
-                        onChange={(ev) => setPhone(ev.target.value)}
+                        render={({ field }) => (
+                          <Input
+                            type="text"
+                            placeholder="Số điện thoại"
+                            name="phone"
+                            value={field.value}
+                            onChange={(ev) => field.onChange(ev.target.value)}
+                          />
+                        )}
                       />
                     </AddressHolder>
+                    <ErrorMessage>
+                      {errors.name && <p>{errors.name.message}</p>}
+                      {errors.phone && <p>{errors.phone.message}</p>}
+                    </ErrorMessage>
                     <Input
                       type="text"
                       placeholder="Địa chỉ E-mail"
                       name="email"
                       value={email}
-                      onChange={(ev) => setEmail(ev.target.value)}
+                      readOnly
+                      style={{ color: "darkgrey" }}
                     />
                     <Input
                       type="text"
@@ -226,13 +267,25 @@ export default function AccountPage() {
                       value={postalcode}
                       onChange={(ev) => setPostalcode(ev.target.value)}
                     />
-                    <Input
-                      type="text"
-                      placeholder="Địa chỉ nhận hàng"
+                    <Controller
+                      control={control}
+                      defaultValue=""
+                      rules={{ required: "Địa chỉ không để trống" }}
                       name="address"
-                      value={address}
-                      onChange={(ev) => setAddress(ev.target.value)}
+                      render={({ field }) => (
+                        <Input
+                          type="text"
+                          placeholder="Địa chỉ"
+                          name="address"
+                          value={field.value}
+                          onChange={(ev) => field.onChange(ev.target.value)}
+                        />
+                      )}
                     />
+                    <ErrorMessage>
+                      {errors.address && <p>{errors.address.message}</p>}
+                    </ErrorMessage>
+
                     <Button primary block onClick={saveAddress}>
                       Cập nhật
                     </Button>
@@ -257,3 +310,5 @@ export default function AccountPage() {
     </>
   );
 }
+
+export default withSwal(({ swal }) => <AccountPage swal={swal} />);

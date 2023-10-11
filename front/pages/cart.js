@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "@component/components/CartContext";
+import { useForm, Controller } from "react-hook-form";
 import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
@@ -9,6 +10,12 @@ import Input from "@component/components/Input";
 import Table from "@component/components/Table";
 import axios from "axios";
 import styled from "styled-components";
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+`;
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -102,11 +109,10 @@ export default function CartPage() {
       clearCart();
     }
 
-    axios.get('/api/settings?name=shippingFee').then(res => {
+    axios.get("/api/settings?name=shippingFee").then((res) => {
       setShippingFee(res.data.value);
-    })
+    });
   }, []);
-
 
   useEffect(() => {
     if (!session) {
@@ -152,10 +158,9 @@ export default function CartPage() {
   //tinhs tong tien hoa don
   let productsTotal = 0;
   for (const productId of cartProducts) {
-    const price = products.find(p => p._id === productId)?.price || 0;
+    const price = products.find((p) => p._id === productId)?.price || 0;
     productsTotal += price;
   }
-
 
   //Lấy giá trị từ url của cửa sổ thanh toán nếu succes trả về thông báo
 
@@ -237,15 +242,20 @@ export default function CartPage() {
                     ))}
                     <tr className="subtotal">
                       <td colSpan={2}>Tổng giá trị sản phẩm</td>
-                      <td>{productsTotal} đ</td>
+                      <td>{productsTotal.toLocaleString()} đ</td>
                     </tr>
                     <tr className="subtotal">
                       <td colSpan={2}>Tiền ship</td>
-                      <td>{shippingFee} đ</td>
+                      <td>{shippingFee?.toLocaleString()} đ</td>
                     </tr>
                     <tr className="subtotal total">
                       <td colSpan={2}>Tổng hóa đơn</td>
-                      <td>{productsTotal + parseInt(shippingFee || 0)} đ</td>
+                      <td>
+                        {(
+                          productsTotal + parseInt(shippingFee || 0)
+                        ).toLocaleString()}{" "}
+                        đ
+                      </td>
                     </tr>
                   </tbody>
                 </Table>
@@ -278,7 +288,8 @@ export default function CartPage() {
                   placeholder="Địa chỉ E-mail"
                   name="email"
                   value={email}
-                  onChange={(ev) => setEmail(ev.target.value)}
+                  readOnly
+                  style={{ color: "darkgrey" }}
                 />
                 <Input
                   type="text"
