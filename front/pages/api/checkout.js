@@ -5,6 +5,7 @@ import { Order } from "@component/models/Order";
 import { Product } from "@component/models/Product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
+import { Setting } from "@component/models/Setting";
 
 const stripe = require("stripe")(process.env.STRIPE_SK);
 
@@ -24,6 +25,7 @@ export default async function handle(req, res) {
   const productsIds = cartProducts;
   const uniqueIds = [...new Set(productsIds)];
   const productsInfos = await Product.find({ _id: uniqueIds });
+  ///
 
   //Tạo một mảng các danh sách dựa trên sản phẩm trong cơ sở dữ liệu và số lượng
   //sản phẩm trong giỏ hàng
@@ -60,6 +62,8 @@ export default async function handle(req, res) {
     paid: false,
     userEmail: session?.user?.email,
   });
+  const shippingFeeSetting = await Setting.findOne({ name: 'shippingFee' });
+  const shippingFeeCents = parseInt(shippingFeeSetting.value || '0');
 
   //session theo thông tin tài khoản đang đăng nhập
   //Nếu không có session thì sẽ không thanh toán được
@@ -73,6 +77,15 @@ export default async function handle(req, res) {
     success_url: process.env.PUBLIC_URL + "/cart?success=1",
     cancel_url: process.env.PUBLIC_URL + "/cart?canceled=1",
     metadata: { orderId: orderDoc._id.toString() },
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          display_name: 'shipping fee',
+          type: 'fixed_amount',
+          fixed_amount: { amount: shippingFeeCents, currency: 'VND' },
+        },
+      }
+    ],
   });
 
   //Trả về URL đến trang thanh toán của Stripe cho client:

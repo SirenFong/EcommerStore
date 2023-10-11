@@ -80,6 +80,7 @@ export default function CartPage() {
   const [postalcode, setPostalcode] = useState("");
   const [address, setAddress] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [shippingFee, setShippingFee] = useState(null);
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post("/api/cart", { ids: cartProducts }).then((response) => {
@@ -100,8 +101,12 @@ export default function CartPage() {
       setIsSuccess(true);
       clearCart();
     }
-    ///load thông tin tk
+
+    axios.get('/api/settings?name=shippingFee').then(res => {
+      setShippingFee(res.data.value);
+    })
   }, []);
+
 
   useEffect(() => {
     if (!session) {
@@ -144,6 +149,14 @@ export default function CartPage() {
       window.location = response.data.url;
     }
   }
+  //tinhs tong tien hoa don
+  let productsTotal = 0;
+  for (const productId of cartProducts) {
+    const price = products.find(p => p._id === productId)?.price || 0;
+    productsTotal += price;
+  }
+
+
   //Lấy giá trị từ url của cửa sổ thanh toán nếu succes trả về thông báo
 
   if (isSuccess) {
@@ -222,10 +235,17 @@ export default function CartPage() {
                         </td>
                       </tr>
                     ))}
-
-                    <tr>
-                      <td></td>
-                      <td></td> <td>{total.toLocaleString()} đ</td>
+                    <tr className="subtotal">
+                      <td colSpan={2}>Tổng giá trị sản phẩm</td>
+                      <td>{productsTotal} đ</td>
+                    </tr>
+                    <tr className="subtotal">
+                      <td colSpan={2}>Tiền ship</td>
+                      <td>{shippingFee} đ</td>
+                    </tr>
+                    <tr className="subtotal total">
+                      <td colSpan={2}>Tổng hóa đơn</td>
+                      <td>{productsTotal + parseInt(shippingFee || 0)} đ</td>
                     </tr>
                   </tbody>
                 </Table>
