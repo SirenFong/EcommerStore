@@ -216,42 +216,21 @@ function AccountPage({ swal }) {
                 {addressLoaded && session && (
                   <>
                     <AddressHolder>
-                      <Controller
-                        control={control}
-                        defaultValue=""
-                        rules={{ required: "Tên không được trống" }}
+                      <Input
+                        type="text"
+                        placeholder="Tên người nhận"
                         name="name"
-                        render={({ field }) => (
-                          <Input
-                            type="text"
-                            placeholder="Tên người nhận"
-                            name="name"
-                            value={field.value}
-                            onChange={(ev) => field.onChange(ev.target.value)}
-                          />
-                        )}
+                        value={name}
+                        onChange={(ev) => setName(ev.target.value)}
                       />
-
-                      <Controller
-                        control={control}
-                        defaultValue=""
-                        rules={{ required: "SĐT không được trống" }}
+                      <Input
+                        type="text"
+                        placeholder="Số điện thoại"
                         name="phone"
-                        render={({ field }) => (
-                          <Input
-                            type="text"
-                            placeholder="Số điện thoại"
-                            name="phone"
-                            value={field.value}
-                            onChange={(ev) => field.onChange(ev.target.value)}
-                          />
-                        )}
+                        value={phone}
+                        onChange={(ev) => setPhone(ev.target.value)}
                       />
                     </AddressHolder>
-                    <ErrorMessage>
-                      {errors.name && <p>{errors.name.message}</p>}
-                      {errors.phone && <p>{errors.phone.message}</p>}
-                    </ErrorMessage>
                     <Input
                       type="text"
                       placeholder="Địa chỉ E-mail"
@@ -267,25 +246,13 @@ function AccountPage({ swal }) {
                       value={postalcode}
                       onChange={(ev) => setPostalcode(ev.target.value)}
                     />
-                    <Controller
-                      control={control}
-                      defaultValue=""
-                      rules={{ required: "Địa chỉ không để trống" }}
+                    <Input
+                      type="text"
+                      placeholder="Địa chỉ nhận hàng"
                       name="address"
-                      render={({ field }) => (
-                        <Input
-                          type="text"
-                          placeholder="Địa chỉ"
-                          name="address"
-                          value={field.value}
-                          onChange={(ev) => field.onChange(ev.target.value)}
-                        />
-                      )}
+                      value={address}
+                      onChange={(ev) => setAddress(ev.target.value)}
                     />
-                    <ErrorMessage>
-                      {errors.address && <p>{errors.address.message}</p>}
-                    </ErrorMessage>
-
                     <Button primary block onClick={saveAddress}>
                       Cập nhật
                     </Button>
