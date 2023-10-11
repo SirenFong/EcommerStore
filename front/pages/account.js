@@ -2,7 +2,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useEffect, useState } from "react";
 import { FaGoogle } from "react-icons/fa";
-import { useForm, Controller } from "react-hook-form";
 import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
@@ -69,11 +68,6 @@ const AddressHolder = styled.div`
 `;
 
 function AccountPage({ swal }) {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
