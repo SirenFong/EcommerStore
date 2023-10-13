@@ -60,7 +60,7 @@ export default function CategoriesPage({
       <Header />
       <Center>
         {mainCategories.map((cat) => (
-          <CategoryWrapper>
+          <CategoryWrapper key={cat._id}>
             <CategoryTitle>
               <h2>{cat.name}</h2>
               <div>
@@ -70,7 +70,7 @@ export default function CategoriesPage({
 
             <CategoryGrid>
               {categoriesProducts[cat._id].map((p, index) => (
-                <RevealWrapper delay={index * 50}>
+                <RevealWrapper key={index} delay={index * 50}>
                   <ProductBox {...p} wished={wishedProducts.includes(p._id)} />
                 </RevealWrapper>
               ))}
@@ -82,7 +82,7 @@ export default function CategoriesPage({
             </CategoryGrid>
           </CategoryWrapper>
         ))}
-      </Center>
+      </Center >
     </>
   );
 }
@@ -111,9 +111,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session?.user.email,
-        product: allFetchedProductsId,
-      })
+      userEmail: session?.user.email,
+      product: allFetchedProductsId,
+    })
     : [];
 
   return {

@@ -66,7 +66,7 @@ export default function SearchPage({ wishedProducts }) {
           />
         </InputWrapper>
         {!isLoading && phrase !== "" && products.length === 0 && (
-          <h2>Không có kết quả tìm kiếm "{phrase}"</h2>
+          <h2>Không có kết quả tìm kiếm &quot;{phrase}&quot;</h2>
         )}
         {isLoading && <Spinner fullWidth={true} />}
         {!isLoading && products.length > 0 && (
@@ -84,9 +84,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session?.user.email,
-        product: products.map((p) => p._id.toString()),
-      })
+      userEmail: session?.user.email,
+      product: products.map((p) => p._id.toString()),
+    })
     : [];
 
   return {

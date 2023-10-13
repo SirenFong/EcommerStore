@@ -139,7 +139,7 @@ export default function CartPage() {
   let total = 0;
   for (const productId of cartProducts) {
     const price = products.find((p) => p._id === productId)?.price || 0;
-    total += price;
+    total += price;;
   }
   //Đi tới trang web thanh toán
   async function goToPayment() {
@@ -203,7 +203,7 @@ export default function CartPage() {
                   </thead>
                   <tbody>
                     {products.map((product) => (
-                      <tr>
+                      <tr key={product._id}>
                         <ProductInfoCell>
                           <ProductImageBox>
                             <img src={product.images[0]} alt="" />

@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { withSwal } from "react-sweetalert2";
 
@@ -11,6 +12,7 @@ function Categories({ swal }) {
   const [categories, setCategories] = useState([]);
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
   /**useEffect gọi tới cái API cũng như trả về data của loại sản phẩm*/
   /**dưới đây là trả về api lấy thông tin loại sản phẩm để hiển thị */
   /**hiển thị danh sách loại sản phẩm trong hàm useState */

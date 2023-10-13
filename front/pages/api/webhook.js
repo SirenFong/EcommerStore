@@ -13,11 +13,7 @@ export default async function handler(req, res) {
   let event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      await buffer(req),
-      sig,
-      endpointSecret
-    );
+    event = stripe.webhooks.constructEvent(await buffer(req), sig, endpointSecret);
   } catch (err) {
     res.status(400).send(`Webhook Error: ${err.message}`);
     return;
@@ -25,25 +21,26 @@ export default async function handler(req, res) {
 
   // Handle the event
   switch (event.type) {
-    case "checkout.session.completed":
+    case 'checkout.session.completed':
       const data = event.data.object;
       const orderId = data.metadata.orderId;
-      const paid = data.payment_status === "paid";
+      const paid = data.payment_status === 'paid';
+      console.log(paid)
       if (orderId && paid) {
         await Order.findByIdAndUpdate(orderId, {
           paid: true,
-        });
+        })
       }
       break;
     default:
       console.log(`Unhandled event type ${event.type}`);
   }
 
-  res.status(200).send("ok");
+  res.status(200).send('ok');
 }
 
 export const config = {
-  api: { bodyParser: false },
+  api: { bodyParser: false, }
 };
 ///virtue-like-winner-evenly
 //acct_1Nw7HzDuZCOl5dk9
