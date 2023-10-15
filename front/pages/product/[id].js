@@ -6,9 +6,10 @@ import ProductImages from "@component/components/ProductImages";
 import Title from "@component/components/Title";
 import WhiteBox from "@component/components/WhiteBox";
 import CartIcon from "@component/components/icons/CartIcon";
-
 import styled from "styled-components";
 import FlyingButton from "@component/components/FlyingButton";
+import ProductReviews from "@component/components/ProductReviews";
+import { useEffect, useState } from "react";
 
 const ColWrapper = styled.div`
   display: grid;
@@ -29,6 +30,12 @@ const Price = styled.span`
 `;
 
 export default function ProductPage({ product }) {
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   return (
     <>
       <Header />
@@ -42,7 +49,9 @@ export default function ProductPage({ product }) {
             <p>{product.description}</p>
             <PriceRow>
               <div>
-                <Price>{product.price.toLocaleString()} đ</Price>
+                <Price>
+                  {isClient ? product.price.toLocaleString() : ''}
+                  đ</Price>
               </div>
               <div>
                 <FlyingButton main _id={product._id} src={product.images?.[0]}>
@@ -53,6 +62,7 @@ export default function ProductPage({ product }) {
             </PriceRow>
           </div>
         </ColWrapper>
+        <ProductReviews product={product} />
       </Center>
     </>
   );

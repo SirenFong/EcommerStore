@@ -9,19 +9,19 @@ const FlyingButtonWrapper = styled.div`
   button {
     ${ButtonStyle};
     ${(props) =>
-      props.main
-        ? `
+    props.main
+      ? `
       background-color: ${primary};
       color:white;
     `
-        : `
+      : `
       background-color: transparent;
       border: 1px solid ${primary};
       color:${primary};
     `}
     ${(props) =>
-      props.white &&
-      `
+    props.white &&
+    `
       background-color: white;
       border: 1px solid white;
       font-weight:500;
@@ -58,7 +58,7 @@ export default function FlyingButton(props) {
     imgRef.current.style.top = ev.clientY - 50 + "px";
     setTimeout(() => {
       imgRef.current.style.display = "none";
-    }, 1000);
+    }, 500);
   }
   useEffect(() => {
     const interval = setInterval(() => {

@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 4000",
+    "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start -p 4000",
+    "start": "next start -p 3001",
     "lint": "next lint"
   },
   "dependencies": {
@@ -31,6 +31,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-flying-item": "^1.1.2",
+    "react-helmet": "^6.1.0",
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.11.0",
     "react-intl": "^6.4.7",
