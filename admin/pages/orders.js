@@ -6,6 +6,7 @@ import Spinner from "@/components/Spinner";
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     setIsLoading(true);
     axios.get("/api/orders").then((response) => {
@@ -13,6 +14,7 @@ export default function OrdersPage() {
       setIsLoading(false);
     });
   }, []);
+  
   return (
     <Layout>
       <h1>Orders</h1>
@@ -45,10 +47,10 @@ export default function OrdersPage() {
           )}
           {orders.length > 0 &&
             orders.map((order) => (
-              <tr>
+              <tr key={order._id}>
                 <td>{new Date(order.createdAt).toLocaleString()}</td>
                 <td className={order.paid ? "text-green-600" : "text-red-600"}>
-                  {order.paid ? "YES" : "NO"}
+                  {order.paid ? "Yes" : "No"}
                 </td>
 
                 <td>

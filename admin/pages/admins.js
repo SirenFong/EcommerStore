@@ -9,6 +9,7 @@ function AdminsPage({ swal }) {
   const [email, setEmail] = useState("");
   const [adminEmails, setAdminEmails] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
   function addAdmin(ev) {
     ev.preventDefault();
     axios
@@ -30,6 +31,7 @@ function AdminsPage({ swal }) {
         });
       });
   }
+
   function deleteAdmin(_id, email) {
     swal
       .fire({
@@ -53,6 +55,7 @@ function AdminsPage({ swal }) {
         }
       });
   }
+
   function loadAdmins() {
     setIsLoading(true);
     axios.get("/api/admins").then((res) => {
@@ -60,9 +63,11 @@ function AdminsPage({ swal }) {
       setIsLoading(false);
     });
   }
+
   useEffect(() => {
     loadAdmins();
   }, []);
+
   return (
     <Layout>
       <h1>Admins</h1>
@@ -103,7 +108,7 @@ function AdminsPage({ swal }) {
           )}
           {adminEmails.length > 0 &&
             adminEmails.map((adminEmail) => (
-              <tr>
+              <tr key={adminEmail._id}>
                 <td>{adminEmail.email}</td>
                 <td>
                   {adminEmail.createdAt && prettyDate(adminEmail.createdAt)}

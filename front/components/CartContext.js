@@ -45,7 +45,7 @@ export function CartContextProvider({ children }) {
   ////Hàm xóa danh sách giỏ hàng khi đã đặt hàng
   function clearCart() {
     setCartProducts([]);
-    ls?.setItem('cart', JSON.stringify([]));
+    ls?.setItem("cart", JSON.stringify([]));
   }
   return (
     <CartContext.Provider

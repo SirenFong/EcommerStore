@@ -107,23 +107,31 @@ export default function CartPage() {
     if (window?.location.href.includes("success")) {
       setIsSuccess(true);
       clearCart();
+      localStorage.setItem("cart", JSON.stringify([]));
     }
 
-    axios.get("/api/settings?name=shippingFee").then((res) => {
-      setShippingFee(res.data.value);
-    });
+    axios
+      .get("/api/settings?name=shippingFee")
+      .then((res) => {
+        setShippingFee(res.data.value);
+      })
+      .catch((error) => {
+        console.error("Error fetching shipping fee:", error);
+        setShippingFee(0);
+      });
   }, []);
 
   useEffect(() => {
     if (!session) {
       return;
     }
+
     axios.get("/api/address").then((response) => {
-      setName(response.data.name);
-      setPhone(response.data.phone);
-      setEmail(response.data.email);
-      setPostalcode(response.data.postalcode);
-      setAddress(response.data.address);
+      setName(response.data.name || "");
+      setPhone(response.data.phone || "");
+      setEmail(response.data.email || "");
+      setPostalcode(response.data.postalcode || "");
+      setAddress(response.data.address || "");
     });
   }, [session]);
   //Hàm gọi thêm sản phẩm vào giỏ hàng
@@ -139,7 +147,7 @@ export default function CartPage() {
   let total = 0;
   for (const productId of cartProducts) {
     const price = products.find((p) => p._id === productId)?.price || 0;
-    total += price;;
+    total += price;
   }
   //Đi tới trang web thanh toán
   async function goToPayment() {

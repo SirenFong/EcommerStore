@@ -13,6 +13,7 @@ import axios from "axios";
 import styled from "styled-components";
 import Tabs from "@component/components/Tabs";
 import SingleOrder from "@component/components/SingleOrder";
+import { withSwal } from "react-sweetalert2";
 
 const ColsWrapper = styled.div`
   display: grid;
@@ -60,7 +61,7 @@ const AddressHolder = styled.div`
   gap: 5px;
 `;
 
-export default function AccountPage() {
+function AccountPage({ swal }) {
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -73,6 +74,7 @@ export default function AccountPage() {
   const [wishedProducts, setWishedProducts] = useState([]);
   const [activeTab, setActivetab] = useState("Danh sách yêu thích");
   const [orders, setOrders] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function logout() {
     await signOut({
@@ -83,9 +85,14 @@ export default function AccountPage() {
   async function login() {
     await signIn("google");
   }
-  function saveAddress() {
+  async function saveAddress() {
     const data = { name, phone, email, postalcode, address };
     axios.put("/api/address", data);
+    setIsLoading(false);
+    await swal.fire({
+      title: "Settings saved!",
+      icon: "success",
+    });
   }
 
   useEffect(() => {
@@ -97,22 +104,43 @@ export default function AccountPage() {
     setWishListLoaded(false);
     setOrderLoaded(false);
 
-    axios.get("/api/address").then((response) => {
-      setName(response.data.name);
-      setPhone(response.data.phone);
-      setEmail(response.data.email);
-      setPostalcode(response.data.postalcode);
-      setAddress(response.data.address);
-      setAddressLoaded(true);
-    });
+    axios
+      .get("/api/address")
+      .then((response) => {
+        if (response.data) {
+          setIsLoading(true);
+          setName(response.data.name || "");
+          setPhone(response.data.phone || "");
+          setEmail(response.data.email || "");
+          setPostalcode(response.data.postalcode || "");
+          setAddress(response.data.address || "");
+          setAddressLoaded(true);
+        }
+        setAddressLoaded(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching address data:", error);
+        setAddressLoaded(true);
+      });
+
     axios.get("/api/wishlist").then((response) => {
       setWishedProducts(response.data.map((wp) => wp.product));
       setWishListLoaded(true);
     });
-    axios.get("/api/orders").then((response) => {
-      setOrders(response.data);
-      setOrderLoaded(true);
-    });
+    axios
+      .get("/api/orders")
+      .then((response) => {
+        setOrders(
+          response.data.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          )
+        );
+        setOrderLoaded(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching orders data:", error);
+        setOrderLoaded(true);
+      });
   }, [session]);
 
   function productRemovedFromWishList(idToRemove) {
@@ -122,7 +150,7 @@ export default function AccountPage() {
   }
   return (
     <>
-      <Header />
+      <Header key={new Date().getTime()} />
       <Center>
         <ColsWrapper>
           <div>
@@ -257,3 +285,5 @@ export default function AccountPage() {
     </>
   );
 }
+
+export default withSwal(({ swal }) => <AccountPage swal={swal} />);

@@ -67,7 +67,7 @@ export default function FlyingButton(props) {
         // visible
         reveal.style.transform = "none";
       }
-    }, 1000);
+    }, 500);
 
     return () => clearInterval(interval);
   }, []);
