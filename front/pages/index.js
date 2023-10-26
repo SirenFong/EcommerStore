@@ -7,16 +7,34 @@ import Header from "@component/components/Header";
 import Featured from "./../components/Featured";
 import NewProducts from "@component/components/NewProducts";
 import { Setting } from "@component/models/Setting";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function HomePage({
   featuredProduct,
   newProducts,
   wishedNewProducts,
 }) {
+  const [recommends, setRecommends] = useState([]);
+  useEffect(() => {
+
+    axios.get("/api/recommends").then((response) => {
+
+      setRecommends(response.data.filter((item) =>
+        console.log(item.line_items)
+        // item.line_items.map(
+        //   (lineitem) => console.log(lineitem))
+      ));
+
+    });
+    console.log(recommends)
+  }, []);
   return (
     <div>
       <Header />
       <Featured product={featuredProduct} />
+
+
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
     </div>
   );
@@ -36,9 +54,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session.user.email,
-        product: newProducts.map((p) => p._id.toString()),
-      })
+      userEmail: session.user.email,
+      product: newProducts.map((p) => p._id.toString()),
+    })
     : [];
   return {
     props: {

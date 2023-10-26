@@ -39,6 +39,7 @@
     "react-sweetalert2": "^0.6.0",
     "spinner": "^0.3.4",
     "stripe": "^13.8.0",
-    "styled-components": "^6.0.8"
+    "styled-components": "^6.0.8",
+    "yarn": "^1.22.19"
   }
 }

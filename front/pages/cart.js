@@ -75,7 +75,35 @@ const AddressHolder = styled.div`
   display: flex;
   gap: 5px;
 `;
+const Payment = styled.div`
+  display: flex;
+  gap: 5px;
+`;
+const ButtonPayment = styled.div`
+ border:1;
 
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-weight:500;
+  font-size: 15px;
+  background-color: transparent;
+    color: #000;
+    border: 1px solid #000;
+    ${(props) =>
+    props.wished
+      ? `
+    color:red;
+  `
+      : `
+    color:black;
+  `}
+  
+`;
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
@@ -88,6 +116,11 @@ export default function CartPage() {
   const [address, setAddress] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
+  const [isWished, setIsWished] = useState(false);
+  //
+  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post("/api/cart", { ids: cartProducts }).then((response) => {
@@ -127,11 +160,11 @@ export default function CartPage() {
     }
 
     axios.get("/api/address").then((response) => {
-      setName(response.data.name || "");
-      setPhone(response.data.phone || "");
-      setEmail(response.data.email || "");
-      setPostalcode(response.data.postalcode || "");
-      setAddress(response.data.address || "");
+      setName(response.data?.name || "");
+      setPhone(response.data?.phone || "");
+      setEmail(response.data?.email || "");
+      setPostalcode(response.data?.postalcode || "");
+      setAddress(response.data?.address || "");
     });
   }, [session]);
   //Hàm gọi thêm sản phẩm vào giỏ hàng
@@ -150,7 +183,19 @@ export default function CartPage() {
     total += price;
   }
   //Đi tới trang web thanh toán
+  async function ToPayment() {
+    if (category == '653a3235c7eb9518522fa788') {
+      goToPayment();
+    }
+    if (category == '653a31f0c7eb9518522fa774') {
+
+    }
+
+  }
+
+
   async function goToPayment() {
+
     const response = await axios.post("/api/checkout", {
       name,
       phone,
@@ -159,6 +204,7 @@ export default function CartPage() {
       address,
       cartProducts,
     });
+
     if (response.data.url) {
       window.location = response.data.url;
     }
@@ -190,7 +236,32 @@ export default function CartPage() {
       </>
     );
   }
-
+  async function tb() {
+    return (
+      <>
+        <Header />
+        <Center>
+          <ColumnsWrapper>
+            <Box>
+              <h1>Cảm ơn bạn đã đặt hàng</h1>
+              <p>
+                Chúng tôi sẽ gọi điện thoại cho bạn khi đơn đặt hàng của bạn
+                được giao tới.
+              </p>
+            </Box>
+          </ColumnsWrapper>
+        </Center>
+      </>
+    );
+  }
+  ///
+  useEffect(() => {
+    setCategoriesLoading(true);
+    axios.get('/api/paymenttypes').then(result => {
+      setCategories(result.data);
+      setCategoriesLoading(false);
+    })
+  }, []);
   return (
     <>
       <Header />
@@ -274,53 +345,75 @@ export default function CartPage() {
           {!!cartProducts?.length && (
             <RevealWrapper delay={200}>
               <Box>
-                <h2>NGƯỜI MUA/NHẬN HÀNG</h2>
-                <AddressHolder>
+                <Box>
+                  <h2>NGƯỜI MUA/NHẬN HÀNG</h2>
+                  <AddressHolder>
+                    <Input
+                      type="text"
+                      placeholder="Tên người nhận"
+                      name="name"
+                      value={name}
+                      onChange={(ev) => setName(ev.target.value)}
+                    />
+                    <Input
+                      type="text"
+                      placeholder="Số điện thoại"
+                      name="phone"
+                      value={phone}
+                      onChange={(ev) => setPhone(ev.target.value)}
+                    />
+                  </AddressHolder>
                   <Input
                     type="text"
-                    placeholder="Tên người nhận"
-                    name="name"
-                    value={name}
-                    onChange={(ev) => setName(ev.target.value)}
+                    placeholder="Địa chỉ E-mail"
+                    name="email"
+                    value={email}
+                    readOnly
+                    style={{ color: "darkgrey" }}
                   />
                   <Input
                     type="text"
-                    placeholder="Số điện thoại"
-                    name="phone"
-                    value={phone}
-                    onChange={(ev) => setPhone(ev.target.value)}
+                    placeholder="Postal Code"
+                    name="postalcode"
+                    value={postalcode}
+                    onChange={(ev) => setPostalcode(ev.target.value)}
                   />
-                </AddressHolder>
-                <Input
-                  type="text"
-                  placeholder="Địa chỉ E-mail"
-                  name="email"
-                  value={email}
-                  readOnly
-                  style={{ color: "darkgrey" }}
-                />
-                <Input
-                  type="text"
-                  placeholder="Postal Code"
-                  name="postalcode"
-                  value={postalcode}
-                  onChange={(ev) => setPostalcode(ev.target.value)}
-                />
-                <Input
-                  type="text"
-                  placeholder="Địa chỉ nhận hàng"
-                  name="address"
-                  value={address}
-                  onChange={(ev) => setAddress(ev.target.value)}
-                />
-                <Button black block onClick={goToPayment}>
+                  <Input
+                    type="text"
+                    placeholder="Địa chỉ nhận hàng"
+                    name="address"
+                    value={address}
+                    onChange={(ev) => setAddress(ev.target.value)}
+                  />
+
+                </Box>
+                <Box>
+                  <h2>Phương thức thanh toán</h2>
+                  <Payment>
+                    <label>Loại sản phẩm</label>
+
+                    <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
+                      <option value="">Chưa chọn loại sản phẩm</option>
+                      {categories.length > 0 &&
+                        categories.map((category) => (
+                          <option value={category._id}>{category.paymentName}</option>
+                        ))}
+                    </select>
+                  </Payment>
+
+
+
+                </Box>
+
+                <Button black block onClick={ToPayment}>
                   Đặt hàng
                 </Button>
               </Box>
+
             </RevealWrapper>
           )}
         </ColumnsWrapper>
-      </Center>
+      </Center >
     </>
   );
 }

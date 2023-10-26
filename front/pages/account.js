@@ -109,11 +109,11 @@ function AccountPage({ swal }) {
       .then((response) => {
         if (response.data) {
           setIsLoading(true);
-          setName(response.data.name || "");
-          setPhone(response.data.phone || "");
-          setEmail(response.data.email || "");
-          setPostalcode(response.data.postalcode || "");
-          setAddress(response.data.address || "");
+          setName(response.data?.name || "");
+          setPhone(response.data?.phone || "");
+          setEmail(response.data?.email || "");
+          setPostalcode(response.data?.postalcode || "");
+          setAddress(response.data?.address || "");
           setAddressLoaded(true);
         }
         setAddressLoaded(true);

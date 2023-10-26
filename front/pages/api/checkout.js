@@ -27,6 +27,7 @@ export default async function handle(req, res) {
   const productsInfos = await Product.find({ _id: uniqueIds });
   ///
 
+
   //Tạo một mảng các danh sách dựa trên sản phẩm trong cơ sở dữ liệu và số lượng
   //sản phẩm trong giỏ hàng
   let line_items = [];
@@ -41,7 +42,7 @@ export default async function handle(req, res) {
         quantity,
         price_data: {
           currency: "VND",
-          product_data: { name: productInfo.title },
+          product_data: { id: productInfo._id, name: productInfo.title },
           unit_amount: productInfo.price,
         },
       });
