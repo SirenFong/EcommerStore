@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { withSwal } from "react-sweetalert2";
 
-function Paymenttypes({ swal }) {
+function Paymentmethods({ swal }) {
     const [payments, setPayments] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
@@ -16,7 +16,7 @@ function Paymenttypes({ swal }) {
     }, []);
     function fetchPayment() {
         setIsLoading(true)
-        axios.get("/api/paymenttypes").then((response) => {
+        axios.get("/api/paymentmethods").then((response) => {
             setPayments(response.data.filter((item) => item.isDeleted == false));
             setIsLoading(false)
         });
@@ -34,7 +34,7 @@ function Paymenttypes({ swal }) {
             .then(async (result) => {
                 if (result.isConfirmed) {
                     const { _id } = payment;
-                    await axios.delete("/api/paymenttypes?_id=" + _id);
+                    await axios.delete("/api/paymentmethods?_id=" + _id);
                     fetchPayment()
                 }
 
@@ -88,7 +88,7 @@ function Paymenttypes({ swal }) {
     //             if (result.isConfirmed) {
     //                 const { _id } = payment;
 
-    //                 await axios.delete("/api/paymenttypes?_id=" + _id);
+    //                 await axios.delete("/api/paymentmethods?_id=" + _id);
 
     //             }
     //         });
@@ -97,7 +97,7 @@ function Paymenttypes({ swal }) {
         <Layout>
             <Link
                 className="bg-primary text-white rounded-md py-1 px-2"
-                href={"/paymenttypes/newPaymentType"}
+                href={"/paymentmethods/newPaymentMethod"}
             >
                 Thêm loại thanh toán mới
             </Link>
@@ -132,7 +132,7 @@ function Paymenttypes({ swal }) {
                             <td>
                                 <Link
                                     className="btn-default"
-                                    href={"/paymenttypes/edit/" + payment._id}>
+                                    href={"/paymentmethods/edit/" + payment._id}>
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="none"
@@ -170,4 +170,4 @@ function Paymenttypes({ swal }) {
     );
 }
 
-export default withSwal(({ swal }, ref) => <Paymenttypes swal={swal} />);
+export default withSwal(({ swal }, ref) => <Paymentmethods swal={swal} />);

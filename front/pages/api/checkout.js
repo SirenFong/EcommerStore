@@ -6,6 +6,7 @@ import { Product } from "@component/models/Product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import { Setting } from "@component/models/Setting";
+import { PaymentMethod } from "@component/models/PaymentMethod";
 
 const stripe = require("stripe")(process.env.STRIPE_SK);
 
@@ -16,7 +17,7 @@ export default async function handle(req, res) {
     return;
   }
   //Hàm nhận các thông tin truyền vào từ form điền ở trang thanh toán
-  const { name, phone, email, postalcode, address, cartProducts } = req.body;
+  const { name, phone, email, postalcode, address, paymentmethod, cartProducts } = req.body;
   // await mongooseConnect();
 
   //Lấy thông tin sản phẩm từ cơ sở dữ liệu sau đó hiện danh sách sản phẩm và
@@ -25,8 +26,8 @@ export default async function handle(req, res) {
   const productsIds = cartProducts;
   const uniqueIds = [...new Set(productsIds)];
   const productsInfos = await Product.find({ _id: uniqueIds });
+  const paymentInfos = await PaymentMethod.findById({ _id: paymentmethod });
   ///
-
 
   //Tạo một mảng các danh sách dựa trên sản phẩm trong cơ sở dữ liệu và số lượng
   //sản phẩm trong giỏ hàng
@@ -50,6 +51,7 @@ export default async function handle(req, res) {
   }
 
   const session = await getServerSession(req, res, authOptions);
+  ///
 
   //Tạo một đơn hàng mới trong
   //cơ sở dữ liệu với thông tin của người mua và danh sách các mặt hàng (line_items):
@@ -60,6 +62,8 @@ export default async function handle(req, res) {
     email,
     postalcode,
     address,
+    paymentmethods: { id: paymentInfos._id, name: paymentInfos.paymentName, key: paymentInfos.paymentKey },
+    status: "1",
     paid: false,
     userEmail: session?.user?.email,
   });

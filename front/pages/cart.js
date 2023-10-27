@@ -118,9 +118,9 @@ export default function CartPage() {
   const [shippingFee, setShippingFee] = useState(null);
   const [isWished, setIsWished] = useState(false);
   //
-  const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [paymentmethod, setPaymentMethod] = useState("");
+  const [paymentmethods, setPaymentMethods] = useState([]);
+
   useEffect(() => {
     if (cartProducts.length > 0) {
       axios.post("/api/cart", { ids: cartProducts }).then((response) => {
@@ -166,6 +166,9 @@ export default function CartPage() {
       setPostalcode(response.data?.postalcode || "");
       setAddress(response.data?.address || "");
     });
+    axios.get('/api/paymentmethods').then(result => {
+      setPaymentMethods(result.data);
+    })
   }, [session]);
   //Hàm gọi thêm sản phẩm vào giỏ hàng
   function moreOfThisProduct(id) {
@@ -182,16 +185,7 @@ export default function CartPage() {
     const price = products.find((p) => p._id === productId)?.price || 0;
     total += price;
   }
-  //Đi tới trang web thanh toán
-  async function ToPayment() {
-    if (category == '653a3235c7eb9518522fa788') {
-      goToPayment();
-    }
-    if (category == '653a31f0c7eb9518522fa774') {
 
-    }
-
-  }
 
 
   async function goToPayment() {
@@ -202,6 +196,7 @@ export default function CartPage() {
       email,
       postalcode,
       address,
+      paymentmethod,
       cartProducts,
     });
 
@@ -236,32 +231,17 @@ export default function CartPage() {
       </>
     );
   }
-  async function tb() {
-    return (
-      <>
-        <Header />
-        <Center>
-          <ColumnsWrapper>
-            <Box>
-              <h1>Cảm ơn bạn đã đặt hàng</h1>
-              <p>
-                Chúng tôi sẽ gọi điện thoại cho bạn khi đơn đặt hàng của bạn
-                được giao tới.
-              </p>
-            </Box>
-          </ColumnsWrapper>
-        </Center>
-      </>
-    );
-  }
+
   ///
-  useEffect(() => {
-    setCategoriesLoading(true);
-    axios.get('/api/paymenttypes').then(result => {
-      setCategories(result.data);
-      setCategoriesLoading(false);
-    })
-  }, []);
+
+
+  //Đi tới trang web thanh toán
+  async function ToPayment() {
+    if (paymentmethod == '653a7e8993659336603d60a9') {
+      goToPayment();
+    }
+
+  }
   return (
     <>
       <Header />
@@ -392,11 +372,11 @@ export default function CartPage() {
                   <Payment>
                     <label>Loại sản phẩm</label>
 
-                    <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
+                    <select value={paymentmethod} onChange={(ev) => setPaymentMethod(ev.target.value)}>
                       <option value="">Chưa chọn loại sản phẩm</option>
-                      {categories.length > 0 &&
-                        categories.map((category) => (
-                          <option value={category._id}>{category.paymentName}</option>
+                      {paymentmethods.length > 0 &&
+                        paymentmethods.map((paymentmethod) => (
+                          <option value={paymentmethod._id}>{paymentmethod.paymentName}</option>
                         ))}
                     </select>
                   </Payment>

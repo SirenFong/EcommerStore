@@ -122,8 +122,8 @@ export default function Nav({ show }) {
           Đơn đặt hàng
         </Link>
         <Link
-          className={pathname.includes("/paymenttypes") ? activeLink : inactiveLink}
-          href={"/paymenttypes"}
+          className={pathname.includes("/paymentmethods") ? activeLink : inactiveLink}
+          href={"/paymentmethods"}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

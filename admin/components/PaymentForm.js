@@ -30,17 +30,17 @@ export default function PaymentForm({
         };
         if (_id) {
             //update product
-            await axios.put("/api/paymenttypes", { ...data, _id });
+            await axios.put("/api/paymentmethods", { ...data, _id });
         } else {
             //create new product
-            await axios.post("/api/paymenttypes", data);
+            await axios.post("/api/paymentmethods", data);
         }
         console.log(data)
-        setGoToPaymentTypes(true);
+        setGoToPayment(true);
     }
 
-    if (goToPaymentTypes) {
-        router.push("/paymenttypes");
+    if (goToPayment) {
+        router.push("/paymentmethods");
     }
     /**router dùng để redirect về trang products sau khi thêm mới 1 sản phẩm */
     /**useRouter giúp chúng ta thực hiện điều này thay vì redirect thông thường */

@@ -45,8 +45,8 @@ select:focus {
 h1 {
   @apply text-gray-800 mb-4 text-xl;
 }
-h2{
-  @apply text-gray-800 mt-4 mb-2 text-lg
+h2 {
+  @apply text-gray-800 mt-4 mb-2 text-lg;
 }
 label {
   @apply text-gray-600 text-sm;
@@ -84,4 +84,7 @@ table.basic a {
 }
 .btn-default {
   @apply bg-white text-gray-800 px-4 py-1 rounded-sm border border-gray-200 shadow-sm;
+}
+.btn-success {
+  @apply bg-green-300 text-gray-600 px-4 py-1 rounded-sm border border-gray-200 shadow-sm;
 }

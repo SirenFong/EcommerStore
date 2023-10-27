@@ -1,7 +1,8 @@
 import { mongooseConnect } from "@/lib/mongoose";
 
 import { isAdminRequest } from "./auth/[...nextauth]";
-import { PaymentType } from "@/models/PaymentType";
+import { PaymentMethod } from "@/models/PaymentMethod";
+
 
 export default async function handle(req, res) {
     const { method } = req;
@@ -13,9 +14,9 @@ export default async function handle(req, res) {
 
     if (method === "GET") {
         if (req.query?.id) {
-            res.json(await PaymentType.findOne({ _id: req.query.id }));
+            res.json(await PaymentMethod.findOne({ _id: req.query.id }));
         } else {
-            res.json(await PaymentType.find());
+            res.json(await PaymentMethod.find());
         }
     }
 
@@ -23,7 +24,7 @@ export default async function handle(req, res) {
         const { paymentName, paymentKey, paymentDescription, isDeleted } =
             req.body;
         console.log(req.body)
-        const paymentDoc = await PaymentType.create({
+        const paymentDoc = await PaymentMethod.create({
             paymentName,
             paymentKey,
             paymentDescription,
@@ -39,7 +40,7 @@ export default async function handle(req, res) {
             paymentName, paymentKey, paymentDescription, isDeleted,
             _id,
         } = req.body;
-        await PaymentType.updateOne(
+        await PaymentMethod.updateOne(
             { _id },
             { paymentName, paymentKey, paymentDescription, isDeleted }
         );
@@ -48,7 +49,7 @@ export default async function handle(req, res) {
     if (method === "DELETE") {
         const { _id } = req.query;
         console.log({ _id })
-        await PaymentType.updateOne({ _id },
+        await PaymentMethod.updateOne({ _id },
             {
                 isDeleted: true,
             });

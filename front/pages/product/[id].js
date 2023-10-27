@@ -62,7 +62,7 @@ export default function ProductPage({ product }) {
             </PriceRow>
           </div>
         </ColWrapper>
-        <ProductsPage />
+
         <ProductReviews product={product} />
       </Center>
     </>

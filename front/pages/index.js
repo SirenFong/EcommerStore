@@ -33,8 +33,6 @@ export default function HomePage({
     <div>
       <Header />
       <Featured product={featuredProduct} />
-
-
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
     </div>
   );

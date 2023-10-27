@@ -10,10 +10,11 @@ const OrderSchema = new Schema({
     postalcode: String,
     address: String,
     paid: Boolean,
+    paymentmethods: { type: Object },
     status: {
         type: Number,
         default: "1",
-        enum: ["1", "2", "3", "4"]
+        enum: ["1", "2", "3", "4","5"]
 
     },
 

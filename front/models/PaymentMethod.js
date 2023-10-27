@@ -1,7 +1,7 @@
 import mongoose, { model, Schema, models } from "mongoose";
 
 /**Tạo cấu trúc Json để lưu vào Database thông qua mongoose */
-const PaymentTypeSchema = new Schema({
+const PaymentMethodSchema = new Schema({
     paymentName: { type: String, require: true },
     paymentKey: { type: String, require: true },
     paymentDescription: String,
@@ -12,4 +12,4 @@ const PaymentTypeSchema = new Schema({
         timestamps: true,
     });
 
-export const PaymentType = models.PaymentType || model("PaymentType", PaymentTypeSchema);
+export const PaymentMethod = models.PaymentMethod || model("PaymentMethod", PaymentMethodSchema);
