@@ -63,7 +63,7 @@ export default async function handle(req, res) {
     postalcode,
     address,
     paymentmethods: { id: paymentInfos._id, name: paymentInfos.paymentName, key: paymentInfos.paymentKey },
-    status: "1",
+    status: 1,
     paid: false,
     userEmail: session?.user?.email,
   });

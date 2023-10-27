@@ -239,7 +239,24 @@ export default function CartPage() {
   async function ToPayment() {
     if (paymentmethod == '653a7e8993659336603d60a9') {
       goToPayment();
+    } else {
+
+      await axios.post("/api/checkout", {
+        name,
+        phone,
+        email,
+        postalcode,
+        address,
+        paymentmethod,
+        cartProducts,
+      });
+      setIsSuccess(true);
+      clearCart();
+      localStorage.setItem("cart", JSON.stringify([]));
+
     }
+
+
 
   }
   return (

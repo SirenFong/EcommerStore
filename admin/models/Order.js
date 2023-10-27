@@ -13,7 +13,7 @@ const OrderSchema = new Schema({
     status: {
         type: Number,
         default: "1",
-        enum: ["1", "2", "3", "4"]
+        enum: ["0", "1", "2", "3", "4"]
 
     },
 }, {

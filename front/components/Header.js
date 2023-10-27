@@ -6,6 +6,7 @@ import { useContext, useState } from "react";
 import { CartContext } from "./CartContext";
 import BarsIcon from "./icons/Bars";
 import SearchIcon from "./icons/SearchIcon";
+import UsersIcon from "./icons/UsersIcon";
 
 
 const StyledHeader = styled.header`
@@ -100,7 +101,9 @@ export default function Header() {
             <NavLink href={"/cart"}>Giỏ hàng ({cartProducts.length})</NavLink>
           </StyledNav>
           <SideIcons>
+
             <Link href={'/search'}><SearchIcon /></Link>
+            <Link href={'/account'}><UsersIcon /></Link>
             <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>
               <BarsIcon />
             </NavButton>

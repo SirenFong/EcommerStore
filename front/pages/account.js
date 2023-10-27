@@ -157,7 +157,7 @@ function AccountPage({ swal }) {
             <WhiteBox>
               <RevealWrapper delay={0}>
                 <Tabs
-                  tabs={["Danh sách yêu thích", "Đơn đặt hàng"]}
+                  tabs={["Danh sách yêu thích", "Đơn đặt hàng", "Đơn chờ xác nhận", "Đơn chờ giao hàng", "Đơn đã giao"]}
                   active={activeTab}
                   onChange={setActivetab}
                 />
@@ -175,6 +175,60 @@ function AccountPage({ swal }) {
                         )}
                         {orders.length > 0 &&
                           orders.map((o) => <SingleOrder {...o} />)}
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "Đơn chờ xác nhận" && (
+                  <>
+                    {!orderLoaded && <Spinner fullWidth={true} />}
+
+                    {orderLoaded && (
+                      <div>
+                        {orders.length === 0 && !session && (
+                          <p>Đăng nhập để xem đơn hàng !!</p>
+                        )}
+                        {orders.length === 0 && session && (
+                          <p>Bạn chưa có đơn hàng nào !!</p>
+                        )}
+                        {orders.length > 0 &&
+                          orders.filter((item) => item.status == 1).map((o) => <SingleOrder {...o} />)}
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "Đơn chờ giao hàng" && (
+                  <>
+                    {!orderLoaded && <Spinner fullWidth={true} />}
+
+                    {orderLoaded && (
+                      <div>
+                        {orders.length === 0 && !session && (
+                          <p>Đăng nhập để xem đơn hàng !!</p>
+                        )}
+                        {orders.length === 0 && session && (
+                          <p>Bạn chưa có đơn hàng nào !!</p>
+                        )}
+                        {orders.length > 0 &&
+                          orders.filter((item) => item.status == 2).map((o) => <SingleOrder {...o} />)}
+                      </div>
+                    )}W
+                  </>
+                )}
+                {activeTab === "Đơn đã giao" && (
+                  <>
+                    {!orderLoaded && <Spinner fullWidth={true} />}
+
+                    {orderLoaded && (
+                      <div>
+                        {orders.length === 0 && !session && (
+                          <p>Đăng nhập để xem đơn hàng !!</p>
+                        )}
+                        {orders.length === 0 && session && (
+                          <p>Bạn chưa có đơn hàng nào !!</p>
+                        )}
+                        {orders.length > 0 &&
+                          orders.filter((item) => item.status == 4).map((o) => <SingleOrder {...o} />)}
                       </div>
                     )}
                   </>

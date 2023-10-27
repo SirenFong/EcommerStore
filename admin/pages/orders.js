@@ -56,6 +56,13 @@ export default function OrdersPage() {
         setIsLoading(false);
       });
     }
+    if (status == 5) {
+      setIsLoading(true);
+      axios.get("/api/orders").then((response) => {
+        setOrders(response.data.filter((item) => item.status == 0));
+        setIsLoading(false);
+      });
+    }
   }, [status]);
 
   function access(order) {
@@ -72,7 +79,20 @@ export default function OrdersPage() {
       setIsLoading(false);
     });
   }
+  function cancer(order) {
 
+    const data = {
+      _id: order._id,
+      status: 0,
+    }
+    setIsLoading(true);
+    axios.put("/api/orders", data);
+    setIsLoading(true);
+    axios.get("/api/orders").then((response) => {
+      setOrders(response.data.filter((item) => item.status == istatus));
+      setIsLoading(false);
+    });
+  }
   return (
     <Layout>
       <h1>Đơn đạt hàng</h1>
@@ -84,6 +104,7 @@ export default function OrdersPage() {
             <option value="2">Đơn đã xác nhận</option>
             <option value="3">Đơn đã bàn giao cho đơn vị vận chuyển</option>
             <option value="4">Đơn đã giao</option>
+            <option value="5">Đơn đã hủy</option>
           </select>
 
         </div>
@@ -92,20 +113,14 @@ export default function OrdersPage() {
       <table className="basic">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Paid</th>
+            <th>Ngày</th>
+            <th>Thanh toán</th>
             <th>
-              Customer Info
-              {/* <tr>
-                <th>Name</th>
-                <th>Mail</th>
-                <th>Phone</th>
-                <th>Address</th>
-              </tr> */}
+              Thông tin khách hàng
             </th>
-            <th>Products</th>
-            <th>Payment Method</th>
-            <th>Status</th>
+            <th>Danh sách sản phẩm mua</th>
+            <th>Phương thước thanh toán</th>
+            <th>Trạng thái</th>
             <th></th>
           </tr>
         </thead>
@@ -147,15 +162,17 @@ export default function OrdersPage() {
                   {order.paymentmethods?.name}
                 </td>
                 <td>
-                  {order.status == 1 ? "Đang chờ xác nhận" : ""
+                  {order.status == 0 ? "Đã hủy" : ""
                     ||
-                    order.status == 2 ? "Đã xác nhận" : ""
+                    order.status == 1 ? "Đang chờ xác nhận" : ""
                       ||
-                      order.status == 3 ? "Đang giao" : ""
+                      order.status == 2 ? "Đã xác nhận" : ""
                         ||
-                        order.status == 4 ? "Đã giao" : ""
+                        order.status == 3 ? "Đang giao" : ""
                           ||
-                          order.status == 5 ? "Đổi trả hàng" : ""
+                          order.status == 4 ? "Đã giao" : ""
+                            ||
+                            order.status == 5 ? "Đổi trả hàng" : ""
                   }
                 </td>
                 <td>
@@ -187,13 +204,13 @@ export default function OrdersPage() {
 
 
                     }
-
-                    <button
-                      onClick={() => deleteCategory(order)}
-                      className="btn-red"
-                    >
-                      Hủy
-                    </button>
+                    {order.status == 1 ?
+                      <button
+                        onClick={() => cancer(order)}
+                        className="btn-red"
+                      >
+                        Hủy
+                      </button> : ""}
                   </div>
 
                 </td>
