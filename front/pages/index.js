@@ -14,6 +14,10 @@ import ProductImages from "@component/components/ProductImages";
 import FlyingButton from "@component/components/FlyingButton";
 import CartIcon from "@component/components/icons/CartIcon";
 import Center from "@component/components/Center";
+import { RevealWrapper } from "next-reveal";
+import ProductBox from "@component/components/ProductBox";
+import { Link } from "@mui/material";
+import SuggestedProducts from "@component/components/SuggestedProducts";
 
 const Bg = styled.div`
   background-color: #222;
@@ -91,74 +95,64 @@ const PriceRow = styled.div`
 const Price = styled.span`
   font-size: 1.4rem;
 `;
+const CategoryGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+`;
 
+const CategoryTitle = styled.div`
+  display: flex;
+  margin-top: 30px;
+  margin-bottom: 0;
+  align-items: center;
+  gap: 10px;
+  h2 {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  a {
+    color: #555;
+    display: inline-block;
+  }
+`;
+const ShowAllSquare = styled(Link)`
+  background-color: #ddd;
+  height: 160px;
+  border-radius: 10px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  color: #555;
+  text-decoration: none;
+`;
 export default function HomePage({
   featuredProduct,
   newProducts,
   wishedNewProducts,
+  suggestedProduct
 }) {
-  const [suggestedProduct, setSuggestedProduct] = useState(null);
+
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    // Hàm này sẽ gợi ý sản phẩm và cập nhật state khi trang web tải lên
-    function suggestRandomProduct() {
-      const randomIndex = Math.floor(Math.random() * newProducts.length);
-      const randomProduct = newProducts[randomIndex];
-      setSuggestedProduct(randomProduct);
-    }
-    // Gọi hàm gợi ý sản phẩm khi trang web tải lên
-    suggestRandomProduct();
-  }, [newProducts]);
-  
+
+
   return (
     <div>
       <Header />
       <Featured product={featuredProduct} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
+      <SuggestedProducts suggestedproducts={suggestedProduct} wishedProducts={wishedNewProducts} />
 
-      {/* Hiển thị sản phẩm được gợi ý */}
-      <ColWrapper>
-        {suggestedProduct && (
-          <div>
-            <Center>
-              <Title>Có thể bạn sẽ thích</Title>
-              <ColWrapper>
-                <WhiteBox>
-                  <Title>{suggestedProduct.title}</Title>
 
-                  <ProductImages images={suggestedProduct.images} />
 
-                  <PriceRow>
-                    <div>
-                      <Price>
-                        {isClient
-                          ? suggestedProduct.price.toLocaleString()
-                          : ""}
-                        đ
-                      </Price>
-                    </div>
-                  </PriceRow>
-                  <div>
-                    <FlyingButton
-                      main
-                      _id={suggestedProduct._id}
-                      src={suggestedProduct.images?.[0]}
-                    >
-                      <CartIcon />
-                      Thêm vào giỏ
-                    </FlyingButton>
-                  </div>
-                </WhiteBox>
-              </ColWrapper>
-            </Center>
-          </div>
-        )}
-      </ColWrapper>
     </div>
   );
 }
@@ -176,17 +170,20 @@ export async function getServerSideProps(ctx) {
     sort: { _id: -1 },
     limit: 10,
   });
+  //hàm random
+  const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }])
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session.user.email,
-        product: newProducts.map((p) => p._id.toString()),
-      })
+      userEmail: session.user.email,
+      product: newProducts.map((p) => p._id.toString()),
+    })
     : [];
   return {
     props: {
       featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),
       newProducts: JSON.parse(JSON.stringify(newProducts)),
+      suggestedProduct: JSON.parse(JSON.stringify(suggestedProduct)),
       wishedNewProducts: wishedNewProducts.map((i) => i.product.toString()),
     },
   };

@@ -59,6 +59,7 @@ const NavLink = styled(Link)`
     padding:0;
   }
 `;
+
 const NavButton = styled.button`
   background-color: transparent;
   width: 30px;
@@ -80,8 +81,8 @@ const SideIcons = styled.div`
     min-width:20px;
     color:white;
     svg{
-      width:14px;
-      height:14px;
+      width:30px;
+      height:30px;
     }
   }
 `;

@@ -65,7 +65,7 @@ export default function CategoryPage({
       return;
     }
     setLoadingProducts(true);
-    
+
     //... trước subCategories cho phép truyền số lượng phần tử không xác định vào
     //mảng cho dù mảng đó có bao nhiêu phần tử đi nữa. Nếu subCategories 
     //tồn tại và không null, mảng subCategories sẽ được 

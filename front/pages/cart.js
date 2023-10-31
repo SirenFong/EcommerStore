@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "@component/components/CartContext";
@@ -10,6 +10,7 @@ import Input from "@component/components/Input";
 import Table from "@component/components/Table";
 import axios from "axios";
 import styled from "styled-components";
+import { FaGoogle } from "react-icons/fa";
 
 const ErrorMessage = styled.p`
   color: red;
@@ -170,6 +171,9 @@ export default function CartPage() {
       setPaymentMethods(result.data);
     })
   }, [session]);
+  async function login() {
+    await signIn("google");
+  }
   //Hàm gọi thêm sản phẩm vào giỏ hàng
   function moreOfThisProduct(id) {
     addProduct(id);
@@ -338,7 +342,16 @@ export default function CartPage() {
               )}
             </Box>
           </RevealWrapper>
-
+          {!session && ( //nếu không thì sẽ login
+            <RevealWrapper delay={200}>
+              <Box>
+                <h2>Đăng nhập để tiếp tục</h2>
+                <Button primary onClick={login}>
+                  <FaGoogle /> Đăng nhập với Google
+                </Button>
+              </Box>
+            </RevealWrapper>
+          )}
           {!!cartProducts?.length && (
             <RevealWrapper delay={200}>
               <Box>

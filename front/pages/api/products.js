@@ -26,8 +26,6 @@ export default async function handle(req, res) {
   }
   console.log(productsQuery);
   res.json(
-    await Product.find(productsQuery, null, {
-      sort: { [sortField]: sortOrder === "asc" ? 1 : -1 },
-    })
+    await Product.aggregate([{ $sample: { size: 1 } }])
   );
 }
