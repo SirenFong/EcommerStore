@@ -44,10 +44,36 @@ const ButtonCancer = styled.div`
     margin-right: 5px;
   }
 `;
+const TitleCancel = styled.div`
+ border:0;
+  padding: 5px 15px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-family: 'Poppins', sans-serif;
+  font-weight:500;
+  font-size: 15px;
+  
+  color:#ff9999;
+ 
+`;
 export default function SingleOrder({ _id, line_items, status, createdAt, ...rest }) {
+  function cancer(_id) {
 
+    const data = {
+      _id: _id,
+      status: 0,
+
+    }
+
+    axios.put("/api/orders", data);
+
+
+  }
   return (
     <StyledOrder>
+
       <div>
         <time>{new Date(createdAt).toLocaleString("sv-SE")}</time>
         <Address>
@@ -75,7 +101,7 @@ export default function SingleOrder({ _id, line_items, status, createdAt, ...res
       ))}
 
       <div>
-        {status === 0 && ("Đơn hàng đã hủy")
+        {status === 0 && <TitleCancel>Đơn hàng đã hủy </TitleCancel>
           || status === 1 && ("Đang chờ xác nhận")
           || status === 2 && ("Đã xác nhận")
           || status === 3 && ("Đang giao hàng")
@@ -83,8 +109,8 @@ export default function SingleOrder({ _id, line_items, status, createdAt, ...res
       </div>
       <div>
         {status === 1 ?
-          <ButtonCancer > hhhh</ButtonCancer> : ""
-            || status === 0 ? <div> không thể hủy đơn hàng</div> :
+          <ButtonCancer onClick={() => cancer(_id)}> hủy đơn hàng</ButtonCancer> : ""
+            || status === 0 ? <div> </div> :
             <div> không thể hủy đơn hàng</div>
               || status === 4 ? <ButtonCancer > hoàn trả hàng lỗi</ButtonCancer> : ""}
       </div>

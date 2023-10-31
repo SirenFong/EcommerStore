@@ -148,6 +148,7 @@ function AccountPage({ swal }) {
       return [...products.filter((p) => p._id.toString() !== idToRemove)];
     });
   }
+
   return (
     <>
       <Header key={new Date().getTime()} />
@@ -212,7 +213,7 @@ function AccountPage({ swal }) {
                         {orders.length > 0 &&
                           orders.filter((item) => item.status == 2).map((o) => <SingleOrder {...o} />)}
                       </div>
-                    )}W
+                    )}
                   </>
                 )}
                 {activeTab === "Đơn đã giao" && (

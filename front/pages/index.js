@@ -21,9 +21,9 @@ export default function HomePage({
     axios.get("/api/recommends").then((response) => {
 
       setRecommends(response.data.filter((item) =>
-        console.log(item.line_items)
-        // item.line_items.map(
-        //   (lineitem) => console.log(lineitem))
+
+        item.line_items.map(
+          (lineitem) => console.log(lineitem.quantity))
       ));
 
     });
