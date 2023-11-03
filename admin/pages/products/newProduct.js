@@ -7,5 +7,5 @@ export default function NewProduct() {
       <h1>Thêm mới sản phẩm</h1>
       <ProductForm />
     </Layout>
-  )
+  );
 }

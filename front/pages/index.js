@@ -8,154 +8,44 @@ import Featured from "./../components/Featured";
 import NewProducts from "@component/components/NewProducts";
 import { Setting } from "@component/models/Setting";
 import { useState, useEffect } from "react";
-import WhiteBox from "@component/components/WhiteBox";
 import styled from "styled-components";
-import ProductImages from "@component/components/ProductImages";
-import FlyingButton from "@component/components/FlyingButton";
-import CartIcon from "@component/components/icons/CartIcon";
-import Center from "@component/components/Center";
-import { RevealWrapper } from "next-reveal";
-import ProductBox from "@component/components/ProductBox";
-import { Link } from "@mui/material";
 import SuggestedProducts from "@component/components/SuggestedProducts";
 import Footer from "@component/components/Footer";
 
 
-const Bg = styled.div`
-  background-color: #222;
-  color: #fff;
-  padding: 50px 0;
-`;
-const Title = styled.h2`
-  font-size: 2rem;
-  margin: 30px 0 20px;
-`;
-const Desc = styled.p`
-  color: #aaa;
-  font-size: 0.8rem;
-`;
-const ColumnsWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
-  img.main {
-    max-width: 100%;
-    max-height: 200px;
-    display: block;
-    margin: 0 auto;
-  }
-  div:nth-child(1) {
-    order: 2;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  @media screen and (min-width: 768px) {
-    grid-template-columns: 1.1fr 0.9fr;
-    & > div:nth-child(1) {
-      order: 0;
-    }
-    img {
-      max-width: 100%;
-    }
-  }
-`;
 const Column = styled.div`
   display: flex;
   align-items: center;
-`;
-const ButtonsWrapper = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-top: 25px;
-`;
-const CenterImg = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`;
-
-const ImgColumn = styled(Column)`
-  & > div {
-    width: 100%;
-  }
-`;
-const ColWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  @media screen and (min-width: 768px) {
-    grid-template-columns: 0.8fr 1.2fr;
-  }
-  gap: 40px;
-  margin: 40px 0;
-`;
-const PriceRow = styled.div`
-  display: flex;
-  gap: 20px;
-  align-items: center;
-`;
-const Price = styled.span`
-  font-size: 1.4rem;
-`;
-const CategoryGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  @media screen and (min-width: 768px) {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-`;
-
-const CategoryTitle = styled.div`
-  display: flex;
-  margin-top: 30px;
-  margin-bottom: 0;
-  align-items: center;
-  gap: 10px;
-  h2 {
-    margin-bottom: 10px;
-    margin-top: 10px;
-  }
-  a {
-    color: #555;
-    display: inline-block;
-  }
-`;
-const ShowAllSquare = styled(Link)`
-  background-color: #ddd;
-  height: 160px;
-  border-radius: 10px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  color: #555;
-  text-decoration: none;
 `;
 export default function HomePage({
   featuredProduct,
   newProducts,
   wishedNewProducts,
-  suggestedProduct
+  suggestedProduct,
 }) {
-
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-
-
   return (
     <div>
       <Header />
       <Featured product={featuredProduct} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
+<<<<<<< HEAD
       <SuggestedProducts suggestedproducts={suggestedProduct} wishedProducts={wishedNewProducts} />
       <Footer />
 
 
-    </div>
+=======
+      <SuggestedProducts
+        suggestedproducts={suggestedProduct}
+        wishedProducts={wishedNewProducts}
+      />
+>>>>>>> ec9d39dbf907068a4fa5f50a27e8b7d0fd8254c9
+    </div >
 
   );
 }
@@ -174,7 +64,8 @@ export async function getServerSideProps(ctx) {
     limit: 10,
   });
   //hàm random
-  const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }])
+  const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
+
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({

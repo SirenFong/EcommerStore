@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
-import Link from "next/link";
+// import Link from "next/link";
 
 import * as XLSX from 'xlsx';
 export default function OrdersPage() {
@@ -41,8 +41,6 @@ export default function OrdersPage() {
   const [istatus, setIsStatus] = useState(null);
 
   useEffect(() => {
-
-
     ////
     if (status == 0) {
       setIsLoading(true);
@@ -89,11 +87,10 @@ export default function OrdersPage() {
   }, [status]);
 
   function access(order) {
-
     const data = {
       _id: order._id,
-      status: (order.status) + 1,
-    }
+      status: order.status + 1,
+    };
     setIsLoading(true);
     axios.put("/api/orders", data);
     setIsLoading(true);
@@ -103,11 +100,10 @@ export default function OrdersPage() {
     });
   }
   function cancer(order) {
-
     const data = {
       _id: order._id,
       status: 0,
-    }
+    };
     setIsLoading(true);
     axios.put("/api/orders", data);
     setIsLoading(true);
@@ -131,7 +127,12 @@ export default function OrdersPage() {
       <div>
         <button className="bg-primary text-white rounded-md py-1 px-2" onClick={() => handleExcelExport()}></button>
         <div className="center ">
-          <select value={status} onChange={(ev) => { setStatus(ev.target.value), setIsStatus((ev.target.value)) }}>
+          <select
+            value={status}
+            onChange={(ev) => {
+              setStatus(ev.target.value), setIsStatus(ev.target.value);
+            }}
+          >
             <option value="0">tất cả</option>
             <option value="1">Đơn chờ xác nhận</option>
             <option value="2">Đơn đã xác nhận</option>
@@ -139,18 +140,14 @@ export default function OrdersPage() {
             <option value="4">Đơn đã giao</option>
             <option value="5">Đơn đã hủy</option>
           </select>
-
         </div>
-
       </div>
       <table className="basic">
         <thead>
           <tr>
             <th>Ngày</th>
             <th>Thanh toán</th>
-            <th>
-              Thông tin khách hàng
-            </th>
+            <th>Thông tin khách hàng</th>
             <th>Danh sách sản phẩm mua</th>
             <th>Phương thước thanh toán</th>
             <th>Trạng thái</th>
@@ -191,66 +188,63 @@ export default function OrdersPage() {
                     </>
                   ))}
                 </td>
+                <td>{order.paymentmethods?.name}</td>
                 <td>
-                  {order.paymentmethods?.name}
-                </td>
-                <td>
-                  {order.status == 0 ? "Đã hủy" : ""
-                    ||
-                    order.status == 1 ? "Đang chờ xác nhận" : ""
-                      ||
-                      order.status == 2 ? "Đã xác nhận" : ""
-                        ||
-                        order.status == 3 ? "Đang giao" : ""
-                          ||
-                          order.status == 4 ? "Đã giao" : ""
-                            ||
-                            order.status == 5 ? "Đổi trả hàng" : ""
-                  }
+                  {order.status == 0
+                    ? "Đã hủy"
+                    : "" || order.status == 1
+                    ? "Đang chờ xác nhận"
+                    : "" || order.status == 2
+                    ? "Đã xác nhận"
+                    : "" || order.status == 3
+                    ? "Đang giao"
+                    : "" || order.status == 4
+                    ? "Đã giao"
+                    : "" || order.status == 5
+                    ? "Đổi trả hàng"
+                    : ""}
                 </td>
                 <td>
                   <div className="center flex ">
-
-                    {order.status == 1 ?
+                    {order.status == 1 ? (
                       <button
                         onClick={() => access(order)}
-                        className="btn-success mr-1">
-                        Xác nhận
-                      </button> : ""
-                        ||
-                        order.status == 2 ?
-                        <button
-                          onClick={() => access(order)}
-                          className="btn-success mr-1">
-                          Giao Hàng
-                        </button> : ""
-                          ||
-                          order.status == 3 ?
-                          <button
-                            onClick={() => access(order)}
-                            className="btn-success mr-1">
-                            Hoàn Tất
-                          </button> : ""
-                            ||
-                            order.status == 4 ?
-                            "" : ""
-
-
-                    }
-                    {order.status == 1 ?
-                      <button
-                        onClick={() => cancer(order)}
-                        className="btn-red"
+                        className="btn-success mr-1"
                       >
+                        Xác nhận
+                      </button>
+                    ) : "" || order.status == 2 ? (
+                      <button
+                        onClick={() => access(order)}
+                        className="btn-success mr-1"
+                      >
+                        Giao Hàng
+                      </button>
+                    ) : "" || order.status == 3 ? (
+                      <button
+                        onClick={() => access(order)}
+                        className="btn-success mr-1"
+                      >
+                        Hoàn Tất
+                      </button>
+                    ) : "" || order.status == 4 ? (
+                      ""
+                    ) : (
+                      ""
+                    )}
+                    {order.status == 1 ? (
+                      <button onClick={() => cancer(order)} className="btn-red">
                         Hủy
-                      </button> : ""}
+                      </button>
+                    ) : (
+                      ""
+                    )}
                   </div>
-
                 </td>
               </tr>
             ))}
         </tbody>
       </table>
-    </Layout >
+    </Layout>
   );
 }

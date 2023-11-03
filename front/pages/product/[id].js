@@ -10,8 +10,10 @@ import styled from "styled-components";
 import FlyingButton from "@component/components/FlyingButton";
 import ProductReviews from "@component/components/ProductReviews";
 import { useEffect, useState } from "react";
-import ProductBox from "@component/components/ProductBox";
-import ProductsPage from "../products";
+import SuggestedProducts from "@component/components/SuggestedProducts";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { WishedProduct } from "@component/models/WishedProduct";
 
 const ColWrapper = styled.div`
   display: grid;
@@ -31,7 +33,11 @@ const Price = styled.span`
   font-size: 1.4rem;
 `;
 
-export default function ProductPage({ product }) {
+export default function ProductPage({
+  product,
+  suggestedProduct,
+  wishedNewProducts,
+}) {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -54,7 +60,7 @@ export default function ProductPage({ product }) {
                 <Price>{isClient ? product.price.toLocaleString() : ""}đ</Price>
               </div>
               <div>
-                <FlyingButton main _id={product._id} src={product.images?.[0]}>
+                <FlyingButton main_id={product._id} src={product.images?.[0]}>
                   <CartIcon />
                   Thêm vào giỏ
                 </FlyingButton>
@@ -64,6 +70,11 @@ export default function ProductPage({ product }) {
         </ColWrapper>
 
         <ProductReviews product={product} />
+
+        <SuggestedProducts
+          suggestedproducts={suggestedProduct}
+          wishedProducts={wishedNewProducts}
+        />
       </Center>
     </>
   );
@@ -71,11 +82,28 @@ export default function ProductPage({ product }) {
 
 export async function getServerSideProps(context) {
   await mongooseConnect();
+  const newProducts = await Product.find({}, null, {
+    sort: { _id: -1 },
+    limit: 4,
+  });
+  //hàm random
+  const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
+  const session = await getServerSession(context.req, context.res, authOptions);
+  const wishedNewProducts = session?.user
+    ? await WishedProduct.find({
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
+    : [];
   const { id } = context.query;
   const product = await Product.findById(id);
+
   return {
     props: {
       product: JSON.parse(JSON.stringify(product)),
+      newProducts: JSON.parse(JSON.stringify(newProducts)),
+      suggestedProduct: JSON.parse(JSON.stringify(suggestedProduct)),
+      wishedNewProducts: wishedNewProducts.map((i) => i.product.toString()),
     },
   };
 }
