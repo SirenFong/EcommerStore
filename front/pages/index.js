@@ -34,17 +34,14 @@ export default function HomePage({
       <Header />
       <Featured product={featuredProduct} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
-<<<<<<< HEAD
-      <SuggestedProducts suggestedproducts={suggestedProduct} wishedProducts={wishedNewProducts} />
-      <Footer />
 
 
-=======
       <SuggestedProducts
         suggestedproducts={suggestedProduct}
         wishedProducts={wishedNewProducts}
       />
->>>>>>> ec9d39dbf907068a4fa5f50a27e8b7d0fd8254c9
+      <Footer />
+
     </div >
 
   );
