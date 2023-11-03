@@ -11,6 +11,7 @@ import Table from "@component/components/Table";
 import axios from "axios";
 import styled from "styled-components";
 import { FaGoogle } from "react-icons/fa";
+import Footer from "@component/components/Footer";
 
 const ErrorMessage = styled.p`
   color: red;
@@ -423,7 +424,8 @@ export default function CartPage() {
             </RevealWrapper>
           )}
         </ColumnsWrapper>
-      </Center >
+      </Center>
+      <Footer />
     </>
   );
 }

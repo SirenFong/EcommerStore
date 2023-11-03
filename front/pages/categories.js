@@ -55,6 +55,7 @@ export default function CategoriesPage({
   categoriesProducts,
   wishedProducts = [],
 }) {
+  console.log(mainCategories);
   return (
     <>
       <Header />

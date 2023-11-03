@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { subHours } from "date-fns";
+import Linechart from "./Linechart";
 export default function HomeStats() {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -83,6 +84,16 @@ export default function HomeStats() {
   return (
     <div>
       <h2>Đơn hàng</h2>
+      <div className="chart-grid">
+
+        <div className="tile">
+          <h3 className="tile-header">Tuần</h3>
+          <Linechart />
+        </div>
+
+
+      </div>
+      <h2>Đơn hàng</h2>
       <div className="tiles-grid">
         <div className="tile">
           <h3 className="tile-header">Hôm nay</h3>
@@ -142,9 +153,9 @@ export default function HomeStats() {
           <div className="tile-number">
             {new Intl.NumberFormat("de-DE").format(
               ordersTotal(ordersMonth) +
-                (ordersTotal(ordersMonth) *
-                  calculateSalesForecast(ordersMonth)) /
-                  100 //Giả sử tăng 10% so với tháng trước
+              (ordersTotal(ordersMonth) *
+                calculateSalesForecast(ordersMonth)) /
+              100 //Giả sử tăng 10% so với tháng trước
             )}{" "}
             VNĐ
           </div>

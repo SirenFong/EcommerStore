@@ -18,6 +18,8 @@ import { RevealWrapper } from "next-reveal";
 import ProductBox from "@component/components/ProductBox";
 import { Link } from "@mui/material";
 import SuggestedProducts from "@component/components/SuggestedProducts";
+import Footer from "@component/components/Footer";
+
 
 const Bg = styled.div`
   background-color: #222;
@@ -150,10 +152,11 @@ export default function HomePage({
       <Featured product={featuredProduct} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
       <SuggestedProducts suggestedproducts={suggestedProduct} wishedProducts={wishedNewProducts} />
-
+      <Footer />
 
 
     </div>
+
   );
 }
 

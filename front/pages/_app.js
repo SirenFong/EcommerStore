@@ -1,6 +1,9 @@
 import { CartContextProvider } from "@component/components/CartContext";
 import { createGlobalStyle } from "styled-components";
 import { SessionProvider } from "next-auth/react";
+import "bootstrap/dist/css/bootstrap.css";
+import { useEffect } from "react";
+
 const GlobalStyles = createGlobalStyle`
 ///url font chữ
   @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;900&family=Roboto:wght@700&family=Rowdies:wght@700&display=swap');
@@ -20,6 +23,9 @@ const GlobalStyles = createGlobalStyle`
 
 
 export default function App({ Component, pageProps: { session, ...pageProps } }) {
+  useEffect(() => {
+    import("bootstrap/dist/js/bootstrap");
+  }, []);
   return (
     <>
       <GlobalStyles />

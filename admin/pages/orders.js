@@ -4,8 +4,31 @@ import axios from "axios";
 import Spinner from "@/components/Spinner";
 import Link from "next/link";
 
+import * as XLSX from 'xlsx';
 export default function OrdersPage() {
-  ////
+  ////const csvConfig = mkConfig({ useKeysAsHeaders: true });
+
+  const mockData = [
+    {
+      name: "Rouky",
+      date: "2023-09-01",
+      percentage: 0.4,
+      quoted: '"Pickles"',
+    },
+    {
+      name: "Keiko",
+      date: "2023-09-01",
+      percentage: 0.9,
+      quoted: '"Cactus"',
+    },
+  ];
+
+
+
+  // Add a click handler that will run the `download` function.
+  // `download` takes `csvConfig` and the generated `CsvOutput`
+  // from `generateCsv`.
+
   const inactiveButton = "flex gap-1 p-1";
   const activeButton = inactiveButton + " bg-highlight text-black rounded-sm ";
   //Được sử dụng như tạo 1 đường dẫn tới cho trang web đồng thời kích thoạt hiệu ứng khi đang ở trang web đó
@@ -93,10 +116,20 @@ export default function OrdersPage() {
       setIsLoading(false);
     });
   }
+  const handleExcelExport = () => {
+
+
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.json_to_sheet(orders)
+
+    XLSX.utils.book_append_sheet(wb, ws, "Comments");
+    XLSX.writeFile(wb, "survey-data.xlsx");
+  }
   return (
     <Layout>
       <h1>Đơn đạt hàng</h1>
       <div>
+        <button className="bg-primary text-white rounded-md py-1 px-2" onClick={() => handleExcelExport()}></button>
         <div className="center ">
           <select value={status} onChange={(ev) => { setStatus(ev.target.value), setIsStatus((ev.target.value)) }}>
             <option value="0">tất cả</option>

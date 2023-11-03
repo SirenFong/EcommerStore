@@ -32,24 +32,24 @@ const BigImageWrapper = styled.div`
 `;
 
 export default function ProductImages({ images }) {
-    ///hàm chọn hình ảnh và set giá trị hình ảnh vào activeImage
-    const [activeImage, setActiveImage] = useState(images?.[0]);
-    return (
-        <>
-            <BigImageWrapper>
-                <BigImage src={activeImage} />
-            </BigImageWrapper>
-            <ImageButtons>
-                {images.map(image => (
-                    <ImageButton
-                        key={image}
-                        active={image === activeImage}
-                        onClick={() => setActiveImage(image)}
-                    >
-                        <Image src={image} alt="" />
-                    </ImageButton>
-                ))}
-            </ImageButtons>
-        </>
-    );
+  ///hàm chọn hình ảnh và set giá trị hình ảnh vào activeImage
+  const [activeImage, setActiveImage] = useState(images?.[0]);
+  return (
+    <>
+      <BigImageWrapper>
+        <BigImage src={activeImage} />
+      </BigImageWrapper>
+      <ImageButtons>
+        {images.map(image => (
+          <ImageButton
+            key={image}
+            active={image === activeImage}
+            onClick={() => setActiveImage(image)}
+          >
+            <Image src={image} alt="" />
+          </ImageButton>
+        ))}
+      </ImageButtons>
+    </>
+  );
 }
