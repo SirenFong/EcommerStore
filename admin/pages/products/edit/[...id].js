@@ -10,7 +10,6 @@ export default function EditProductPage() {
   const router = useRouter();
   const { id } = router.query;
   const [isLoading, setIsLoading] = useState(false);
-  console.log(router);
   //Nhận API từ id
   useEffect(() => {
     if (!id) {
@@ -27,14 +26,12 @@ export default function EditProductPage() {
       <h1>Chỉnh sửa sản phẩm</h1>
       {isLoading && (
         <tr>
-          <td colSpan={4} >
+          <td colSpan={4}>
             <div className="py-4">
               <Spinner fullWidth={true} />
             </div>
-
           </td>
         </tr>
-
       )}
       {productInfo && <ProductForm {...productInfo} />}
     </Layout>

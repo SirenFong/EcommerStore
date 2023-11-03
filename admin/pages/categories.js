@@ -1,7 +1,7 @@
 import Layout from "@/components/Layout";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
-import { useSession } from "next-auth/react";
+// import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { withSwal } from "react-sweetalert2";
 
@@ -221,14 +221,12 @@ function Categories({ swal }) {
           <tbody>
             {isLoading && (
               <tr>
-                <td colSpan={4} >
+                <td colSpan={4}>
                   <div className="py-4">
                     <Spinner fullWidth={true} />
                   </div>
-
                 </td>
               </tr>
-
             )}
             {categories.length > 0 &&
               categories.map((category, properties) => (

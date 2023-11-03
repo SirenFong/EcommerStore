@@ -1,10 +1,9 @@
 import styled from "styled-components";
-
 import Center from "./Center";
-import ProductsGrid from "./ProductsGrid";
 import ProductBox from "./ProductBox";
 import { RevealWrapper } from "next-reveal";
-import Link from "next/link";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 const Title = styled.h2`
   font-size: 2rem;
@@ -19,51 +18,48 @@ const CategoryGrid = styled.div`
   }
 `;
 
-const CategoryTitle = styled.div`
-  display: flex;
-  margin-top: 30px;
-  margin-bottom: 0;
-  align-items: center;
-  gap: 10px;
-  h2 {
-    margin-bottom: 10px;
-    margin-top: 10px;
-  }
-  a {
-    color: #555;
-    display: inline-block;
-  }
-`;
+export default function SuggestedProducts({
+  suggestedproducts,
+  wishedProducts = [],
+}) {
+  const router = useRouter();
 
-const CategoryWrapper = styled.div`
-  margin-bottom: 40px;
-`;
+  // Xử lý chuyển hướng khi nhấn vào sản phẩm
+  const handleProductClick = (productId) => {
+    // Thực hiện chuyển hướng đến trang sản phẩm cụ thể dựa trên productId
+    router.push(`/product/${productId}`);
+  };
 
-const ShowAllSquare = styled(Link)`
-  background-color: #ddd;
-  height: 160px;
-  border-radius: 10px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  color: #555;
-  text-decoration: none;
-`;
+  useEffect(() => {
+    // Đặt sự kiện xử lý khi chuyển hướng
+    router.events.on("routeChangeComplete", () => {
+      // Reload trang sau khi chuyển hướng
+      router.reload();
+    });
 
-export default function SuggestedProducts({ suggestedproducts, wishedProducts }) {
-    return (
-        <Center>
-            <Title>Có thể bạn sẽ thích</Title>
-            <CategoryGrid>
-                {suggestedproducts.map((suggestedproducts, index) => (
-                    <RevealWrapper key={index} delay={index * 50}>
-                        <ProductBox {...suggestedproducts} wished={wishedProducts.includes(suggestedproducts._id)} />
-                    </RevealWrapper>
-                ))}
+    return () => {
+      router.events.off("routeChangeComplete");
+    };
+  }, [router]);
 
-            </CategoryGrid>
-
-
-        </Center>
-    );
+  return (
+    <Center>
+      <Title>Có thể bạn sẽ thích</Title>
+      <CategoryGrid interval={100}>
+        {suggestedproducts?.length > 0 &&
+          suggestedproducts.map((suggestedproduct, index) => (
+            <RevealWrapper
+              onClick={() => handleProductClick(suggestedproduct._id)}
+              key={suggestedproduct._id}
+              delay={index * 50}
+            >
+              <ProductBox
+                {...suggestedproduct}
+                wished={wishedProducts.includes(suggestedproduct._id)}
+              />
+            </RevealWrapper>
+          ))}
+      </CategoryGrid>
+    </Center>
+  );
 }

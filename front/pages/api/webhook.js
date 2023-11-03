@@ -5,7 +5,8 @@ const stripe = require("stripe")(process.env.STRIPE_SK);
 
 const endpointSecret =
   "whsec_0ea94497f6583d6fb22478a2b1ee2921efa7b72738ccff612767953fb30bdbdc";
-// This is your Stripe CLI webhook secret for testing your endpoint locally.
+//Up lên vercel chỉ cần chỉnh sửa endpointSecret = [my-website]/api/webhook
+
 export default async function handler(req, res) {
   await mongooseConnect();
   const sig = req.headers["stripe-signature"];
