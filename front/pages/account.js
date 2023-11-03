@@ -14,6 +14,7 @@ import styled from "styled-components";
 import Tabs from "@component/components/Tabs";
 import SingleOrder from "@component/components/SingleOrder";
 import { withSwal } from "react-sweetalert2";
+import Footer from "@component/components/Footer";
 
 const ColsWrapper = styled.div`
   display: grid;
@@ -172,124 +173,7 @@ function AccountPage({ swal }) {
       <Header key={new Date().getTime()} />
       <Center>
         <ColumnsWrapper>
-          {/* <div>
-            <WhiteBox>
-              <RevealWrapper delay={0}>
-                <Tabs
-                  tabs={["Danh sách yêu thích", "Đơn đặt hàng", "Đơn chờ xác nhận", "Đơn chờ giao hàng", "Đơn đã giao"]}
-                  active={activeTab}
-                  onChange={setActivetab}
-                />
-                {activeTab === "Đơn đặt hàng" && (
-                  <>
-                    {!orderLoaded && <Spinner fullWidth={true} />}
 
-                    {orderLoaded && (
-                      <div>
-                        {orders.length === 0 && !session && (
-                          <p>Đăng nhập để xem đơn hàng !!</p>
-                        )}
-                        {orders.length === 0 && session && (
-                          <p>Bạn chưa có đơn hàng nào !!</p>
-                        )}
-                        {orders.length > 0 &&
-                          orders.map((o) => <SingleOrder {...o} />)}
-                      </div>
-                    )}
-                  </>
-                )}
-                {activeTab === "Đơn chờ xác nhận" && (
-                  <>
-                    {!orderLoaded && <Spinner fullWidth={true} />}
-
-                    {orderLoaded && (
-                      <div>
-                        {orders.length === 0 && !session && (
-                          <p>Đăng nhập để xem đơn hàng !!</p>
-                        )}
-                        {orders.length === 0 && session && (
-                          <p>Bạn chưa có đơn hàng nào !!</p>
-                        )}
-                        {orders.length > 0 &&
-                          orders.filter((item) => item.status == 1).map((o) => <SingleOrder {...o} />)}
-                      </div>
-                    )}
-                  </>
-                )}
-                {activeTab === "Đơn chờ giao hàng" && (
-                  <>
-                    {!orderLoaded && <Spinner fullWidth={true} />}
-
-                    {orderLoaded && (
-                      <div>
-                        {orders.length === 0 && !session && (
-                          <p>Đăng nhập để xem đơn hàng !!</p>
-                        )}
-                        {orders.length === 0 && session && (
-                          <p>Bạn chưa có đơn hàng nào !!</p>
-                        )}
-                        {orders.length > 0 &&
-                          orders.filter((item) => item.status == 2).map((o) => <SingleOrder {...o} />)}
-                      </div>
-                    )}
-                  </>
-                )}
-                {activeTab === "Đơn đã giao" && (
-                  <>
-                    {!orderLoaded && <Spinner fullWidth={true} />}
-
-                    {orderLoaded && (
-                      <div>
-                        {orders.length === 0 && !session && (
-                          <p>Đăng nhập để xem đơn hàng !!</p>
-                        )}
-                        {orders.length === 0 && session && (
-                          <p>Bạn chưa có đơn hàng nào !!</p>
-                        )}
-                        {orders.length > 0 &&
-                          orders.filter((item) => item.status == 4).map((o) => <SingleOrder {...o} />)}
-                      </div>
-                    )}
-                  </>
-                )}
-                {activeTab === "Danh sách yêu thích" && (
-                  <>
-                    {!wishlistLoaded && <Spinner fullWidth={true} />}
-                    {wishlistLoaded && (
-                      <>
-                        <WishedProductsGrid>
-                          {wishedProducts.length > 0 &&
-                            wishedProducts.map((wp) => (
-                              <ProductBox
-                                key={wp._id}
-                                {...wp}
-                                wished={true}
-                                onRemoveFromWishlist={
-                                  productRemovedFromWishList
-                                }
-                              />
-                            ))}
-                        </WishedProductsGrid>
-
-                        {wishedProducts.length === 0 && (
-                          <>
-                            {session && (
-                              <>
-                                <p>Bạn chưa thích sản phẩm nào !!</p>
-                              </>
-                            )}
-                            {!session && (
-                              <p>Đăng nhập để thêm sản phẩm yêu thích</p>
-                            )}
-                          </>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
-              </RevealWrapper>
-            </WhiteBox>
-          </div> */}
           <div>
             <WhiteBox className="container">
               <RevealWrapper delay={100}>
@@ -362,6 +246,7 @@ function AccountPage({ swal }) {
           </div>
         </ColumnsWrapper>
       </Center>
+      <Footer />
     </>
   );
 }

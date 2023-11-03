@@ -9,6 +9,7 @@ import Header from "@component/components/Header";
 import ProductBox from "@component/components/ProductBox";
 import Link from "next/link";
 import styled from "styled-components";
+import Footer from "@component/components/Footer";
 
 const CategoryGrid = styled.div`
   display: grid;
@@ -83,7 +84,8 @@ export default function CategoriesPage({
             </CategoryGrid>
           </CategoryWrapper>
         ))}
-      </Center >
+      </Center>
+      <Footer />
     </>
   );
 }

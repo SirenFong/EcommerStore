@@ -15,6 +15,7 @@ const ProductWrapper = styled.div`
 
 const WhiteBox = styled(Link)`
   background-color: #fff;
+  box-shadow-sm:  0 .125rem .25rem rgba($black, .075);
   padding: 20px;
   height: 120px;
   text-align: center;
@@ -93,7 +94,7 @@ export default function ProductBox({
   price,
   images,
   wished = false,
-  onRemoveFromWishlist = () => {},
+  onRemoveFromWishlist = () => { },
 }) {
   const url = "/product/" + _id;
 
@@ -111,7 +112,7 @@ export default function ProductBox({
       .post("/api/wishlist", {
         product: _id,
       })
-      .then(() => {});
+      .then(() => { });
     setIsWished(nextValue);
   }
   return (

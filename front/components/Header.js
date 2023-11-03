@@ -31,6 +31,8 @@ export default function Header(
   async function login() {
     await signIn("google");
   }
+
+
   return (
 
 
@@ -57,7 +59,7 @@ export default function Header(
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 <Link className="nav-link active" aria-current="page" href={"/"}>
-                  Tran chủ
+                  Trang chủ
                 </Link>
               </li>
               <li className="nav-item">
@@ -180,8 +182,13 @@ export default function Header(
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" href={"/orders"}>
+                    <Link className="dropdown-item" href={"/order"}>
                       đơn hàng đã đặt
+                    </Link>
+                  </li>
+                  <li>
+                    <Link className="dropdown-item" href={"/wishlist"}>
+                      danh sách yêu thích
                     </Link>
                   </li>
                   <li>

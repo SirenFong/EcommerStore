@@ -14,6 +14,7 @@ import styled from "styled-components";
 import Tabs from "@component/components/Tabs";
 import SingleOrder from "@component/components/SingleOrder";
 import { withSwal } from "react-sweetalert2";
+import Footer from "@component/components/Footer";
 
 const ColsWrapper = styled.div`
   display: grid;
@@ -90,7 +91,7 @@ function OrdersPage({ swal }) {
   const [wishlistLoaded, setWishListLoaded] = useState(true);
   const [orderLoaded, setOrderLoaded] = useState(true);
   const [wishedProducts, setWishedProducts] = useState([]);
-  const [activeTab, setActivetab] = useState("Danh sách yêu thích");
+  const [activeTab, setActivetab] = useState("Đơn đặt hàng");
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -177,7 +178,7 @@ function OrdersPage({ swal }) {
               <RevealWrapper delay={0}>
                 <Tabs
                   tabs={[
-                    // "Danh sách yêu thích",
+
                     "Đơn đặt hàng", "Đơn chờ xác nhận", "Đơn chờ giao hàng", "Đơn đã giao"]}
                   active={activeTab}
                   onChange={setActivetab}
@@ -254,41 +255,7 @@ function OrdersPage({ swal }) {
                     )}
                   </>
                 )}
-                {activeTab === "Danh sách yêu thích" && (
-                  <>
-                    {!wishlistLoaded && <Spinner fullWidth={true} />}
-                    {wishlistLoaded && (
-                      <>
-                        <WishedProductsGrid>
-                          {wishedProducts.length > 0 &&
-                            wishedProducts.map((wp) => (
-                              <ProductBox
-                                key={wp._id}
-                                {...wp}
-                                wished={true}
-                                onRemoveFromWishlist={
-                                  productRemovedFromWishList
-                                }
-                              />
-                            ))}
-                        </WishedProductsGrid>
 
-                        {wishedProducts.length === 0 && (
-                          <>
-                            {session && (
-                              <>
-                                <p>Bạn chưa thích sản phẩm nào !!</p>
-                              </>
-                            )}
-                            {!session && (
-                              <p>Đăng nhập để thêm sản phẩm yêu thích</p>
-                            )}
-                          </>
-                        )}
-                      </>
-                    )}
-                  </>
-                )}
               </RevealWrapper>
             </WhiteBox>
           </div>
@@ -364,6 +331,7 @@ function OrdersPage({ swal }) {
                     </div> */}
         </ColumnsWrapper>
       </Center>
+      <Footer />
     </>
   );
 }
