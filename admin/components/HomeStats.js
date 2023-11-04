@@ -15,13 +15,7 @@ export default function HomeStats() {
     });
   }, []);
 
-  useEffect(() => {
-    setIsLoading(true);
-    axios.get("/api/orders").then((res) => {
-      setOrders(res.data);
-      setIsLoading(false);
-    });
-  }, []);
+
 
   function ordersTotal(orders) {
     let sum = 0;

@@ -3,27 +3,16 @@ import Spinner from "@/components/Spinner";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { CSVLink, CSVDownload } from "react-csv";
 
-import * as XLSX from 'xlsx';
 export default function Products() {
-<<<<<<< HEAD
-    const [products, setProducts] = useState([]);
-    const [productsexcel, setProductsexcel] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    /**useEffect gọi tới cái API cũng như trả về data */
-    /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
-    /**hiển thị danh sách sản phẩm trong hàm useState */
-    useEffect(() => {
-        setIsLoading(true);
-        axios.get("/api/products").then((response) => {
-            setProducts(response.data);
-            setProductsexcel(response.data);
-            setIsLoading(false);
-        });
-    }, []);
-=======
+
   const [products, setProducts] = useState([]);
+  const [dataExport, setdataExport] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [category, setCategory] = useState();
+  const [categories, setCategories] = useState([]);
+
   /**useEffect gọi tới cái API cũng như trả về data */
   /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
   /**hiển thị danh sách sản phẩm trong hàm useState */
@@ -34,104 +23,58 @@ export default function Products() {
       setIsLoading(false);
     });
   }, []);
->>>>>>> ec9d39dbf907068a4fa5f50a27e8b7d0fd8254c9
 
-    /**Đường link /products/newProduct (10) phải trùng với tên file đã đặt */
-    /**Tên file ở đây là newProduct bên trong pages/products/newProduct */
-    const handleExcelExport = () => {
+  useEffect(() => {
 
-<<<<<<< HEAD
+    axios.get("/api/categories").then((result) => {
+      setCategories(result.data);
 
-        const wb = XLSX.utils.book_new()
-        const ws = XLSX.utils.json_to_sheet(products)
-        const myHeader = Object.keys(products[0]);
-        XLSX.utils.book_append_sheet(wb, myHeader, "Comments");
-        XLSX.writeFile(wb, "survey-data.xlsx");
+    });
+  }, []);
+
+  const getUsersExport = (event, done) => {
+
+    let result = [];
+    console.log(result)
+    if (products && products.length > 0) {
+      result.push(["Title", "Quantity", "Price", "Category"])
+      products.map((item, index) => {
+        let categoryInfo = categories.find(({ _id }) => _id === item.category);
+
+        let arr = [];
+        arr[0] = item.title;
+        arr[1] = item.qty;
+        arr[2] = item.price;
+        arr[3] = categoryInfo.name;
+        result.push(arr);
+      })
+      setdataExport(result);
+      done();
     }
-    return (
-        <Layout>
-            <Link
-                className="bg-primary text-white rounded-md py-1 px-2"
-                href={"/products/newProduct"}
-            >
-                Thêm mới sản phẩm
-            </Link>
-            <button className="bg-primary text-white rounded-md py-1 px-2" onClick={() => handleExcelExport()}></button>
-            <table className="basic mt-2 py-1 px-2 ">
-                <thead>
-                    <tr>
-                        <td>Tên Sản Phẩm</td>
-                        <td>Số lượng</td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    {isLoading && (
-                        <tr>
-                            <td colSpan={2}>
-                                <div className="py-4">
-                                    <Spinner fullWidth={true} />
-                                </div>
-
-                            </td>
-                        </tr>
-
-                    )}
-
-                    {products.map((product) => (
-                        <tr key={product._id}>
-                            <td>{product.title}</td>
-                            <td>{product.qty}</td>
-                            <td>
-                                <Link
-                                    className="btn-default"
-                                    href={"/products/edit/" + product._id}>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="1.5"
-                                        stroke="currentColor"
-                                        class="w-4 h-4"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                                    </svg>
-                                    Edit Product
-                                </Link>
-                                <Link
-                                    className="btn-red"
-                                    href={"/products/delete/" + product._id}>
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke-width="1.5"
-                                        stroke="currentColor"
-                                        class="w-4 h-4"
-                                    >
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                    </svg>
-                                    Delete
-                                </Link>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </Layout>
-    );
-=======
+  }
+  return (
+    <Layout>
+      <Link
+        className="bg-primary text-white rounded-md py-1 px-2"
+        href={"/products/newProduct"}
+      >
+        Thêm mới sản phẩm
+      </Link>
+      <CSVLink
+        data={dataExport}
+        filename={"my-file.csv"}
+        className="btn btn-primary"
+        asyncOnClick={true}
+        onClick={getUsersExport}
+      >
+        Download me
+      </CSVLink>;
+      {/* <button className="bg-primary text-white rounded-md py-1 px-2" onClick={() => handleExcelExport()}></button> */}
       <table className="basic mt-2 py-1 px-2 ">
         <thead>
           <tr>
             <td>Tên Sản Phẩm</td>
-            <td>Giá tiền</td>
+            <td>Số lượng</td>
             <td></td>
           </tr>
         </thead>
@@ -142,19 +85,20 @@ export default function Products() {
                 <div className="py-4">
                   <Spinner fullWidth={true} />
                 </div>
+
               </td>
             </tr>
+
           )}
 
           {products.map((product) => (
             <tr key={product._id}>
               <td>{product.title}</td>
-              <td>{product.price.toLocaleString()} VNĐ</td>
+              <td>{product.qty}</td>
               <td>
                 <Link
                   className="btn-default"
-                  href={"/products/edit/" + product._id}
-                >
+                  href={"/products/edit/" + product._id}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -166,15 +110,13 @@ export default function Products() {
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-                    />
+                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
                   </svg>
-                  Chỉnh sửa
+                  Edit Product
                 </Link>
                 <Link
                   className="btn-red"
-                  href={"/products/delete/" + product._id}
-                >
+                  href={"/products/delete/" + product._id}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -186,10 +128,9 @@ export default function Products() {
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"
-                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
-                    />
+                      d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                   </svg>
-                  Xóa
+                  Delete
                 </Link>
               </td>
             </tr>
@@ -198,5 +139,4 @@ export default function Products() {
       </table>
     </Layout>
   );
->>>>>>> ec9d39dbf907068a4fa5f50a27e8b7d0fd8254c9
 }

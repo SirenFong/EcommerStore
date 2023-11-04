@@ -8,21 +8,6 @@ import * as XLSX from 'xlsx';
 export default function OrdersPage() {
   ////const csvConfig = mkConfig({ useKeysAsHeaders: true });
 
-  const mockData = [
-    {
-      name: "Rouky",
-      date: "2023-09-01",
-      percentage: 0.4,
-      quoted: '"Pickles"',
-    },
-    {
-      name: "Keiko",
-      date: "2023-09-01",
-      percentage: 0.9,
-      quoted: '"Cactus"',
-    },
-  ];
-
 
 
   // Add a click handler that will run the `download` function.

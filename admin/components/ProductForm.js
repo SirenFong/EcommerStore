@@ -37,7 +37,7 @@ export default function ProductForm({
       setCategoriesLoading(false);
     });
   }, []);
-
+  console.log(categories)
   //Xóa theo index :v
   const deleteByIndex = (index) => {
     setImages((oldValues) => {
@@ -107,7 +107,9 @@ export default function ProductForm({
   const propertiesToFill = [];
   if (categories.length > 0 && category) {
     let categoryInfo = categories.find(({ _id }) => _id === category);
+    console.log(categoryInfo)
     propertiesToFill.push(...categoryInfo.properties);
+    console.log(propertiesToFill)
     while (categoryInfo?.parent?._id) {
       const parentCat = categories.find(
         ({ _id }) => _id === categoryInfo?.parent?._id
