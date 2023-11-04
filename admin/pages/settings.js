@@ -65,7 +65,7 @@ function SettingsPage({ swal }) {
           <label>Tiền ship (VNĐ)</label>
           <input
             type="number"
-            value={shippingFee.toLocaleString("it-IT")}
+            value={shippingFee}
             onChange={(ev) =>
               setShippingFee(parseFloat(ev.target.value.split(".").join("")))
             }

@@ -38,56 +38,7 @@ function Paymentmethods({ swal }) {
         }
       });
   }
-  // function editpayment(payment) {
-  //     swal.fire({
-  //         title: "Cập nhật loại thanh toán",
-  //         text: `Bạn có muốn xóa ${payment.paymentName}?`,
 
-  //         showCancelButton: true,
-  //         cancelButtonText: "Cancel",
-  //         confirmButtonText: "Yes, Delete!",
-  //         confirmButtonsColor: "#d55",
-  //         reverseButtons: true,
-  //         html: `
-  //         <p>select an action</p>
-  //        <div>
-  //        <label>Tên loại thanh toán</label>
-  //        <input
-  //            type="text"
-  //            placeholder="Nhập tên loại thanh toán"
-  //            value={paymentName}
-  //            onChange={(ev) => setPaymentName(ev.target.value)}
-  //        />
-
-  //        <label>Mã loại thanh toán</label>
-  //        <input
-  //            type="text"
-  //            placeholder="Mã loại thanh toán"
-  //            value={paymentKey}
-  //            onChange={(ev) => setPaymentKey(ev.target.value)}
-  //        />
-
-  //        <label>Mô tả chi tiết Loại thanh toán</label>
-  //        <textarea
-  //            placeholder="Nhập mô tả loại thanh toán"
-  //            value={paymentDescription}
-  //            onChange={(ev) => setPaymentDescription(ev.target.value)}
-  //        ></textarea>
-
-  //        <button type="submit" className="btn-primary">
-  //            Lưu
-  //        </button>
-  //        </div>`
-  //     })
-  //         .then(async (result) => {
-  //             if (result.isConfirmed) {
-  //                 const { _id } = payment;
-
-  //                 await axios.delete("/api/paymentmethods?_id=" + _id);
-
-  //             }
-  //         });
-  // }
   return (
     <Layout>
       <Link

@@ -5,9 +5,10 @@ import CartIcon from "./icons/CartIcon";
 import FlyingButton from "./FlyingButton";
 import { RevealWrapper } from "next-reveal";
 const Bg = styled.div`
-  background-color: #222;
+ background-color: #222;
   color: #fff;
-  padding: 50px 0;
+  padding: 100px ;
+  margin:20px 200px;
 `;
 const Title = styled.h1`
   margin: 0;

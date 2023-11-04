@@ -5,7 +5,7 @@ import { Order } from "@component/models/Order";
 import { Product } from "@component/models/Product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
-import { Setting } from "@component/models/Setting";
+import { Setting } from "@component/models/Advertisement";
 import { PaymentMethod } from "@component/models/PaymentMethod";
 
 const stripe = require("stripe")(process.env.STRIPE_SK);

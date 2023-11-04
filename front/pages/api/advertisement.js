@@ -1,5 +1,6 @@
 import { mongooseConnect } from "@component/lib/mongoose";
-import { Setting } from "@component/models/Setting";
+import { Advertisement } from "@component/models/Advertisement";
+
 
 
 export default async function handle(req, res) {
@@ -7,6 +8,6 @@ export default async function handle(req, res) {
 
   if (req.method === 'GET') {
     const { name } = req.query;
-    res.json(await Setting.findOne({ name }));
+    res.json(await Advertisement.findOne({ name }));
   }
 }

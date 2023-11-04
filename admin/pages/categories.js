@@ -52,10 +52,14 @@ function Categories({ swal }) {
     setParentCategory("");
     setProperties([]);
     fetchCategories();
+    await swal.fire({
+      title: "Settings saved!",
+      icon: "success",
+    });
   }
 
   //Hàm chỉnh sửa Property
-  function editCategory(category) {
+  async function editCategory(category) {
     setEditedCategory(category);
     setName(category.name);
     setParentCategory(category.parent?._id);
@@ -65,6 +69,10 @@ function Categories({ swal }) {
         values: values.join(","),
       }))
     );
+    await swal.fire({
+      title: "Settings saved!",
+      icon: "success",
+    });
   }
 
   //Hàm xóa loại sản phẩm

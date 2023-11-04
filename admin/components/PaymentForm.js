@@ -10,7 +10,7 @@ export default function PaymentForm({
 }) {
   const [paymentName, setPaymentName] = useState(existingPaymentName || "");
   const [paymentKey, setPaymentKey] = useState(existingPaymentKey || "");
-
+  const [goToPayment, setGoToPayment] = useState(false);
   const [paymentDescription, setPaymentDescription] = useState(
     existingPaymentDescription || ""
   );

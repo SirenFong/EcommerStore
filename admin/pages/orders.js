@@ -92,10 +92,13 @@ export default function OrdersPage() {
     setIsLoading(true);
     axios.put("/api/orders", data);
     setIsLoading(true);
+
     axios.get("/api/orders").then((response) => {
       setOrders(response.data.filter((item) => item.status == istatus));
       setIsLoading(false);
     });
+
+
   }
   const handleExcelExport = () => {
 
@@ -178,16 +181,16 @@ export default function OrdersPage() {
                   {order.status == 0
                     ? "Đã hủy"
                     : "" || order.status == 1
-                    ? "Đang chờ xác nhận"
-                    : "" || order.status == 2
-                    ? "Đã xác nhận"
-                    : "" || order.status == 3
-                    ? "Đang giao"
-                    : "" || order.status == 4
-                    ? "Đã giao"
-                    : "" || order.status == 5
-                    ? "Đổi trả hàng"
-                    : ""}
+                      ? "Đang chờ xác nhận"
+                      : "" || order.status == 2
+                        ? "Đã xác nhận"
+                        : "" || order.status == 3
+                          ? "Đang giao"
+                          : "" || order.status == 4
+                            ? "Đã giao"
+                            : "" || order.status == 5
+                              ? "Đổi trả hàng"
+                              : ""}
                 </td>
                 <td>
                   <div className="center flex ">
