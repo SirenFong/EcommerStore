@@ -7,6 +7,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
 import { Setting } from "@component/models/Advertisement";
 import { PaymentMethod } from "@component/models/PaymentMethod";
+import { Service } from "@component/models/Service";
 
 const stripe = require("stripe")(process.env.STRIPE_SK);
 
@@ -17,7 +18,7 @@ export default async function handle(req, res) {
     return;
   }
   //Hàm nhận các thông tin truyền vào từ form điền ở trang thanh toán
-  const { name, phone, email, postalcode, address, paymentmethod, cartProducts } = req.body;
+  const { name, phone, email, postalcode, address, paymentmethod, cartProducts, service } = req.body;
   // await mongooseConnect();
 
   //Lấy thông tin sản phẩm từ cơ sở dữ liệu sau đó hiện danh sách sản phẩm và
@@ -67,9 +68,10 @@ export default async function handle(req, res) {
     paid: false,
     userEmail: session?.user?.email,
   });
-  const shippingFeeSetting = await Setting.findOne({ name: 'shippingFee' });
+  const shippingFeeSetting = await Service.findOne({ name: 'shippingFee' });
   const shippingFeeCents = parseInt(shippingFeeSetting.value || '0');
-
+  const servicerFee = await Service.findOne({ name: 'shippingFee' });
+  const servicerFeeCents = parseInt(servicerFee.value || '0');
   //session theo thông tin tài khoản đang đăng nhập
   //Nếu không có session thì sẽ không thanh toán được
   //Lưu thông tin email của khách hàng đã điền
@@ -89,6 +91,11 @@ export default async function handle(req, res) {
           display_name: 'shipping fee',
           type: 'fixed_amount',
           fixed_amount: { amount: shippingFeeCents, currency: 'VND' },
+        },
+        shipping_rate_data: {
+          display_name: 'service fee',
+          type: 'fixed_amount',
+          fixed_amount: { amount: servicerFeeCents, currency: 'VND' },
         },
       }
     ],

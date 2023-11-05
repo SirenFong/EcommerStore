@@ -15,6 +15,7 @@ const Title = styled.h1`
   margin: 10px;
   font-weight: normal;
   font-size: 0.5rem;
+  color:#222;
   @media screen and (min-width: 768px) {
     font-size: 1.5rem;
   }
@@ -61,6 +62,8 @@ const ButtonsWrapper = styled.div`
   display: flex;
   gap: 10px;
   margin: 25px;
+  background-color: #fff;
+  
 `;
 const CenterImg = styled.div`
   display: flex;

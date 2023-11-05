@@ -12,6 +12,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { FaGoogle } from "react-icons/fa";
 import Footer from "@component/components/Footer";
+import { Checkbox } from "@mui/material";
 
 const ErrorMessage = styled.p`
   color: red;
@@ -119,6 +120,8 @@ export default function CartPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
   const [serviceCost, setserviceCost] = useState([]);
+  const [service, setService] = useState([]);
+  const [isService, setIsService] = useState(false);
   const [isWished, setIsWished] = useState(false);
   //
   const [paymentmethod, setPaymentMethod] = useState("");
@@ -155,6 +158,17 @@ export default function CartPage() {
         console.error("Error fetching shipping fee:", error);
         setShippingFee(0);
       });
+    setIsService(true);
+    axios
+      .get("/api/service")
+      .then((res) => {
+        setserviceCost(res.data.filter((item) => item.name !== "shippingFee"));
+      })
+      .catch((error) => {
+        console.error("Error fetching shipping fee:", error);
+        setserviceCost(null);
+      });
+    setIsService(false);
   }, []);
 
   useEffect(() => {
@@ -204,6 +218,8 @@ export default function CartPage() {
       address,
       paymentmethod,
       cartProducts,
+      service
+
     });
 
     if (response.data.url) {
@@ -265,6 +281,24 @@ export default function CartPage() {
 
 
   }
+  const handleChange = (e) => {
+    // Destructuring 
+    const { value, checked } = e.target;
+
+
+    console.log(`${value} is ${checked}`);
+
+    // Case 1 : The user checks the box 
+    if (checked) {
+      setService(value);
+      console.log(service)
+    }
+
+    // Case 2  : The user unchecks the box 
+    else {
+      setService(null);
+    }
+  };
   return (
     <>
       <Header />
@@ -330,6 +364,36 @@ export default function CartPage() {
                       <td colSpan={2}>Tiền ship</td>
                       <td>{shippingFee?.toLocaleString()} đ</td>
                     </tr>
+                    <tr className="subtotal">
+
+                      <td colSpan={3}>Dịch vụ khác
+                        <div className="checkbox-container">
+
+                          <div class="flex">
+                            <div class="flex items-center mr-4 ">
+                              {/* {isService && (
+                                <Spinner fullWidth={true} />
+                              )} */}
+                              {serviceCost.map((service) => (
+                                <div className="flex items-center mr-10 " key={service._id}>
+                                  <input type="checkbox" id="some_id" value={service.name}
+                                    name="languages"
+                                    onChange={handleChange} />
+                                  <label htmlFor="some_id">{service.name}:{service.value.toLocaleString()} VNĐ</label>
+
+                                </div>
+
+                              ))}
+
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+
+
+                    </tr>
+
                     <tr className="subtotal total">
                       <td colSpan={2}>Tổng hóa đơn</td>
                       <td>
