@@ -88,3 +88,10 @@ table.basic a {
 .btn-success {
   @apply bg-green-300 text-gray-600 px-4 py-1 rounded-sm border border-gray-200 shadow-sm;
 }
+.logo {
+  height: 50px;
+}
+.title-logo {
+  text-align: center;
+  font-size: 25px;
+}

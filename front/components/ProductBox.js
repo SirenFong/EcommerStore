@@ -6,6 +6,8 @@ import HeartOutlineIcon from "./icons/HeartOutlineIcon";
 import HeartSolidIcon from "./icons/HeartSolidIcon";
 import axios from "axios";
 const ProductWrapper = styled.div`
+ background-color: #fff;
+ padding:30px;
   button {
     width: 100%;
     text-align: center;
@@ -17,7 +19,7 @@ const WhiteBox = styled(Link)`
   background-color: #fff;
   box-shadow-sm:  0 .125rem .25rem rgba($black, .075);
   padding: 20px;
-  height: 120px;
+  height: 200px;
   text-align: center;
   display: flex;
   align-items: center;
@@ -26,7 +28,7 @@ const WhiteBox = styled(Link)`
   position: relative;
   img {
     max-width: 100%;
-    max-height: 80px;
+    max-height: 200px;
   }
 `;
 
@@ -124,6 +126,7 @@ export default function ProductBox({
           </WishlistButton>
           <img src={images?.[0]} alt="" />
         </div>
+
       </WhiteBox>
       <ProductInfoBox>
         <Title href={url}>{title}</Title>

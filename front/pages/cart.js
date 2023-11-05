@@ -118,6 +118,7 @@ export default function CartPage() {
   const [address, setAddress] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
+  const [serviceCost, setserviceCost] = useState([]);
   const [isWished, setIsWished] = useState(false);
   //
   const [paymentmethod, setPaymentMethod] = useState("");
@@ -146,7 +147,7 @@ export default function CartPage() {
     }
 
     axios
-      .get("/api/settings?name=shippingFee")
+      .get("/api/service?name=shippingFee")
       .then((res) => {
         setShippingFee(res.data.value);
       })

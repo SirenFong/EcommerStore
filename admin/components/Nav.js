@@ -1,7 +1,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import Logo from "./Logo";
+
 
 export default function Nav({ show }) {
   //Hàm kiểm tra xem danh mục có đang được chọn hay không
@@ -29,9 +29,17 @@ export default function Nav({ show }) {
         " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"
       }
     >
-      <div className="mb-4 mr-4">
-        <Logo />
-      </div>
+      <Link
+        href={"/"}
+
+      >
+        <div className="container flex justify-center ">
+          <img className="logo" src="/Logo.png" alt="An SVG of an eye" />
+
+        </div>
+        <h3 className="title-logo">Trang quản trị</h3>
+      </Link>
+
 
       <nav className="flex flex-col gap-2">
         <Link

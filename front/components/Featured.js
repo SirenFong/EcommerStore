@@ -57,13 +57,19 @@ const ButtonsWrapper = styled.div`
   margin-top: 25px;
 `;
 const CenterImg = styled.div`
+
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+  img {
+      max-width: 100%;
+     
+    }
 `;
 
 const ImgColumn = styled(Column)`
+
   & > div {
     width: 100%;
   }
@@ -103,13 +109,15 @@ export default function Featured({ product }) {
               </RevealWrapper>
             </div>
           </Column>
-          <ImgColumn>
-            <RevealWrapper delay={0}>
+
+          <RevealWrapper delay={0}>
+            <ImgColumn>
               <CenterImg>
                 <img className={"main"} src={product.images?.[0]} alt="" />
               </CenterImg>
-            </RevealWrapper>
-          </ImgColumn>
+            </ImgColumn>
+          </RevealWrapper>
+
         </ColumnsWrapper>
       </Center>
     </Bg>
