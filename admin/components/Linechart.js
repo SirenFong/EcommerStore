@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Chart } from "chart.js";
-export default function Linechart({ ordersMonth }) {
+
+export default function Linechart({ ordersLast12Months }) {
   useEffect(() => {
     const monthlySales = [];
     const months = [
@@ -18,11 +19,11 @@ export default function Linechart({ ordersMonth }) {
       "Tháng 12",
     ];
 
-    for (let i = 1; i <= 12; i++) {
-      const salesOfMonth = ordersMonth.filter(
-        (order) => new Date(order.createdAt).getMonth() === i - 1
+    for (let i = 0; i < 12; i++) {
+      const salesOfMonth = ordersLast12Months.filter(
+        (order) => new Date(order.createdAt).getMonth() === i
       );
-
+      console.log(salesOfMonth);
       const totalSales = salesOfMonth.reduce((sum, order) => {
         const lineItems = order.line_items;
         const lineSum = lineItems.reduce((subSum, li) => {
@@ -52,12 +53,12 @@ export default function Linechart({ ordersMonth }) {
         ],
       },
     });
-  }, [ordersMonth]);
+  }, [ordersLast12Months]);
 
   return (
     <>
       {/* Bar chart */}
-      <h1>Bar Chart</h1>
+      <h1>Biểu đồ doanh thu từng tháng</h1>
       <div>
         <div>
           <canvas id="myChart"></canvas>

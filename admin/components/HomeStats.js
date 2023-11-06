@@ -25,8 +25,8 @@ export default function HomeStats() {
     });
     return sum;
   }
-  const calculateSalesForecast = (ordersMonth) => {
-    const currentMonthOrders = ordersMonth.length;
+  const calculateSalesForecast = (ordersLast12Months) => {
+    const currentMonthOrders = ordersLast12Months.length;
     const forecast = currentMonthOrders + currentMonthOrders * 0.1; //Giả sử tăng 10%
     return Math.round(forecast);
   };
@@ -40,14 +40,24 @@ export default function HomeStats() {
   }
 
   const ordersToday = orders.filter(
-    (o) => new Date(o.createdAt) > subHours(new Date(), 12)
+    (o) => new Date(o.createdAt) > subHours(new Date(), 24)
   );
   const ordersWeek = orders.filter(
     (o) => new Date(o.createdAt) > subHours(new Date(), 24 * 7)
   );
-  const ordersMonth = orders.filter(
-    (o) => new Date(o.createdAt) > subHours(new Date(), 24 * 30)
-  );
+
+  //Lưu trữ ngày giờ hiện tại
+  const currentDate = new Date();
+  // Lấy tất cả đơn hàng trong 12 tháng gần đây
+  //chứa tất cả các đơn hàng được tạo trong vòng 12 tháng gần đây.
+  //Bằng cách so sánh ngày hiện tại trừ đi 12 tháng
+  //Hợp lệ đơn hàng sẽ được giữ lại
+  const ordersLast12Months = orders.filter((o) => {
+    const orderDate = new Date(o.createdAt);
+    const twelveMonthsAgo = new Date(currentDate);
+    twelveMonthsAgo.setMonth(currentDate.getMonth() - 12);
+    return orderDate >= twelveMonthsAgo;
+  });
 
   return (
     <div>
@@ -55,7 +65,7 @@ export default function HomeStats() {
       <div className="chart-grid">
         <div className="tile">
           <h3 className="tile-header">Bán hàng trong năm</h3>
-          <Linechart ordersMonth={ordersMonth} />
+          <Linechart ordersLast12Months={ordersLast12Months} />
         </div>
       </div>
       <h2>Đơn hàng</h2>
@@ -72,8 +82,10 @@ export default function HomeStats() {
         </div>
         <div className="tile">
           <h3 className="tile-header">Tháng</h3>
-          <div className="tile-number">{ordersMonth.length}</div>
-          <div className="tile-desc">{ordersMonth.length} Tổng đơn tháng</div>
+          <div className="tile-number">{ordersLast12Months.length}</div>
+          <div className="tile-desc">
+            {ordersLast12Months.length} Tổng đơn tháng
+          </div>
         </div>
       </div>
       <h2>Doanh thu</h2>
@@ -98,9 +110,11 @@ export default function HomeStats() {
           <h3 className="tile-header">Tháng</h3>
           <div className="tile-number">
             {" "}
-            {ordersTotal(ordersMonth).toLocaleString()} VNĐ
+            {ordersTotal(ordersLast12Months).toLocaleString()} VNĐ
           </div>
-          <div className="tile-desc">{ordersMonth.length} Tổng đơn tháng</div>
+          <div className="tile-desc">
+            {ordersLast12Months.length} Tổng đơn tháng
+          </div>
         </div>
       </div>
 
@@ -110,16 +124,16 @@ export default function HomeStats() {
           <h3 className="tile-header">Dự báo tăng trưởng</h3>
           <div className="tile-number">
             {" "}
-            Tăng {calculateSalesForecast(ordersMonth)} %
+            Tăng {calculateSalesForecast(ordersLast12Months)} %
           </div>
         </div>
         <div className="tile">
           <h3 className="tile-header">Dự báo tiền tháng sau</h3>
           <div className="tile-number">
             {new Intl.NumberFormat("de-DE").format(
-              ordersTotal(ordersMonth) +
-                (ordersTotal(ordersMonth) *
-                  calculateSalesForecast(ordersMonth)) /
+              ordersTotal(ordersLast12Months) +
+                (ordersTotal(ordersLast12Months) *
+                  calculateSalesForecast(ordersLast12Months)) /
                   100 //Giả sử tăng 10% so với tháng trước
             )}{" "}
             VNĐ
@@ -127,9 +141,5 @@ export default function HomeStats() {
         </div>
       </div>
     </div>
-    //"Sales Forecast for next month"
-    //sẽ được tính toán và hiển thị dự đoán doanh thu
-    //cho tháng kế tiếp dựa trên số lượng đơn hàng trong tháng
-    //hiện tại và giả thiết tăng 20%.
   );
 }
