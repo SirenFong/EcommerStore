@@ -1,52 +1,68 @@
-import { useEffect } from "react"
+import { useEffect } from "react";
 import { Chart } from "chart.js";
-export default function Linechart() {
-    useEffect(() => {
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-                datasets: [{
-                    data: [66, 144, 146, 116, 107, 131, 43],
-                    label: "Applied",
-                    borderColor: "rgb(109, 253, 181)",
-                    backgroundColor: "rgb(109, 253, 181,0.5)",
-                    borderWidth: 2
-                }, {
-                    data: [40, 100, 44, 70, 63, 30, 10],
-                    label: "Accepted",
-                    borderColor: "rgb(75, 192, 192)",
-                    backgroundColor: "rgb(75, 192, 192,0.5)",
-                    borderWidth: 2
-                }, {
-                    data: [20, 24, 50, 34, 33, 23, 12],
-                    label: "Pending",
-                    borderColor: "rgb(255, 205, 86)",
-                    backgroundColor: "rgb(255, 205, 86,0.5)",
-                    borderWidth: 2
-                }, {
-                    data: [6, 20, 52, 12, 11, 78, 21],
-                    label: "Rejected",
-                    borderColor: "rgb(255, 99, 132)",
-                    backgroundColor: "rgb(255, 99, 132,0.5)",
-                    borderWidth: 2
-                }
-                ]
-            },
-        });
-    }, [])
+export default function Linechart({ ordersMonth }) {
+  useEffect(() => {
+    const monthlySales = [];
+    const months = [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12",
+    ];
 
+    for (let i = 1; i <= 12; i++) {
+      const salesOfMonth = ordersMonth.filter(
+        (order) => new Date(order.createdAt).getMonth() === i - 1
+      );
 
-    return (
-        <>
-            {/* Bar chart */}
-            <h1 >Bar Chart</h1>
-            <div >
-                <div >
-                    <canvas id='myChart'></canvas>
-                </div>
-            </div>
-        </>
-    )
+      const totalSales = salesOfMonth.reduce((sum, order) => {
+        const lineItems = order.line_items;
+        const lineSum = lineItems.reduce((subSum, li) => {
+          return subSum + li.quantity * li.price_data.unit_amount;
+        }, 0);
+
+        return sum + lineSum;
+      }, 0);
+
+      monthlySales.push(totalSales);
+    }
+
+    const ctx = document.getElementById("myChart").getContext("2d");
+
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: months,
+        datasets: [
+          {
+            data: monthlySales,
+            label: "Doanh thu",
+            borderColor: "rgb(75, 192, 192)",
+            backgroundColor: "rgba(75, 192, 192, 0.5)",
+            borderWidth: 2,
+          },
+        ],
+      },
+    });
+  }, [ordersMonth]);
+
+  return (
+    <>
+      {/* Bar chart */}
+      <h1>Bar Chart</h1>
+      <div>
+        <div>
+          <canvas id="myChart"></canvas>
+        </div>
+      </div>
+    </>
+  );
 }

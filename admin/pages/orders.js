@@ -4,11 +4,9 @@ import axios from "axios";
 import Spinner from "@/components/Spinner";
 // import Link from "next/link";
 
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 export default function OrdersPage() {
   ////const csvConfig = mkConfig({ useKeysAsHeaders: true });
-
-
 
   // Add a click handler that will run the `download` function.
   // `download` takes `csvConfig` and the generated `CsvOutput`
@@ -97,23 +95,22 @@ export default function OrdersPage() {
       setOrders(response.data.filter((item) => item.status == istatus));
       setIsLoading(false);
     });
-
-
   }
   const handleExcelExport = () => {
-
-
-    const wb = XLSX.utils.book_new()
-    const ws = XLSX.utils.json_to_sheet(orders)
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(orders);
 
     XLSX.utils.book_append_sheet(wb, ws, "Comments");
     XLSX.writeFile(wb, "survey-data.xlsx");
-  }
+  };
   return (
     <Layout>
       <h1>Đơn đạt hàng</h1>
       <div>
-        <button className="bg-primary text-white rounded-md py-1 px-2" onClick={() => handleExcelExport()}></button>
+        <button
+          className="bg-primary text-white rounded-md py-1 px-2"
+          onClick={() => handleExcelExport()}
+        ></button>
         <div className="center ">
           <select
             value={status}
@@ -181,16 +178,16 @@ export default function OrdersPage() {
                   {order.status == 0
                     ? "Đã hủy"
                     : "" || order.status == 1
-                      ? "Đang chờ xác nhận"
-                      : "" || order.status == 2
-                        ? "Đã xác nhận"
-                        : "" || order.status == 3
-                          ? "Đang giao"
-                          : "" || order.status == 4
-                            ? "Đã giao"
-                            : "" || order.status == 5
-                              ? "Đổi trả hàng"
-                              : ""}
+                    ? "Đang chờ xác nhận"
+                    : "" || order.status == 2
+                    ? "Đã xác nhận"
+                    : "" || order.status == 3
+                    ? "Đang giao"
+                    : "" || order.status == 4
+                    ? "Đã giao"
+                    : "" || order.status == 5
+                    ? "Đổi trả hàng"
+                    : ""}
                 </td>
                 <td>
                   <div className="center flex ">

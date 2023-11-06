@@ -15,7 +15,6 @@ import Featured2 from "@component/components/Featured2";
 import { Advertisement } from "@component/models/Advertisement";
 import Banner from "@component/components/Banner";
 
-
 const Column = styled.div`
   display: flex;
   align-items: center;
@@ -45,15 +44,11 @@ export default function HomePage({
       <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
 
-
       <SuggestedProducts
         suggestedproducts={suggestedProduct}
         wishedProducts={wishedNewProducts}
       />
-
-
     </div>
-
   );
 }
 
@@ -102,9 +97,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
   return {
     props: {

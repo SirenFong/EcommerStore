@@ -6,7 +6,6 @@ import Linechart from "./Linechart";
 export default function HomeStats() {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
   useEffect(() => {
     setIsLoading(true);
     axios.get("/api/orders").then((res) => {
@@ -14,8 +13,6 @@ export default function HomeStats() {
       setIsLoading(false);
     });
   }, []);
-
-
 
   function ordersTotal(orders) {
     let sum = 0;
@@ -28,29 +25,6 @@ export default function HomeStats() {
     });
     return sum;
   }
-
-  // function ordersTotal(orders) {
-  //   let sum = 0; //Đặt tổng bằng 0
-  //   orders.forEach((order) => {
-  //     //Hàm forEach sẽ duyệt qua orders và lấy ra line_items
-  //     const { line_items } = order;
-  //     line_items.forEach((li) => {
-  //       const lineSum = li.quantity * li.price_data.unit_amount; // lấy số lượng đơn đặt * với giá tiền trong data
-  //       sum += lineSum; // rồi gán vào hàm tổng đã tạo = với lineSum đã tính theo mức tăng dần
-  //     });
-  //   });
-  //   console.log({ orders });
-  //   return new Intl.NumberFormat("sv-SE").format(sum);
-  // }
-
-  // const calculateSalesForecast = (orders) => {
-  //   const currentMonthOrders = orders.filter(
-  //     (o) => new Date(o.createdAt) > subHours(new Date(), 24 * 30)
-  //   );
-  //   const forecast =
-  //     currentMonthOrders.length + currentMonthOrders.length * 0.2;
-  //   return forecast;
-  // };
   const calculateSalesForecast = (ordersMonth) => {
     const currentMonthOrders = ordersMonth.length;
     const forecast = currentMonthOrders + currentMonthOrders * 0.1; //Giả sử tăng 10%
@@ -79,13 +53,10 @@ export default function HomeStats() {
     <div>
       <h2>Đơn hàng</h2>
       <div className="chart-grid">
-
         <div className="tile">
-          <h3 className="tile-header">Tuần</h3>
-          <Linechart />
+          <h3 className="tile-header">Bán hàng trong năm</h3>
+          <Linechart ordersMonth={ordersMonth} />
         </div>
-
-
       </div>
       <h2>Đơn hàng</h2>
       <div className="tiles-grid">
@@ -147,9 +118,9 @@ export default function HomeStats() {
           <div className="tile-number">
             {new Intl.NumberFormat("de-DE").format(
               ordersTotal(ordersMonth) +
-              (ordersTotal(ordersMonth) *
-                calculateSalesForecast(ordersMonth)) /
-              100 //Giả sử tăng 10% so với tháng trước
+                (ordersTotal(ordersMonth) *
+                  calculateSalesForecast(ordersMonth)) /
+                  100 //Giả sử tăng 10% so với tháng trước
             )}{" "}
             VNĐ
           </div>
