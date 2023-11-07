@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { subHours } from "date-fns";
 import Linechart from "./Linechart";
-import Doughnutchart from "./Doughnutchart";
+
+
+
+import BestSellingProductsChart from "./BestSellingProductsChart";
+
 export default function HomeStats() {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,11 +30,6 @@ export default function HomeStats() {
     });
     return sum;
   }
-  const calculateSalesForecast = (ordersLast12Months) => {
-    const currentMonthOrders = ordersLast12Months.length;
-    const forecast = currentMonthOrders + currentMonthOrders * 0.1; //Giả sử tăng 10%
-    return Math.round(forecast);
-  };
 
   if (isLoading) {
     return (
@@ -41,10 +40,13 @@ export default function HomeStats() {
   }
 
   const ordersToday = orders.filter(
-    (o) => new Date(o.createdAt) > subHours(new Date(), 24)
+    (o) => new Date(o.createdAt) > subHours(new Date(), 12)
   );
   const ordersWeek = orders.filter(
-    (o) => new Date(o.createdAt) > subHours(new Date(), 24 * 7)
+    (o) => new Date(o.createdAt) > subHours(new Date(), 12 * 7)
+  );
+  const ordersMonth = orders.filter(
+    (o) => new Date(o.createdAt) > subHours(new Date(), 12 * 30)
   );
 
   //Lưu trữ ngày giờ hiện tại
@@ -62,7 +64,7 @@ export default function HomeStats() {
 
   return (
     <div>
-      <h2>Đơn hàng</h2>
+      <h2>Biểu đồ</h2>
       <div className="chart-grid">
         <div className="tile">
           <h3 className="tile-header">Bán hàng trong năm</h3>
@@ -74,24 +76,35 @@ export default function HomeStats() {
           <Doughnutchart />
 
         </div>
+        <div className="tile">
+          <h3 className="tile-header">Bán hàng trong năm</h3>
+          <BestSellingProductsChart ordersLast12Months={ordersLast12Months} />
+        </div>
       </div>
       <h2>Đơn hàng</h2>
       <div className="tiles-grid">
         <div className="tile">
           <h3 className="tile-header">Hôm nay</h3>
           <div className="tile-number">{ordersToday.length}</div>
-          <div className="tile-desc">{ordersToday.length} Tổng đơn ngày</div>
+          <div className="tile-desc">
+            {" "}
+            Tổng {ordersToday.length} đơn ngày hôm nay
+          </div>
         </div>
         <div className="tile">
           <h3 className="tile-header">Tuần</h3>
           <div className="tile-number">{ordersWeek.length}</div>
-          <div className="tile-desc">{ordersWeek.length} Tổng đơn tuần</div>
+          <div className="tile-desc">
+            {" "}
+            Tổng {ordersWeek.length} đơn tuần này
+          </div>
         </div>
         <div className="tile">
           <h3 className="tile-header">Tháng</h3>
-          <div className="tile-number">{ordersLast12Months.length}</div>
+          <div className="tile-number">{ordersMonth.length}</div>
           <div className="tile-desc">
-            {ordersLast12Months.length} Tổng đơn tháng
+            {" "}
+            Tổng {ordersMonth.length} đơn tháng này
           </div>
         </div>
       </div>
@@ -117,13 +130,14 @@ export default function HomeStats() {
           <h3 className="tile-header">Tháng</h3>
           <div className="tile-number">
             {" "}
+
             {ordersTotal(ordersLast12Months).toLocaleString()} VNĐ
-          </div>
+          </div >
           <div className="tile-desc">
             {ordersLast12Months.length} Tổng đơn tháng
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
 
       <h2>Dự báo doanh thu</h2>
       <div className="tiles-grid">
@@ -144,9 +158,13 @@ export default function HomeStats() {
               100 //Giả sử tăng 10% so với tháng trước
             )}{" "}
             VNĐ
+
+            {ordersTotal(ordersMonth).toLocaleString()} VNĐ
+
           </div>
+          <div className="tile-desc">{ordersMonth.length} Tổng đơn tháng</div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
