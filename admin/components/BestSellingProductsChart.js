@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Chart } from "chart.js";
 
-export default function Linechart({ ordersLast12Months }) {
+export default function BestSellingProductsChart({ ordersLast12Months }) {
   useEffect(() => {
     const monthlySales = [];
     const months = [
@@ -18,6 +18,7 @@ export default function Linechart({ ordersLast12Months }) {
       "Tháng 11",
       "Tháng 12",
     ];
+
     const colors = [
       "rgba(255, 99, 132, 0.7)",
       "rgba(54, 162, 235, 0.7)",
@@ -37,20 +38,38 @@ export default function Linechart({ ordersLast12Months }) {
       const salesOfMonth = ordersLast12Months.filter(
         (order) => new Date(order.createdAt).getMonth() === i
       );
-      console.log(salesOfMonth);
-      const totalSales = salesOfMonth.reduce((sum, order) => {
-        const lineItems = order.line_items;
-        const lineSum = lineItems.reduce((subSum, li) => {
-          return subSum + li.quantity * li.price_data.unit_amount;
-        }, 0);
 
-        return sum + lineSum;
-      }, 0);
+      const productsData = {};
 
-      monthlySales.push(totalSales);
+      salesOfMonth.forEach((order) => {
+        order.line_items.forEach((item) => {
+          const productId = item.product_id;
+          const productName = item.name;
+          const productQuantity = item.quantity;
+
+          if (productsData[productId]) {
+            productsData[productId].totalQuantity += productQuantity;
+          } else {
+            productsData[productId] = {
+              name: productName,
+              totalQuantity: productQuantity,
+            };
+          }
+        });
+      });
+
+      const sortedProducts = Object.values(productsData).sort(
+        (a, b) => b.totalQuantity - a.totalQuantity
+      );
+
+      const topProduct = sortedProducts[0];
+
+      monthlySales.push(topProduct ? topProduct.totalQuantity : 0);
     }
 
-    const ctx = document.getElementById("myChart").getContext("2d");
+    const ctx = document
+      .getElementById("bestSellingProductsChart")
+      .getContext("2d");
 
     new Chart(ctx, {
       type: "bar",
@@ -59,8 +78,7 @@ export default function Linechart({ ordersLast12Months }) {
         datasets: [
           {
             data: monthlySales,
-            label: "Doanh thu",
-            borderColor: "rgb(75, 192, 192)",
+            label: "Số lượng sản phẩm bán ra",
             backgroundColor: colors,
             borderWidth: 2,
           },
@@ -71,12 +89,9 @@ export default function Linechart({ ordersLast12Months }) {
 
   return (
     <>
-      {/* Bar chart */}
-      <h1>Biểu đồ doanh thu</h1>
+      <h1>Biểu đồ số lượng sản phẩm bán ra trong từng tháng</h1>
       <div>
-        <div>
-          <canvas id="myChart"></canvas>
-        </div>
+        <canvas id="bestSellingProductsChart"></canvas>
       </div>
     </>
   );
