@@ -31,3 +31,16 @@ export default async function handle(req, res) {
     })
   );
 }
+if (method === "PUT") {
+  const { views, purchases, _id } = req.body;
+  await Product.updateOne(
+    { _id },
+    {
+      views,
+       purchases,
+    }
+  );
+  res.json(true);
+
+
+}

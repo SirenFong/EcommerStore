@@ -98,6 +98,7 @@ export default function ProductBox({
   wished = false,
   onRemoveFromWishlist = () => { },
 }) {
+
   const url = "/product/" + _id;
 
   const formatter = new Intl.NumberFormat("en-US");
@@ -117,6 +118,7 @@ export default function ProductBox({
       .then(() => { });
     setIsWished(nextValue);
   }
+
   return (
     <ProductWrapper>
       <WhiteBox href={url}>

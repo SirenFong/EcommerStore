@@ -39,7 +39,7 @@ export default function Linechart({ ordersLast12Months }) {
     const ctx = document.getElementById("myChart").getContext("2d");
 
     new Chart(ctx, {
-      type: "line",
+      type: "bar",
       data: {
         labels: months,
         datasets: [

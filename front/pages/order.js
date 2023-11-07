@@ -259,76 +259,7 @@ function OrdersPage({ swal }) {
               </RevealWrapper>
             </WhiteBox>
           </div>
-          {/* <div>
-                        <WhiteBox className="container">
-                            <RevealWrapper delay={100}>
-                                <h2 className="text-center">{session ? "Thông tin tài khoản" : "Đăng nhập"}</h2>
-                                {!addressLoaded && <Spinner fullWidth={true} />}
-                                {addressLoaded && session && (
-                                    <>
-                                        <Avatar><img
-                                            src={session?.user?.image}
-                                            class="rounded-circle"
-                                            height="25"
-
-                                            loading="lazy"
-                                        /></Avatar>
-                                        <AddressHolder>
-                                            <Input
-                                                type="text"
-                                                placeholder="Tên người nhận"
-                                                name="name"
-                                                value={name}
-                                                onChange={(ev) => setName(ev.target.value)}
-                                            />
-                                            <Input
-                                                type="text"
-                                                placeholder="Số điện thoại"
-                                                name="phone"
-                                                value={phone}
-                                                onChange={(ev) => setPhone(ev.target.value)}
-                                            />
-                                        </AddressHolder>
-                                        <Input
-                                            type="text"
-                                            placeholder="Địa chỉ E-mail"
-                                            name="email"
-                                            value={email}
-                                            onChange={(ev) => setEmail(ev.target.value)}
-                                        />
-                                        <Input
-                                            type="text"
-                                            placeholder="Postal Code"
-                                            name="postalcode"
-                                            value={postalcode}
-                                            onChange={(ev) => setPostalcode(ev.target.value)}
-                                        />
-                                        <Input
-                                            type="text"
-                                            placeholder="Địa chỉ nhận hàng"
-                                            name="address"
-                                            value={address}
-                                            onChange={(ev) => setAddress(ev.target.value)}
-                                        />
-                                        <Button primary block onClick={saveAddress}>
-                                            Cập nhật
-                                        </Button>
-                                    </>
-                                )}
-                                <hr />
-                                {session && ( //Nếu tồn tại session thì hiện logout
-                                    <Button black onClick={logout}>
-                                        Đăng xuất
-                                    </Button>
-                                )}
-                                {!session && ( //nếu không thì sẽ login
-                                    <Button primary onClick={login}>
-                                        <FaGoogle /> Đăng nhập với Google
-                                    </Button>
-                                )}
-                            </RevealWrapper>
-                        </WhiteBox>
-                    </div> */}
+        
         </ColumnsWrapper>
       </Center>
       <Footer />

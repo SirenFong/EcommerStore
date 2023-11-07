@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { subHours } from "date-fns";
 import Linechart from "./Linechart";
+import Doughnutchart from "./Doughnutchart";
 export default function HomeStats() {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,6 +67,12 @@ export default function HomeStats() {
         <div className="tile">
           <h3 className="tile-header">Bán hàng trong năm</h3>
           <Linechart ordersLast12Months={ordersLast12Months} />
+
+        </div>
+        <div className="tile">
+          <h3 className="tile-header">loại sản phẩm đã bán</h3>
+          <Doughnutchart />
+
         </div>
       </div>
       <h2>Đơn hàng</h2>
@@ -132,9 +139,9 @@ export default function HomeStats() {
           <div className="tile-number">
             {new Intl.NumberFormat("de-DE").format(
               ordersTotal(ordersLast12Months) +
-                (ordersTotal(ordersLast12Months) *
-                  calculateSalesForecast(ordersLast12Months)) /
-                  100 //Giả sử tăng 10% so với tháng trước
+              (ordersTotal(ordersLast12Months) *
+                calculateSalesForecast(ordersLast12Months)) /
+              100 //Giả sử tăng 10% so với tháng trước
             )}{" "}
             VNĐ
           </div>
