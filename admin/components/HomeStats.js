@@ -3,11 +3,7 @@ import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { subHours } from "date-fns";
 import Linechart from "./Linechart";
-
-
-
 import BestSellingProductsChart from "./BestSellingProductsChart";
-
 export default function HomeStats() {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,12 +65,6 @@ export default function HomeStats() {
         <div className="tile">
           <h3 className="tile-header">Bán hàng trong năm</h3>
           <Linechart ordersLast12Months={ordersLast12Months} />
-
-        </div>
-        <div className="tile">
-          <h3 className="tile-header">loại sản phẩm đã bán</h3>
-          <Doughnutchart />
-
         </div>
         <div className="tile">
           <h3 className="tile-header">Bán hàng trong năm</h3>
@@ -130,41 +120,11 @@ export default function HomeStats() {
           <h3 className="tile-header">Tháng</h3>
           <div className="tile-number">
             {" "}
-
-            {ordersTotal(ordersLast12Months).toLocaleString()} VNĐ
-          </div >
-          <div className="tile-desc">
-            {ordersLast12Months.length} Tổng đơn tháng
-          </div>
-        </div >
-      </div >
-
-      <h2>Dự báo doanh thu</h2>
-      <div className="tiles-grid">
-        <div className="tile">
-          <h3 className="tile-header">Dự báo tăng trưởng</h3>
-          <div className="tile-number">
-            {" "}
-            Tăng {calculateSalesForecast(ordersLast12Months)} %
-          </div>
-        </div>
-        <div className="tile">
-          <h3 className="tile-header">Dự báo tiền tháng sau</h3>
-          <div className="tile-number">
-            {new Intl.NumberFormat("de-DE").format(
-              ordersTotal(ordersLast12Months) +
-              (ordersTotal(ordersLast12Months) *
-                calculateSalesForecast(ordersLast12Months)) /
-              100 //Giả sử tăng 10% so với tháng trước
-            )}{" "}
-            VNĐ
-
             {ordersTotal(ordersMonth).toLocaleString()} VNĐ
-
           </div>
           <div className="tile-desc">{ordersMonth.length} Tổng đơn tháng</div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

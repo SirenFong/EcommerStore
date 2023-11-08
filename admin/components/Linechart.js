@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Chart } from "chart.js";
 
 export default function Linechart({ ordersLast12Months }) {
   useEffect(() => {
+    // Biểu đồ thứ nhất (doanh thu theo tháng)
     const monthlySales = [];
     const months = [
       "Tháng 1",
@@ -37,7 +38,7 @@ export default function Linechart({ ordersLast12Months }) {
       const salesOfMonth = ordersLast12Months.filter(
         (order) => new Date(order.createdAt).getMonth() === i
       );
-      console.log(salesOfMonth);
+
       const totalSales = salesOfMonth.reduce((sum, order) => {
         const lineItems = order.line_items;
         const lineSum = lineItems.reduce((subSum, li) => {
@@ -67,15 +68,59 @@ export default function Linechart({ ordersLast12Months }) {
         ],
       },
     });
+
+    // Biểu đồ thứ hai (doanh thu dự báo theo quý)
+    const quarterlySales = [0, 0, 0, 0];
+
+    for (let i = 0; i < 12; i++) {
+      const quarterIndex = Math.floor(i / 3);
+      quarterlySales[quarterIndex] += monthlySales[i];
+    }
+
+    const forecastedSales = quarterlySales.map((quarter, index) => {
+      // Dự báo doanh thu cho quý tiếp theo dựa trên 3 quý trước đó
+      if (index >= 3) {
+        const previousQuarters = quarterlySales.slice(index - 3, index);
+        const average = previousQuarters.reduce((sum, q) => sum + q, 0) / 3;
+        return Math.round(average); // Làm tròn giá trị
+      }
+      return Math.round(quarter); // Làm tròn giá trị
+    });
+
+    const ctx2 = document.getElementById("myChart2").getContext("2d");
+
+    new Chart(ctx2, {
+      type: "pie",
+      data: {
+        labels: ["Q1", "Q2", "Q3", "Q4"],
+        datasets: [
+          {
+            data: forecastedSales,
+            label: "Doanh thu dự báo (VNĐ)",
+            borderColor: "rgb(75, 192, 192)",
+            backgroundColor: colors,
+            borderWidth: 2,
+          },
+        ],
+      },
+    });
   }, [ordersLast12Months]);
 
   return (
     <>
-      {/* Bar chart */}
-      <h1>Biểu đồ doanh thu</h1>
+      {/* Bar chart thứ nhất (doanh thu theo tháng) */}
+      <h1>Biểu đồ doanh thu theo tháng</h1>
       <div>
         <div>
           <canvas id="myChart"></canvas>
+        </div>
+      </div>
+
+      {/* Bar chart thứ hai (doanh thu dự báo theo quý) */}
+      <h1>Biểu đồ doanh thu dự báo theo quý</h1>
+      <div>
+        <div>
+          <canvas id="myChart2"></canvas>
         </div>
       </div>
     </>

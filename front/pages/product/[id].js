@@ -60,7 +60,7 @@ export default function ProductPage({
                 <Price>{isClient ? product.price.toLocaleString() : ""}đ</Price>
               </div>
               <div>
-                <FlyingButton main_id={product._id} src={product.images?.[0]}>
+                <FlyingButton main _id={product._id} src={product.images?.[0]}>
                   <CartIcon />
                   Thêm vào giỏ
                 </FlyingButton>

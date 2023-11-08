@@ -97,9 +97,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
   return {
     props: {

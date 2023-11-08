@@ -1,13 +1,14 @@
 import styled from "styled-components";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import FlyingButton from "./FlyingButton";
 import HeartOutlineIcon from "./icons/HeartOutlineIcon";
 import HeartSolidIcon from "./icons/HeartSolidIcon";
 import axios from "axios";
+import { CategoryContext } from "./CategoryContext";
 const ProductWrapper = styled.div`
- background-color: #fff;
- padding:30px;
+  background-color: #fff;
+  padding: 30px;
   button {
     width: 100%;
     text-align: center;
@@ -17,7 +18,7 @@ const ProductWrapper = styled.div`
 
 const WhiteBox = styled(Link)`
   background-color: #fff;
-  box-shadow-sm:  0 .125rem .25rem rgba($black, .075);
+  box-shadow-sm: 0 0.125rem 0.25rem rgba($black, 0.075);
   padding: 20px;
   height: 200px;
   text-align: center;
@@ -96,11 +97,12 @@ export default function ProductBox({
   price,
   images,
   wished = false,
-  onRemoveFromWishlist = () => { },
+  onRemoveFromWishlist = () => {},
+  props,
 }) {
-
   const url = "/product/" + _id;
 
+  const { addCategory } = useContext(CategoryContext);
   const formatter = new Intl.NumberFormat("en-US");
   const formattedPrice = formatter.format(price);
   const [isWished, setIsWished] = useState(wished);
@@ -115,7 +117,7 @@ export default function ProductBox({
       .post("/api/wishlist", {
         product: _id,
       })
-      .then(() => { });
+      .then(() => {});
     setIsWished(nextValue);
   }
 
@@ -128,7 +130,6 @@ export default function ProductBox({
           </WishlistButton>
           <img src={images?.[0]} alt="" />
         </div>
-
       </WhiteBox>
       <ProductInfoBox>
         <Title href={url}>{title}</Title>
