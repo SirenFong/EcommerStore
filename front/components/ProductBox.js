@@ -134,6 +134,7 @@ export default function ProductBox({
     clearCategory();
     addCategory(category);
     window.location.href = url;
+
   }
   useEffect(() => {
     setDomLoaded(true);
