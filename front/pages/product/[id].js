@@ -92,10 +92,11 @@ export async function getServerSideProps(context) {
   const { id } = context.query;
   const product = await Product.findById(id);
   const category = product.category;
+
   //hàm random
   // Tạo truy vấn MongoDB để lấy các sản phẩm thuộc cùng danh mục
   const suggestedProduct = await Product.aggregate([
-    { $match: { category: category } }, // Lọc sản phẩm thuộc cùng danh mục
+    { $match: { category: category, _id: { $ne: product._id } } }, // Lọc sản phẩm thuộc cùng danh mục
     { $sample: { size: 4 } }, // Lấy ngẫu nhiên 4 sản phẩm
   ]);
   const session = await getServerSession(context.req, context.res, authOptions);
