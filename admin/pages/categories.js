@@ -53,7 +53,7 @@ function Categories({ swal }) {
     setProperties([]);
     fetchCategories();
     await swal.fire({
-      title: "Settings saved!",
+      title: "Lưu thành công!",
       icon: "success",
     });
   }
@@ -69,10 +69,10 @@ function Categories({ swal }) {
         values: values.join(","),
       }))
     );
-    await swal.fire({
-      title: "Settings saved!",
-      icon: "success",
-    });
+    // await swal.fire({
+    //   title: "Settings saved!",
+    //   icon: "success",
+    // });
   }
 
   //Hàm xóa loại sản phẩm

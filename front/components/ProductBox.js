@@ -10,7 +10,6 @@ import Button from "./Button";
 import { CategoryContext } from "@component/components/CategoryContext";
 import { useEffect } from "react";
 
-
 const ProductWrapper = styled.div`
   background-color: #fff;
   padding: 30px;
@@ -103,15 +102,13 @@ export default function ProductBox({
   category,
   images,
   wished = false,
-  onRemoveFromWishlist = () => { },
+  onRemoveFromWishlist = () => {},
   props,
 }) {
   const url = "/product/" + _id;
 
   const { addCategory, clearCategory } = useContext(CategoryContext);
   const [domLoaded, setDomLoaded] = useState(false);
-
-
 
   const formatter = new Intl.NumberFormat("en-US");
   const formattedPrice = formatter.format(price);
@@ -127,46 +124,41 @@ export default function ProductBox({
       .post("/api/wishlist", {
         product: _id,
       })
-      .then(() => { });
+      .then(() => {});
     setIsWished(nextValue);
   }
   function addcategoryId(category) {
     clearCategory();
     addCategory(category);
     window.location.href = url;
-
   }
   useEffect(() => {
     setDomLoaded(true);
   }, []);
   return (
-
     <>
-      {domLoaded && (<ProductWrapper>
+      {domLoaded && (
+        <ProductWrapper>
+          <WhiteBox href={url}>
+            <div>
+              <WishlistButton wished={isWished} onClick={addToWishlist}>
+                {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
+              </WishlistButton>
+              <img src={images?.[0]} alt="" />
+            </div>
+          </WhiteBox>
 
-        <WhiteBox onClick={() => addcategoryId(_id)}>
-          <div>
-            <WishlistButton wished={isWished} onClick={addToWishlist}>
-              {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
-            </WishlistButton>
-            <img src={images?.[0]} alt="" />
-          </div>
-
-        </WhiteBox>
-
-
-        <ProductInfoBox>
-          <Title onClick={() => addcategoryId(category)}>{category}</Title>
-          <PriceRow>
-            <Price>{formattedPrice} đ</Price>
-            <FlyingButton _id={_id} src={images?.[0]}>
-              Thêm vào giỏ hàng
-            </FlyingButton>
-          </PriceRow>
-        </ProductInfoBox>
-      </ProductWrapper>)}
+          <ProductInfoBox>
+            <Title href={url}>{title}</Title>
+            <PriceRow>
+              <Price>{formattedPrice} VNĐ</Price>
+              <FlyingButton _id={_id} src={images?.[0]}>
+                Thêm vào giỏ
+              </FlyingButton>
+            </PriceRow>
+          </ProductInfoBox>
+        </ProductWrapper>
+      )}
     </>
-
-
   );
 }

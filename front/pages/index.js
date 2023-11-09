@@ -6,16 +6,12 @@ import { Product } from "@component/models/Product";
 import Header from "@component/components/Header";
 import Featured from "./../components/Featured";
 import NewProducts from "@component/components/NewProducts";
-
-import { useContext, useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import SuggestedProducts from "@component/components/SuggestedProducts";
 import Footer from "@component/components/Footer";
 import Featured2 from "@component/components/Featured2";
 import { Advertisement } from "@component/models/Advertisement";
 import Banner from "@component/components/Banner";
-import { CategoryContext } from "@component/components/CategoryContext";
-import axios from "axios";
 
 const Column = styled.div`
   display: flex;
@@ -31,21 +27,7 @@ export default function HomePage({
   wishedNewProducts,
   suggestedProduct,
 }) {
-
-  const [isClient, setIsClient] = useState(false);
   const [products, setProducts] = useState([]);
-  const { lastViewCategory } = useContext(CategoryContext);
-
-
-
-  useEffect(() => {
-
-    axios.get("/api/lastcaterogy", { category: lastViewCategory }).then((response) => {
-      setProducts(response.data.filter((item) => item.category == lastViewCategory));
-    });
-
-  }, [lastViewCategory]);
-  console.log(products)
   return (
     <div>
       <Header />
@@ -54,11 +36,12 @@ export default function HomePage({
       <Featured2 product={featuredProduct2} />
       <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
-      <SuggestedProducts
+      {/* <SuggestedProducts
         suggestedproducts={products}
         wishedProducts={wishedNewProducts}
       />
-      {suggestedProduct}
+      {suggestedProduct} */}
+      <Footer />
     </div>
   );
 }
@@ -105,13 +88,12 @@ export async function getServerSideProps(ctx) {
   //hàm random
   // const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
 
-
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
   return {
     props: {
@@ -121,7 +103,6 @@ export async function getServerSideProps(ctx) {
       bannerProduct2: JSON.parse(JSON.stringify(bannerProduct2)),
       bannerProduct3: JSON.parse(JSON.stringify(bannerProduct3)),
       newProducts: JSON.parse(JSON.stringify(newProducts)),
-
       wishedNewProducts: wishedNewProducts.map((i) => i.product.toString()),
     },
   };
