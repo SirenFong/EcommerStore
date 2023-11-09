@@ -14,7 +14,6 @@ import SuggestedProducts from "@component/components/SuggestedProducts";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 import { WishedProduct } from "@component/models/WishedProduct";
-import Footer from "@component/components/Footer";
 
 const ColWrapper = styled.div`
   display: grid;
@@ -43,7 +42,6 @@ export default function ProductPage({
 
   useEffect(() => {
     setIsClient(true);
-    window.scrollTo(0, 0);
   }, []);
 
   return (
@@ -78,12 +76,12 @@ export default function ProductPage({
           wishedProducts={wishedNewProducts}
         />
       </Center>
-      <Footer />
     </>
   );
 }
 
 export async function getServerSideProps(context) {
+  console.log(context)
   await mongooseConnect();
   const newProducts = await Product.find({}, null, {
     sort: { _id: -1 },

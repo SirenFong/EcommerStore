@@ -32,6 +32,20 @@ export default function HomePage({
   suggestedProduct,
 }) {
 
+  const [isClient, setIsClient] = useState(false);
+  const [products, setProducts] = useState([]);
+  const { lastViewCategory } = useContext(CategoryContext);
+
+
+
+  useEffect(() => {
+
+    axios.get("/api/lastcaterogy", { category: lastViewCategory }).then((response) => {
+      setProducts(response.data.filter((item) => item.category == lastViewCategory));
+    });
+
+  }, [lastViewCategory]);
+  console.log(products)
   return (
     <div>
       <Header />
@@ -40,11 +54,11 @@ export default function HomePage({
       <Featured2 product={featuredProduct2} />
       <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
-
       <SuggestedProducts
-        suggestedproducts={suggestedProduct}
+        suggestedproducts={products}
         wishedProducts={wishedNewProducts}
       />
+      {suggestedProduct}
     </div>
   );
 }
@@ -53,7 +67,6 @@ export default function HomePage({
 export async function getServerSideProps(ctx) {
   await mongooseConnect();
   ///
-
   const featuredProductSetting = await Advertisement.findOne({
     name: "featuredProductId1",
   });
@@ -91,10 +104,6 @@ export async function getServerSideProps(ctx) {
   });
   //hàm random
   // const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
-  // const { lastViewCategory } = useContext(CategoryContext);
-  const suggestedProduct = await Product.find(
-    {}
-  )
 
 
   const session = await getServerSession(ctx.req, ctx.res, authOptions);

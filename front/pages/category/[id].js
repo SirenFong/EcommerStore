@@ -67,8 +67,8 @@ export default function CategoryPage({
     setLoadingProducts(true);
 
     //... trước subCategories cho phép truyền số lượng phần tử không xác định vào
-    //mảng cho dù mảng đó có bao nhiêu phần tử đi nữa. Nếu subCategories
-    //tồn tại và không null, mảng subCategories sẽ được
+    //mảng cho dù mảng đó có bao nhiêu phần tử đi nữa. Nếu subCategories 
+    //tồn tại và không null, mảng subCategories sẽ được 
     //lặp qua và các giá trị _id của từng phần tử sẽ được thêm vào mảng catIds.
     const catIds = [category._id, ...(subCategories?.map((c) => c._id) || [])];
     const params = new URLSearchParams();

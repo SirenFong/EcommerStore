@@ -100,6 +100,7 @@ export default function ProductBox({
   title,
   description,
   price,
+  category,
   images,
   wished = false,
   onRemoveFromWishlist = () => { },
@@ -107,7 +108,7 @@ export default function ProductBox({
 }) {
   const url = "/product/" + _id;
 
-  const { lastViewCategory, addCategory, clearCategory } = useContext(CategoryContext);
+  const { addCategory, clearCategory } = useContext(CategoryContext);
   const [domLoaded, setDomLoaded] = useState(false);
 
 
@@ -129,9 +130,9 @@ export default function ProductBox({
       .then(() => { });
     setIsWished(nextValue);
   }
-  function addcategoryId(_id) {
+  function addcategoryId(category) {
     clearCategory();
-    addCategory(_id);
+    addCategory(category);
     window.location.href = url;
   }
   useEffect(() => {
@@ -154,7 +155,7 @@ export default function ProductBox({
 
 
         <ProductInfoBox>
-          <Title onClick={() => addcategoryId(_id)}>{title}</Title>
+          <Title onClick={() => addcategoryId(category)}>{category}</Title>
           <PriceRow>
             <Price>{formattedPrice} đ</Price>
             <FlyingButton _id={_id} src={images?.[0]}>
