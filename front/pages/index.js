@@ -53,8 +53,7 @@ export default function HomePage({
 export async function getServerSideProps(ctx) {
   await mongooseConnect();
   ///
-  const { lastViewCategory, addCategory } =
-    useContext(CategoryContext);
+
   const featuredProductSetting = await Advertisement.findOne({
     name: "featuredProductId1",
   });
@@ -94,16 +93,16 @@ export async function getServerSideProps(ctx) {
   // const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
   // const { lastViewCategory } = useContext(CategoryContext);
   const suggestedProduct = await Product.find(
-    { category: lastViewCategory }
+    {}
   )
 
 
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session.user.email,
-        product: newProducts.map((p) => p._id.toString()),
-      })
+      userEmail: session.user.email,
+      product: newProducts.map((p) => p._id.toString()),
+    })
     : [];
   return {
     props: {
