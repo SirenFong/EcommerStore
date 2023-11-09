@@ -87,17 +87,23 @@ export async function getServerSideProps(context) {
     sort: { _id: -1 },
     limit: 4,
   });
+  const { id } = context.query;
+  const product = await Product.findById(id);
+  const category = product.category;
+
   //hàm random
-  const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
+  // Tạo truy vấn MongoDB để lấy các sản phẩm thuộc cùng danh mục
+  const suggestedProduct = await Product.aggregate([
+    { $match: { category: category, _id: { $ne: product._id } } }, // Lọc sản phẩm thuộc cùng danh mục
+    { $sample: { size: 4 } }, // Lấy ngẫu nhiên 4 sản phẩm
+  ]);
   const session = await getServerSession(context.req, context.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
-  const { id } = context.query;
-  const product = await Product.findById(id);
 
   return {
     props: {
