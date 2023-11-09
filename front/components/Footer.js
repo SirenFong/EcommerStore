@@ -18,7 +18,7 @@ const Footer = () => (
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link px-2 text-muted">
-                Sản phẩm mới
+                Tin tức
               </a>
             </li>
             <li class="nav-item">
@@ -37,7 +37,7 @@ const Footer = () => (
               </a>
             </li>
           </ul>
-          <p class="text-center text-muted">© 2022 Company, Inc</p>
+          <p class="text-center text-muted">© 2023 ThanhThuongCompany, Inc</p>
         </div>
       </div>
     </div>

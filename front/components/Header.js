@@ -15,9 +15,35 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Button from "./Button";
 import { FaGoogle } from "react-icons/fa";
 
+const NavButton = styled.button`
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  color: white;
+  cursor: pointer;
+  position: relative;
+  z-index: 3;
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
+`;
 
-export default function Header(
-) {
+const SideIcons = styled.div`
+  display: flex;
+  align-items: center;
+  a {
+    display: inline-block;
+    min-width: 20px;
+    color: black;
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+`;
+
+export default function Header() {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
   const [mainCategories, , setMainCategories] = useState();
@@ -32,10 +58,7 @@ export default function Header(
     await signIn("google");
   }
 
-
   return (
-
-
     ///
     <div>
       <nav className="navbar navbar-expand-lg navbar-white bg-white">
@@ -58,13 +81,17 @@ export default function Header(
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link active" aria-current="page" href={"/"}>
+                <Link
+                  className="nav-link active"
+                  aria-current="page"
+                  href={"/"}
+                >
                   Trang chủ
                 </Link>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" href={"/products"}>
-                  danh sách sản phẩm
+                  Danh sách sản phẩm
                 </Link>
               </li>
               <li className="nav-item dropdown">
@@ -75,30 +102,19 @@ export default function Header(
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  doanh mục sản phẩm
+                  Danh mục sản phẩm
                 </Link>
-                <ul className="dropdown-menu">
-
-
-                </ul>
-              </li>
-
-              <li className="nav-item">
-                <a className="nav-link disabled">Disabled</a>
+                <ul className="dropdown-menu"></ul>
               </li>
             </ul>
-            <form className="d-flex center" role="search">
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-              />
-              <button className="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
-
+            <SideIcons>
+              <Link href={"/search"}>
+                <SearchIcon />
+              </Link>
+              <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>
+                <BarsIcon />
+              </NavButton>
+            </SideIcons>
           </div>
           <div class="d-flex p-6 gap-4 align-items-center ">
             <ul class="navbar-nav">
@@ -110,115 +126,74 @@ export default function Header(
                 data-mdb-toggle="dropdown"
                 aria-expanded="false"
               >
-                <i ><Cart /></i>
-                <span class="badge rounded-pill badge-notification bg-danger">{cartProducts.length}</span>
+                <i>
+                  <Cart />
+                </i>
+                <span class="badge rounded-pill badge-notification bg-danger">
+                  {cartProducts.length}
+                </span>
               </a>
-
             </ul>
 
-
-
-            <ul class="navbar-nav">
-
-              <li class="nav-item dropdown">
-                <a
-                  class="nav-link dropdown-toggle hidden-arrow"
-                  href="#"
-                  id="navbarDropdownMenuLink"
-                  role="button"
-                  data-mdb-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  <i ><Bell /></i>
-                  <span class="badge rounded-pill badge-notification bg-danger">1</span>
-                </a>
-                <ul
-                  class="dropdown-menu dropdown-menu-end"
-                  aria-labelledby="navbarDropdownMenuLink"
-                >
-                  <li>
-                    <a class="dropdown-item" href="#">Some news</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">Another news</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                  </li>
-                </ul>
-              </li>
-
-            </ul>
             {!session && ( //nếu không thì sẽ login
               <Button primary onClick={login}>
-                <FaGoogle /> Đăng nhập với Google
+                Đăng nhập với Google <FaGoogle />
               </Button>
             )}
             {session && ( //Nếu tồn tại session thì hiện logout
-              <li className="navbar-nav nav-item dropdown ">
+              <li className="navbar-nav nav-item dropdown">
                 <Link
                   className="nav-link dropdown-toggle dropdown-center"
                   href={"/categories"}
                   role="button"
                   data-bs-toggle="dropdown"
-
                 >
                   <img
                     src={session?.user?.image}
                     class="rounded-circle"
                     height="25"
-
                     loading="lazy"
                   />
                 </Link>
-                <ul className="dropdown-menu ">
+                <ul className="dropdown-menu dropdown-menu-end">
+                  {session ? (
+                    <li>
+                      <Link className="dropdown-item" href="/account">
+                        Thông tin tài khoản
+                      </Link>
+                    </li>
+                  ) : null}
                   <li>
-                    <span className="px-2">{session?.user?.name}</span>
-                  </li>
-
-                  <li>
-                    <Link className="dropdown-item" href={"/account"}>
-                      Thông tin tài khoản
+                    <Link className="dropdown-item" href="/order">
+                      Đơn hàng đã đặt
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" href={"/order"}>
-                      đơn hàng đã đặt
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" href={"/wishlist"}>
-                      danh sách yêu thích
+                    <Link className="dropdown-item" href="/wishlist">
+                      Danh sách yêu thích
                     </Link>
                   </li>
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
                   <li>
-                    <Link className="dropdown-item" href={"/setting"}>
+                    <Link className="dropdown-item" href="/setting">
                       Cài đặt
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" href={"/logout"}>
-                      đăng xuất
+                    <Link className="dropdown-item" href="/logout">
+                      Đăng xuất
                     </Link>
                   </li>
                 </ul>
               </li>
             )}
-
           </div>
         </div>
-
-
-
       </nav>
     </div>
     ///
-
-
-
   );
 }
 
@@ -246,9 +221,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session?.user.email,
-      product: allFetchedProductsId,
-    })
+        userEmail: session?.user.email,
+        product: allFetchedProductsId,
+      })
     : [];
 
   return {

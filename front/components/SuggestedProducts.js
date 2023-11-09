@@ -35,7 +35,7 @@ export default function SuggestedProducts({
     // Đặt sự kiện xử lý khi chuyển hướng
     router.events.on("routeChangeComplete", () => {
       // Reload trang sau khi chuyển hướng
-      router.reload();
+      // router.reload();
     });
 
     return () => {
@@ -45,7 +45,9 @@ export default function SuggestedProducts({
 
   return (
     <Center>
-      <Title>Có thể bạn sẽ thích</Title>
+      <Title>
+        Các sản phẩm tương tự
+      </Title>
       <CategoryGrid interval={100}>
         {suggestedproducts?.length > 0 &&
           suggestedproducts.map((suggestedproduct, index) => (
