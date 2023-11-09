@@ -81,7 +81,7 @@ export default function ProductPage({
 }
 
 export async function getServerSideProps(context) {
-  console.log(context)
+  console.log(context);
   await mongooseConnect();
   const newProducts = await Product.find({}, null, {
     sort: { _id: -1 },
@@ -90,7 +90,6 @@ export async function getServerSideProps(context) {
   const { id } = context.query;
   const product = await Product.findById(id);
   const category = product.category;
-
   //hàm random
   // Tạo truy vấn MongoDB để lấy các sản phẩm thuộc cùng danh mục
   const suggestedProduct = await Product.aggregate([
