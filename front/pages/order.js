@@ -27,7 +27,6 @@ const ColsWrapper = styled.div`
 `;
 
 const ColumnsWrapper = styled.div`
-
   grid-template-columns: 1fr;
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.2fr 0.8fr;
@@ -63,21 +62,18 @@ const AddressHolder = styled.div`
 `;
 
 const Avatar = styled.div`
-  height:100px;
-  weight:70px;
+  height: 100px;
+  weight: 70px;
   gap: 5px;
-  boder-radius:50px;
-  margin:0px 10px;
+  boder-radius: 50px;
+  margin: 0px 10px;
 
   display: flex;
   justify-content: center;
-  img{
- 
-    height:70px;
-  weight:70px;
-  
+  img {
+    height: 70px;
+    weight: 70px;
   }
-
 `;
 
 function OrdersPage({ swal }) {
@@ -178,8 +174,11 @@ function OrdersPage({ swal }) {
               <RevealWrapper delay={0}>
                 <Tabs
                   tabs={[
-
-                    "Đơn đặt hàng", "Đơn chờ xác nhận", "Đơn chờ giao hàng", "Đơn đã giao"]}
+                    "Đơn đặt hàng",
+                    "Đơn chờ xác nhận",
+                    "Đơn chờ giao hàng",
+                    "Đơn đã giao",
+                  ]}
                   active={activeTab}
                   onChange={setActivetab}
                 />
@@ -214,7 +213,9 @@ function OrdersPage({ swal }) {
                           <p>Bạn chưa có đơn hàng nào !!</p>
                         )}
                         {orders.length > 0 &&
-                          orders.filter((item) => item.status == 1).map((o) => <SingleOrder {...o} />)}
+                          orders
+                            .filter((item) => item.status == 1)
+                            .map((o) => <SingleOrder {...o} />)}
                       </div>
                     )}
                   </>
@@ -232,7 +233,9 @@ function OrdersPage({ swal }) {
                           <p>Bạn chưa có đơn hàng nào !!</p>
                         )}
                         {orders.length > 0 &&
-                          orders.filter((item) => item.status == 2).map((o) => <SingleOrder {...o} />)}
+                          orders
+                            .filter((item) => item.status == 2)
+                            .map((o) => <SingleOrder {...o} />)}
                       </div>
                     )}
                   </>
@@ -250,16 +253,16 @@ function OrdersPage({ swal }) {
                           <p>Bạn chưa có đơn hàng nào !!</p>
                         )}
                         {orders.length > 0 &&
-                          orders.filter((item) => item.status == 4).map((o) => <SingleOrder {...o} />)}
+                          orders
+                            .filter((item) => item.status == 4)
+                            .map((o) => <SingleOrder {...o} />)}
                       </div>
                     )}
                   </>
                 )}
-
               </RevealWrapper>
             </WhiteBox>
           </div>
-        
         </ColumnsWrapper>
       </Center>
       <Footer />
