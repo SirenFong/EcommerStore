@@ -4,7 +4,8 @@ import ProductBox from "./ProductBox";
 import { RevealWrapper } from "next-reveal";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
-
+import { CategoryContext } from "@component/components/CategoryContext";
+import { useContext } from "react";
 const Title = styled.h2`
   font-size: 2rem;
   margin: 30px 0 20px;

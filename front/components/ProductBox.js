@@ -1,10 +1,14 @@
 import styled from "styled-components";
 import Link from "next/link";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import FlyingButton from "./FlyingButton";
 import HeartOutlineIcon from "./icons/HeartOutlineIcon";
 import HeartSolidIcon from "./icons/HeartSolidIcon";
 import axios from "axios";
+import Button from "./Button";
+import { CategoryContext } from "@component/components/CategoryContext";
+import { useEffect } from "react";
+
 const ProductWrapper = styled.div`
  background-color: #fff;
  padding:30px;
@@ -15,7 +19,7 @@ const ProductWrapper = styled.div`
   }
 `;
 
-const WhiteBox = styled(Link)`
+const WhiteBox = styled.button`
   background-color: #fff;
   box-shadow-sm:  0 .125rem .25rem rgba($black, .075);
   padding: 20px;
@@ -32,7 +36,7 @@ const WhiteBox = styled(Link)`
   }
 `;
 
-const Title = styled(Link)`
+const Title = styled.button`
   font-weight: normal;
   font-size: 0.9rem;
   color: inherit;
@@ -100,7 +104,8 @@ export default function ProductBox({
 }) {
 
   const url = "/product/" + _id;
-
+  const { lastViewCategory, addCategory, clearCategory } = useContext(CategoryContext);
+  const [domLoaded, setDomLoaded] = useState(false);
   const formatter = new Intl.NumberFormat("en-US");
   const formattedPrice = formatter.format(price);
   const [isWished, setIsWished] = useState(wished);
@@ -118,27 +123,40 @@ export default function ProductBox({
       .then(() => { });
     setIsWished(nextValue);
   }
-
+  function addcategoryId(_id) {
+    clearCategory();
+    addCategory(_id);
+    window.location.href = url;
+  }
+  useEffect(() => {
+    setDomLoaded(true);
+  }, []);
   return (
-    <ProductWrapper>
-      <WhiteBox href={url}>
-        <div>
-          <WishlistButton wished={isWished} onClick={addToWishlist}>
-            {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
-          </WishlistButton>
-          <img src={images?.[0]} alt="" />
-        </div>
+    <>
+      {domLoaded && (<ProductWrapper>
 
-      </WhiteBox>
-      <ProductInfoBox>
-        <Title href={url}>{title}</Title>
-        <PriceRow>
-          <Price>{formattedPrice} đ</Price>
-          <FlyingButton _id={_id} src={images?.[0]}>
-            Thêm vào giỏ hàng
-          </FlyingButton>
-        </PriceRow>
-      </ProductInfoBox>
-    </ProductWrapper>
+        <WhiteBox onClick={() => addcategoryId(_id)}>
+          <div>
+            <WishlistButton wished={isWished} onClick={addToWishlist}>
+              {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
+            </WishlistButton>
+            <img src={images?.[0]} alt="" />
+          </div>
+
+        </WhiteBox>
+
+
+        <ProductInfoBox>
+          <Title onClick={() => addcategoryId(_id)}>{title}</Title>
+          <PriceRow>
+            <Price>{formattedPrice} đ</Price>
+            <FlyingButton _id={_id} src={images?.[0]}>
+              Thêm vào giỏ hàng
+            </FlyingButton>
+          </PriceRow>
+        </ProductInfoBox>
+      </ProductWrapper>)}
+    </>
+
   );
 }

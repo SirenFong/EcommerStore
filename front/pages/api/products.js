@@ -30,17 +30,11 @@ export default async function handle(req, res) {
       sort: { [sortField]: sortOrder === "asc" ? 1 : -1 },
     })
   );
-}
-if (method === "PUT") {
-  const { views, purchases, _id } = req.body;
-  await Product.updateOne(
-    { _id },
-    {
-      views,
-       purchases,
-    }
-  );
-  res.json(true);
 
-
+  if (req.method === "GET") {
+    res.json(
+      await Product.find({})
+    );
+  }
 }
+

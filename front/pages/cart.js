@@ -13,6 +13,7 @@ import styled from "styled-components";
 import { FaGoogle } from "react-icons/fa";
 import Footer from "@component/components/Footer";
 import { Checkbox } from "@mui/material";
+import { CategoryContext } from "@component/components/CategoryContext";
 
 const ErrorMessage = styled.p`
   color: red;
@@ -110,6 +111,7 @@ const ButtonPayment = styled.div`
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
+
   const { data: session } = useSession();
   const [products, setProducts] = useState([]);
   const [name, setName] = useState("");

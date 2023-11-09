@@ -7,13 +7,15 @@ import Header from "@component/components/Header";
 import Featured from "./../components/Featured";
 import NewProducts from "@component/components/NewProducts";
 
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import SuggestedProducts from "@component/components/SuggestedProducts";
 import Footer from "@component/components/Footer";
 import Featured2 from "@component/components/Featured2";
 import { Advertisement } from "@component/models/Advertisement";
 import Banner from "@component/components/Banner";
+import { CategoryContext } from "@component/components/CategoryContext";
+import axios from "axios";
 
 const Column = styled.div`
   display: flex;
@@ -29,11 +31,6 @@ export default function HomePage({
   wishedNewProducts,
   suggestedProduct,
 }) {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   return (
     <div>
@@ -56,6 +53,8 @@ export default function HomePage({
 export async function getServerSideProps(ctx) {
   await mongooseConnect();
   ///
+  const { lastViewCategory, addCategory } =
+    useContext(CategoryContext);
   const featuredProductSetting = await Advertisement.findOne({
     name: "featuredProductId1",
   });
@@ -92,7 +91,12 @@ export async function getServerSideProps(ctx) {
     limit: 10,
   });
   //hàm random
-  const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
+  // const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
+  // const { lastViewCategory } = useContext(CategoryContext);
+  const suggestedProduct = await Product.find(
+    { category: lastViewCategory }
+  )
+
 
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
@@ -109,7 +113,7 @@ export async function getServerSideProps(ctx) {
       bannerProduct2: JSON.parse(JSON.stringify(bannerProduct2)),
       bannerProduct3: JSON.parse(JSON.stringify(bannerProduct3)),
       newProducts: JSON.parse(JSON.stringify(newProducts)),
-      suggestedProduct: JSON.parse(JSON.stringify(suggestedProduct)),
+
       wishedNewProducts: wishedNewProducts.map((i) => i.product.toString()),
     },
   };
