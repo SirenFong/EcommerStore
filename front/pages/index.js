@@ -40,7 +40,7 @@ export default function HomePage({
     <div>
       <Header />
       <Featured product={featuredProduct} />
-      <div>----</div>
+  
       <Featured2 product={featuredProduct2} />
       <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />

@@ -23,6 +23,7 @@ const ProductWrapper = styled.div`
 
 const WhiteBox = styled.button`
   background-color: #fff;
+border:none;
   box-shadow-sm: 0 0.125rem 0.25rem rgba($black, 0.075);
   padding: 20px;
   height: 200px;
@@ -30,7 +31,8 @@ const WhiteBox = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+
+
   position: relative;
   img {
     max-width: 100%;
@@ -39,8 +41,11 @@ const WhiteBox = styled.button`
 `;
 
 const Title = styled.button`
+background: transparent;
+border: none;
   font-weight: normal;
-  font-size: 0.9rem;
+ 
+  font-size: 1rem;
   color: inherit;
   text-decoration: none;
   margin: 0;
