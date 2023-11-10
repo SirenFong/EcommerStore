@@ -121,6 +121,7 @@ export default function ProductBox({
   const formatter = new Intl.NumberFormat("en-US");
   const formattedPrice = formatter.format(price);
   const [isWished, setIsWished] = useState(wished);
+  console.log(isWished)
   function addToWishlist(ev) {
     ev.preventDefault();
     ev.stopPropagation();
@@ -149,7 +150,7 @@ export default function ProductBox({
     <>
       {domLoaded && (<ProductWrapper>
 
-        <WhiteBox onClick={() => addcategoryId(_id)}>
+        <WhiteBox onClick={() => addcategoryId(category)}>
           <div>
             <WishlistButton wished={isWished} onClick={addToWishlist}>
               {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}

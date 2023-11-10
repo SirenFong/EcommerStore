@@ -95,3 +95,16 @@ table.basic a {
   text-align: center;
   font-size: 25px;
 }
+.box-checked {
+  background-color: rgb(238, 238, 238);
+  border: 20px;
+  border-color: tomato;
+  border-radius: 5px;
+  padding: 10px 20px;
+  div {
+    font-display: center;
+  }
+}
+.box-checked-input {
+  height: 15px;
+}

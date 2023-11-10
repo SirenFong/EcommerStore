@@ -14,11 +14,15 @@ export default function ProductForm({
   category: assignedCategory,
   properties: assignedProperties,
 }) {
+
   const [title, setTitle] = useState(existingTitle || "");
-  const [value, setValue] = useState([null]);
-  const [productProperties, setProductProperties] = useState(
+
+  const [productProperties, setProductProperties] = useState([
     assignedProperties || {}
+  ]
+
   );
+  console.log(productProperties)
   const [description, setDescription] = useState(existingDescription || "");
   const [category, setCategory] = useState(assignedCategory || "");
   const [price, setPrice] = useState(existingPrice || "");
@@ -38,7 +42,7 @@ export default function ProductForm({
       setCategoriesLoading(false);
     });
   }, []);
-  console.log(categories)
+
   //Xóa theo index :v
   const deleteByIndex = (index) => {
     setImages((oldValues) => {
@@ -108,9 +112,9 @@ export default function ProductForm({
   const propertiesToFill = [];
   if (categories.length > 0 && category) {
     let categoryInfo = categories.find(({ _id }) => _id === category);
-    console.log(categoryInfo)
+
     propertiesToFill.push(...categoryInfo.properties);
-    console.log(propertiesToFill)
+
     while (categoryInfo?.parent?._id) {
       const parentCat = categories.find(
         ({ _id }) => _id === categoryInfo?.parent?._id
@@ -119,26 +123,31 @@ export default function ProductForm({
       categoryInfo = parentCat;
     }
   }
+  const [checkedvalues, setValue] = useState([]);
+  function setProductProp(p, e) {
+    e.preventDefault();
 
-  function setProductProp(propName, value) {
-    setProductProperties((prev) => {
-      const newProductProps = { ...prev };
-      newProductProps[propName] = value;
-      return newProductProps;
-    });
+    const { value, checked } = e.target
+
+    if (checked) {
+      setValue(pre => [...pre, value])
+
+    } else (
+      setValue(pre => {
+        return [...pre.filter(check => check !== value)]
+      })
+
+    )
   }
-  const inactiveButon = "flex gap-1 p-1";
-  const activeButton = inactiveButon + " bg-highlight text-black rounded-sm ";
-  //Được sử dụng như tạo 1 đường dẫn tới cho trang web đồng thời kích thoạt hiệu ứng khi đang ở trang web đó
-  const inactiveIcon = "w-6 h-6";
-  const activeIcon = inactiveIcon + " text-primary";
+  console.log(checkedvalues)
+  // function setProductProp(index, p, value) {
 
-  const [active, setActive] = useState();
 
-  const handleClick = (event) => {
-    event.preventDefault();
-    setActive(event.target.id);
-  }
+  //   setProductProperties((prev) => ({ ...prev, [p.name]: value }));
+
+  //   console.log(productProperties)
+  // }
+  // console.log(propertiesToFill)
   return (
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
     /**Thằng setTitle sẽ thay đổi thành 1 trạng thái mới của thằng title */
@@ -164,27 +173,27 @@ export default function ProductForm({
       {categoriesLoading && <Spinner />}
 
       {propertiesToFill.length > 0 &&
-        propertiesToFill.map((p) => (
+        propertiesToFill.map((p, index) => (
           <div className="">
             <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
 
-            <div className="flex gap-2" value={productProperties[p.name]}
-              onChange={(ev) => setProductProp(p.name, ev.target.value)}>
-              {/* <select
-                value={productProperties[p.name]}
-                onChange={(ev) => setProductProp(p.name, ev.target.value)}
-              >
-                {p.values.map((v) => (
-                  <option value={v}>{v}</option>
-                ))}
-              </select> */}
+            <div className="flex gap-2" value={p.name}
+              // onChange={(ev) => setProductProp(index, p, ev.target.value)}
+              onChange={(e) => setProductProp(p, e)}
+            >
+
               {p.values.map((item, index) => (
-                <buton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"  id={item} key={index} onClick={handleClick}>
+                <div key={index} className="box-checked">
+                  <div>{item}</div>
+                  <input className="box-checked-input" value={item} type="checkbox" />
+
+                </div>
 
 
-                  {item}
-                </buton>
+
               ))}
+
+
             </div>
           </div >
         ))
