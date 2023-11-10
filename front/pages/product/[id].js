@@ -97,13 +97,13 @@ export async function getServerSideProps(context) {
   //   { $match: { category: category, _id: { $ne: product._id } } }, // Lọc sản phẩm thuộc cùng danh mục
   //   { $sample: { size: 4 } }, // Lấy ngẫu nhiên 4 sản phẩm
   // ]);
-  const suggestedProduct = await Product.find({ _id: { $ne: product._id } })
+  const suggestedProduct = await Product.find({ _id: { $ne: product._id } });
   const session = await getServerSession(context.req, context.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
 
   return {
