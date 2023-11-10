@@ -4,6 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import "bootstrap/dist/css/bootstrap.css";
 import { useEffect } from "react";
 import { CategoryContext, CategoryProvider } from "@component/components/CategoryContext";
+import GetCategory from "@component/components/GetCategory";
 
 const GlobalStyles = createGlobalStyle`
 ///url font chữ
@@ -23,7 +24,7 @@ const GlobalStyles = createGlobalStyle`
 `;
 
 
-export default function App({ Component, pageProps: { CategoryContext, session, ...pageProps } }) {
+export default function App({ Component, pageProps: { session, ...pageProps } }) {
 
   useEffect(() => {
     import("bootstrap/dist/js/bootstrap");
@@ -32,7 +33,7 @@ export default function App({ Component, pageProps: { CategoryContext, session, 
     <>
       <GlobalStyles />
       <SessionProvider session={session}>
-        <CategoryProvider category={CategoryContext}>
+        <CategoryProvider>
           <CartContextProvider>
             <Component {...pageProps} />
           </CartContextProvider>

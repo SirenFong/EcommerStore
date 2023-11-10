@@ -6,6 +6,7 @@ import { Product } from "@component/models/Product";
 import Header from "@component/components/Header";
 import Featured from "./../components/Featured";
 import NewProducts from "@component/components/NewProducts";
+
 import { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import SuggestedProducts from "@component/components/SuggestedProducts";
@@ -15,6 +16,7 @@ import { Advertisement } from "@component/models/Advertisement";
 import Banner from "@component/components/Banner";
 import { CategoryContext } from "@component/components/CategoryContext";
 import axios from "axios";
+import GetCategory from "@component/components/GetCategory";
 
 const Column = styled.div`
   display: flex;
@@ -28,54 +30,35 @@ export default function HomePage({
   bannerProduct3,
   newProducts,
   wishedNewProducts,
-  suggestedProduct,
+  suggestedProducts,
+
 }) {
-  // const [isClient, setIsClient] = useState(false);
-  const [products, setProducts] = useState([]);
 
-  // const [viewedProductIds, setViewedProductIds] = useState([]);
-  // const [suggestedProducts, setSuggestedProducts] = useState([]);
+  const [isClient, setIsClient] = useState(false);
 
-  // const { lastViewCategory } = useContext(CategoryContext);
-
-  // useEffect(() => {
-  //   // Lấy danh sách các sản phẩm đã xem trước đó từ localStorage
-  //   const lastViewedCategories =
-  //     JSON.parse(localStorage.getItem("lastViewedCategories")) || [];
-
-  //   // Sử dụng danh sách các sản phẩm đã xem trước đó để lấy các sản phẩm gợi ý
-  //   axios
-  //     .get("/api/lastcaterogy", { category: lastViewedCategories })
-  //     .then((response) => {
-  //       setProducts(
-  //         response.data.filter((item) =>
-  //           lastViewedCategories.includes(item.category)
-  //         )
-  //       );
-  //     });
-  // }, []);
   return (
     <div>
       <Header />
       <Featured product={featuredProduct} />
       <div>----</div>
-      {/* <Featured2 product={featuredProduct2} /> */}
+      <Featured2 product={featuredProduct2} />
       <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
-      {/* <SuggestedProducts
-        suggestedproducts={products}
+      <SuggestedProducts
+        suggestedproducts={suggestedProducts}
         wishedProducts={wishedNewProducts}
       />
-      {suggestedProduct} */}
-      <Footer />
+
     </div>
   );
 }
 
 //Connect tới admin để hiển thị sản phẩm theo id
 export async function getServerSideProps(ctx) {
+
   await mongooseConnect();
   ///
+
   const featuredProductSetting = await Advertisement.findOne({
     name: "featuredProductId1",
   });
@@ -112,14 +95,17 @@ export async function getServerSideProps(ctx) {
     limit: 10,
   });
   //hàm random
-  // const suggestedProduct = await Product.aggregate([{ $sample: { size: 4 } }]);
+  const suggestedProduct = await Product.find({});
+
+
+
 
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session.user.email,
-        product: newProducts.map((p) => p._id.toString()),
-      })
+      userEmail: session.user.email,
+      product: newProducts.map((p) => p._id.toString()),
+    })
     : [];
   return {
     props: {
@@ -129,7 +115,7 @@ export async function getServerSideProps(ctx) {
       bannerProduct2: JSON.parse(JSON.stringify(bannerProduct2)),
       bannerProduct3: JSON.parse(JSON.stringify(bannerProduct3)),
       newProducts: JSON.parse(JSON.stringify(newProducts)),
-
+      suggestedProducts: JSON.parse(JSON.stringify(suggestedProduct)),
       wishedNewProducts: wishedNewProducts.map((i) => i.product.toString()),
     },
   };

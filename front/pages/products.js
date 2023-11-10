@@ -8,13 +8,16 @@ import Header from "@component/components/Header";
 import ProductsGrid from "@component/components/ProductsGrid";
 import Title from "@component/components/Title";
 import Footer from "@component/components/Footer";
+import Example from "@component/pages/CategoryFilters";
 
 export default function ProductsPage({ products, wishedProducts }) {
   return (
     <>
       <Header />
       <Center>
+
         <Title>Xem tất cả</Title>
+
         <ProductsGrid products={products} wishedProducts={wishedProducts} />
       </Center>
       <Footer />

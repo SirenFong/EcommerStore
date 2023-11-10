@@ -22,8 +22,20 @@ const CategoryGrid = styled.div`
 export default function SuggestedProducts({
   suggestedproducts,
   wishedProducts = [],
+  productId,
 }) {
+  const url = "/product/" + productId;
   const router = useRouter();
+
+  const { lastViewCategory } = useContext(CategoryContext);
+
+
+
+
+  const filtered = suggestedproducts.filter((item) => item.category == lastViewCategory)
+
+
+
 
   // Xử lý chuyển hướng khi nhấn vào sản phẩm
   const handleProductClick = (productId) => {
@@ -49,16 +61,16 @@ export default function SuggestedProducts({
         Các sản phẩm tương tự
       </Title>
       <CategoryGrid interval={100}>
-        {suggestedproducts?.length > 0 &&
-          suggestedproducts.map((suggestedproduct, index) => (
+        {filtered?.length > 0 &&
+          filtered.map((filtered, index) => (
             <RevealWrapper
-              onClick={() => handleProductClick(suggestedproduct._id)}
-              key={suggestedproduct._id}
+              onClick={() => handleProductClick(filtered._id)}
+              key={filtered._id}
               delay={index * 50}
             >
               <ProductBox
-                {...suggestedproduct}
-                wished={wishedProducts.includes(suggestedproduct._id)}
+                {...filtered}
+                wished={wishedProducts.includes(filtered._id)}
               />
             </RevealWrapper>
           ))}
