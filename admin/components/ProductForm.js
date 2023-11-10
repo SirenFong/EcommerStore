@@ -15,6 +15,7 @@ export default function ProductForm({
   properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
+  const [value, setValue] = useState([null]);
   const [productProperties, setProductProperties] = useState(
     assignedProperties || {}
   );
@@ -126,6 +127,18 @@ export default function ProductForm({
       return newProductProps;
     });
   }
+  const inactiveButon = "flex gap-1 p-1";
+  const activeButton = inactiveButon + " bg-highlight text-black rounded-sm ";
+  //Được sử dụng như tạo 1 đường dẫn tới cho trang web đồng thời kích thoạt hiệu ứng khi đang ở trang web đó
+  const inactiveIcon = "w-6 h-6";
+  const activeIcon = inactiveIcon + " text-primary";
+
+  const [active, setActive] = useState();
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    setActive(event.target.id);
+  }
   return (
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
     /**Thằng setTitle sẽ thay đổi thành 1 trạng thái mới của thằng title */
@@ -155,18 +168,27 @@ export default function ProductForm({
           <div className="">
             <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
 
-            <div>
-              <select
+            <div className="flex gap-2" value={productProperties[p.name]}
+              onChange={(ev) => setProductProp(p.name, ev.target.value)}>
+              {/* <select
                 value={productProperties[p.name]}
                 onChange={(ev) => setProductProp(p.name, ev.target.value)}
               >
                 {p.values.map((v) => (
                   <option value={v}>{v}</option>
                 ))}
-              </select>
+              </select> */}
+              {p.values.map((item, index) => (
+                <buton className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"  id={item} key={index} onClick={handleClick}>
+
+
+                  {item}
+                </buton>
+              ))}
             </div>
-          </div>
-        ))}
+          </div >
+        ))
+      }
 
       <label>Hình ảnh</label>
       <div className="mb-8 flex flex-wrap gap-2">
@@ -265,6 +287,6 @@ export default function ProductForm({
       <button type="submit" className="btn-primary">
         Lưu
       </button>
-    </form>
+    </form >
   );
 }

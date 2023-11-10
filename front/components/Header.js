@@ -43,10 +43,10 @@ const SideIcons = styled.div`
   }
 `;
 
-export default function Header() {
+export default function Header({ mainCategories }) {
+  console.log(mainCategories)
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
-  const [mainCategories, , setMainCategories] = useState();
   const { data: session } = useSession();
   async function logout() {
     await signOut({
@@ -204,31 +204,31 @@ export async function getServerSideProps(ctx) {
   const categoriesProducts = {}; //catId = [products]
   const allFetchedProductsId = [];
 
-  for (const mainCat of mainCategories) {
-    const mainCatId = mainCat._id.toString();
-    const childCatIds = categories
-      .filter((c) => c?.parent?.toString() === mainCatId)
-      .map((c) => c._id.toString());
-    const categoriesIds = [mainCatId, ...childCatIds];
-    const products = await Product.find({ category: categoriesIds }, null, {
-      limit: 3,
-      sort: { _id: -1 },
-    });
-    allFetchedProductsId.push(...products.map((p) => p._id.toString()));
-    categoriesProducts[mainCat._id] = products;
-  }
+  // for (const mainCat of mainCategories) {
+  //   const mainCatId = mainCat._id.toString();
+  //   const childCatIds = categories
+  //     .filter((c) => c?.parent?.toString() === mainCatId)
+  //     .map((c) => c._id.toString());
+  //   const categoriesIds = [mainCatId, ...childCatIds];
+  //   const products = await Product.find({ category: categoriesIds }, null, {
+  //     limit: 3,
+  //     sort: { _id: -1 },
+  //   });
+  //   allFetchedProductsId.push(...products.map((p) => p._id.toString()));
+  //   categoriesProducts[mainCat._id] = products;
+  // }
 
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session?.user.email,
-        product: allFetchedProductsId,
-      })
+      userEmail: session?.user.email,
+      product: allFetchedProductsId,
+    })
     : [];
 
   return {
     props: {
-      mainCategories: JSON.parse(JSON.stringify(mainCategories)),
+      mainCategories: JSON.parse(JSON.stringify(categories)),
       categoriesProducts: JSON.parse(JSON.stringify(categoriesProducts)),
       wishedProducts: wishedProducts.map((i) => i.product.toString()),
     },

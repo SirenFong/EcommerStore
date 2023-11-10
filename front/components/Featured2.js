@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import Center from "./Center";
-import ButtonLink from "./ButtonLink";
+
 import CartIcon from "./icons/CartIcon";
 import FlyingButton from "./FlyingButton";
 import { RevealWrapper } from "next-reveal";
+import { useContext } from "react";
+import { CategoryContext } from "./CategoryContext";
 const Bg = styled.div`
 
   background-color: #222;
@@ -57,6 +59,17 @@ const ButtonsWrapper = styled.div`
   gap: 10px;
   margin-top: 25px;
 `;
+const ButtonLink = styled.button`
+color:#fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16%;
+  border-radius:5px ;
+  border-color: #fff;
+background-color: #222;
+
+`;
 const CenterImg = styled.div`
   display: flex;
   align-items: center;
@@ -73,47 +86,55 @@ const ImgColumn = styled(Column)`
 const ContentWrapper = styled.div``;
 
 export default function Featured2({ product }) {
-    return (
-        <Bg>
-            <Center>
-                <ColumnsWrapper>
+  const { addCategory, clearCategory } = useContext(CategoryContext);
+  const url = "/product/" + product._id;
+  function addcategoryId() {
+    clearCategory();
+    addCategory(product.category);
+    window.location.href = url;
 
-                    <ImgColumn>
-                        <RevealWrapper delay={0}>
-                            <CenterImg>
-                                <img className={"main"} src={product.images?.[0]} alt="" />
-                            </CenterImg>
-                        </RevealWrapper>
-                    </ImgColumn>
-                    <Column>
-                        <div>
-                            <RevealWrapper origin={"left"} delay={0}>
-                                <ContentWrapper>
-                                    <Title>{product.title}</Title>
-                                    <Desc>{product.description}</Desc>
-                                    <ButtonsWrapper>
-                                        <ButtonLink
-                                            href={"/product/" + product._id}
-                                            outline={1}
-                                            white={1}
-                                        >
-                                            Xem thêm
-                                        </ButtonLink>
-                                        <FlyingButton
-                                            white={1}
-                                            _id={product._id}
-                                            src={product.images?.[0]}
-                                        >
-                                            <CartIcon />
-                                            Thêm vào giỏ
-                                        </FlyingButton>
-                                    </ButtonsWrapper>
-                                </ContentWrapper>
-                            </RevealWrapper>
-                        </div>
-                    </Column>
-                </ColumnsWrapper>
-            </Center>
-        </Bg>
-    );
+  }
+  return (
+    <Bg>
+      <Center>
+        <ColumnsWrapper>
+
+          <ImgColumn>
+            <RevealWrapper delay={0}>
+              <CenterImg>
+                <img className={"main"} src={product.images?.[0]} alt="" />
+              </CenterImg>
+            </RevealWrapper>
+          </ImgColumn>
+          <Column>
+            <div>
+              <RevealWrapper origin={"left"} delay={0}>
+                <ContentWrapper>
+                  <Title>{product.title}</Title>
+                  <Desc>{product.description}</Desc>
+                  <ButtonsWrapper>
+                    <ButtonLink
+                      onClick={() => addcategoryId(product.category)}
+                      outline={1}
+                      white={1}
+                    >
+                      Xem thêm
+                    </ButtonLink>
+                    <FlyingButton
+                      white={1}
+                      _id={product._id}
+                      src={product.images?.[0]}
+                    >
+                      <CartIcon />
+                      Thêm vào giỏ
+                    </FlyingButton>
+                  </ButtonsWrapper>
+                </ContentWrapper>
+              </RevealWrapper>
+            </div>
+          </Column>
+        </ColumnsWrapper>
+      </Center>
+    </Bg>
+  );
 }

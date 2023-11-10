@@ -1,9 +1,13 @@
 import styled from "styled-components";
 import Center from "./Center";
-import ButtonLink from "./ButtonLink";
+
 import CartIcon from "./icons/CartIcon";
 import FlyingButton from "./FlyingButton";
 import { RevealWrapper } from "next-reveal";
+import { useEffect } from "react";
+import { useContext } from "react";
+import { CategoryContext } from "./CategoryContext";
+
 const Bg = styled.div`
  background-color: #222;
   color: #fff;
@@ -67,7 +71,17 @@ const CenterImg = styled.div`
      
     }
 `;
+const ButtonLink = styled.button`
+color:#fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16%;
+  border-radius:5px ;
+  border-color: #fff;
+background-color: #222;
 
+`;
 const ImgColumn = styled(Column)`
 
   & > div {
@@ -77,7 +91,16 @@ const ImgColumn = styled(Column)`
 
 const ContentWrapper = styled.div``;
 
+
 export default function Featured({ product }) {
+  const { addCategory, clearCategory } = useContext(CategoryContext);
+  const url = "/product/" + product._id;
+  function addcategoryId() {
+    clearCategory();
+    addCategory(product.category);
+    window.location.href = url;
+
+  }
   return (
     <Bg>
       <Center>
@@ -90,7 +113,7 @@ export default function Featured({ product }) {
                   <Desc>{product.description}</Desc>
                   <ButtonsWrapper>
                     <ButtonLink
-                      href={"/product/" + product._id}
+                      onClick={() => addcategoryId(product.category)}
                       outline={1}
                       white={1}
                     >
