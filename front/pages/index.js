@@ -31,16 +31,14 @@ export default function HomePage({
   newProducts,
   wishedNewProducts,
   suggestedProducts,
-
 }) {
-
   const [isClient, setIsClient] = useState(false);
 
   return (
     <div>
       <Header />
       <Featured product={featuredProduct} />
-  
+
       <Featured2 product={featuredProduct2} />
       <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} />
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
@@ -48,14 +46,12 @@ export default function HomePage({
         suggestedproducts={suggestedProducts}
         wishedProducts={wishedNewProducts}
       />
-
     </div>
   );
 }
 
 //Connect tới admin để hiển thị sản phẩm theo id
 export async function getServerSideProps(ctx) {
-
   await mongooseConnect();
   ///
 
@@ -96,16 +92,12 @@ export async function getServerSideProps(ctx) {
   });
   //hàm random
   const suggestedProduct = await Product.find({});
-
-
-
-
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
   return {
     props: {
