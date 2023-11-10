@@ -154,17 +154,6 @@ export default function ProductBox({
           </WhiteBox>
 
 
-          <WhiteBox onClick={() => addcategoryId(category)}>
-            <div>
-              <WishlistButton wished={isWished} onClick={addToWishlist}>
-                {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
-              </WishlistButton>
-              <img src={images?.[0]} alt="" />
-            </div>
-
-          </WhiteBox>
-
-
           <ProductInfoBox>
             <Title onClick={() => addcategoryId(category)}>{title}</Title>
             <PriceRow>
@@ -174,9 +163,8 @@ export default function ProductBox({
               </FlyingButton>
             </PriceRow>
           </ProductInfoBox>
-        </ProductWrapper>)}
-
-
+        </ProductWrapper>
+      )}
 
     </>
   );
