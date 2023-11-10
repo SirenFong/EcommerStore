@@ -69,19 +69,59 @@ export default function OrdersPage() {
     }
   }, [status]);
 
+  function updateStatus(order, newStatus) {
+    const data = {
+      _id: order._id,
+      status: newStatus,
+    };
+    setIsLoading(true);
+
+    // Gọi API để cập nhật trạng thái đơn hàng
+    axios.put("/api/orders", data);
+    // Giảm số lượng sản phẩm (if needed)
+    // ...
+
+    // Cập nhật danh sách đơn hàng sau khi cập nhật trạng thái
+    axios.get("/api/orders").then((response) => {
+      setOrders(response.data.filter((item) => item.status === istatus));
+      setIsLoading(false);
+    });
+  }
   function access(order) {
     const data = {
       _id: order._id,
       status: order.status + 1,
     };
     setIsLoading(true);
+
+    // Gọi API để cập nhật trạng thái đơn hàng
     axios.put("/api/orders", data);
-    setIsLoading(true);
+    // Giảm số lượng sản phẩm
+    order.line_items.forEach(async (item) => {
+      const productData = await axios.get(
+        `/api/products?id=${item.price_data.product_data.id}`
+      );
+      const product = productData.data;
+
+      // Kiểm tra số lượng còn lại trước khi giảm
+      if (product.qty >= item.quantity) {
+        await axios.put("/api/products", {
+          _id: product._id,
+          qty: product.qty - item.quantity,
+        });
+      } else {
+        console.error("Sản phẩm không có đủ số lượng để giảm!");
+      }
+    });
+
+    // Cập nhật danh sách đơn hàng sau khi giảm số lượng sản phẩm
     axios.get("/api/orders").then((response) => {
-      setOrders(response.data.filter((item) => item.status == istatus));
+      setOrders(response.data.filter((item) => item.status === istatus));
       setIsLoading(false);
     });
   }
+
+  //Chưa làm được
   function cancer(order) {
     const data = {
       _id: order._id,
@@ -200,14 +240,14 @@ export default function OrdersPage() {
                       </button>
                     ) : "" || order.status == 2 ? (
                       <button
-                        onClick={() => access(order)}
+                        onClick={() => updateStatus(order, 3)}
                         className="btn-success mr-1"
                       >
                         Giao Hàng
                       </button>
                     ) : "" || order.status == 3 ? (
                       <button
-                        onClick={() => access(order)}
+                        onClick={() => updateStatus(order, 4)}
                         className="btn-success mr-1"
                       >
                         Hoàn Tất
