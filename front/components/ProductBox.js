@@ -10,7 +10,6 @@ import Button from "./Button";
 import { CategoryContext } from "@component/components/CategoryContext";
 import { useEffect } from "react";
 
-
 const ProductWrapper = styled.div`
   background-color: #fff;
   padding: 30px;
@@ -23,7 +22,7 @@ const ProductWrapper = styled.div`
 
 const WhiteBox = styled.button`
   background-color: #fff;
-border:none;
+  border: none;
   box-shadow-sm: 0 0.125rem 0.25rem rgba($black, 0.075);
   padding: 20px;
   height: 200px;
@@ -31,7 +30,6 @@ border:none;
   display: flex;
   align-items: center;
   justify-content: center;
-
 
   position: relative;
   img {
@@ -41,10 +39,10 @@ border:none;
 `;
 
 const Title = styled.button`
-background: transparent;
-border: none;
+  background: transparent;
+  border: none;
   font-weight: normal;
- 
+
   font-size: 1rem;
   color: inherit;
   text-decoration: none;
@@ -116,8 +114,6 @@ export default function ProductBox({
   const { addCategory, clearCategory } = useContext(CategoryContext);
   const [domLoaded, setDomLoaded] = useState(false);
 
-
-
   const formatter = new Intl.NumberFormat("en-US");
   const formattedPrice = formatter.format(price);
   const [isWished, setIsWished] = useState(wished);
@@ -140,39 +136,48 @@ export default function ProductBox({
     clearCategory();
     addCategory(category);
     window.location.href = url;
-
   }
   useEffect(() => {
     setDomLoaded(true);
   }, []);
   return (
-
     <>
-      {domLoaded && (<ProductWrapper>
+      {domLoaded && (
+        <ProductWrapper>
+          <WhiteBox onClick={() => addcategoryId(category)}>
+            <div>
+              <WishlistButton wished={isWished} onClick={addToWishlist}>
+                {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
+              </WishlistButton>
+              <img src={images?.[0]} alt="" />
+            </div>
+          </WhiteBox>
 
-        <WhiteBox onClick={() => addcategoryId(category)}>
-          <div>
-            <WishlistButton wished={isWished} onClick={addToWishlist}>
-              {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
-            </WishlistButton>
-            <img src={images?.[0]} alt="" />
-          </div>
 
-        </WhiteBox>
+          <WhiteBox onClick={() => addcategoryId(category)}>
+            <div>
+              <WishlistButton wished={isWished} onClick={addToWishlist}>
+                {isWished ? <HeartSolidIcon /> : <HeartOutlineIcon />}
+              </WishlistButton>
+              <img src={images?.[0]} alt="" />
+            </div>
+
+          </WhiteBox>
 
 
-        <ProductInfoBox>
-          <Title onClick={() => addcategoryId(category)}>{title}</Title>
-          <PriceRow>
-            <Price>{formattedPrice} đ</Price>
-            <FlyingButton _id={_id} src={images?.[0]}>
-              Thêm vào giỏ hàng
-            </FlyingButton>
-          </PriceRow>
-        </ProductInfoBox>
-      </ProductWrapper>)}
+          <ProductInfoBox>
+            <Title onClick={() => addcategoryId(category)}>{title}</Title>
+            <PriceRow>
+              <Price>{formattedPrice} đ</Price>
+              <FlyingButton _id={_id} src={images?.[0]}>
+                Thêm vào giỏ hàng
+              </FlyingButton>
+            </PriceRow>
+          </ProductInfoBox>
+        </ProductWrapper>)}
+
+
+
     </>
-
-
   );
 }

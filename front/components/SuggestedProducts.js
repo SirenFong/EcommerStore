@@ -29,13 +29,9 @@ export default function SuggestedProducts({
 
   const { lastViewCategory } = useContext(CategoryContext);
 
-
-
-
-  const filtered = suggestedproducts.filter((item) => item.category == lastViewCategory)
-
-
-
+  const filtered = suggestedproducts.filter(
+    (item) => item.category == lastViewCategory
+  );
 
   // Xử lý chuyển hướng khi nhấn vào sản phẩm
   const handleProductClick = (productId) => {
@@ -57,9 +53,7 @@ export default function SuggestedProducts({
 
   return (
     <Center>
-      <Title>
-        Các sản phẩm tương tự
-      </Title>
+      <Title>Các sản phẩm tương tự</Title>
       <CategoryGrid interval={100}>
         {filtered?.length > 0 &&
           filtered.map((filtered, index) => (
