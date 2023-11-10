@@ -130,7 +130,7 @@ export default function ProductForm({
     const { value, checked } = e.target
 
     if (checked) {
-      setValue(pre => [...pre, value])
+      setValue(pre => [...pre, p.name])
 
     } else (
       setValue(pre => {
