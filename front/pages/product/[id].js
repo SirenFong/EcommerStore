@@ -35,11 +35,13 @@ const Price = styled.span`
 
 export default function ProductPage({
   product,
+  category,
   suggestedProduct,
   wishedNewProducts,
 }) {
   const [isClient, setIsClient] = useState(false);
-
+  // Thêm state để theo dõi properties được chọn
+  const [selectedProperty, setSelectedProperty] = useState(null);
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -56,10 +58,32 @@ export default function ProductPage({
             <Title>{product.title}</Title>
             <p>{product.description}</p>
             <p>{product.qty} Sản phẩm có sẵn</p>
+            {/* Lựa chọn properties dưới dạng button */}
+            <div>
+              {product.properties.map((prop, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedProperty(prop)}
+                  style={{
+                    background: selectedProperty === prop ? "blue" : "white",
+                    color: selectedProperty === prop ? "white" : "black",
+                    border: "1px solid #ccc",
+                    padding: "5px 10px",
+                    margin: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  {prop.name}: {prop.value}
+                </button>
+              ))}
+            </div>
+
+            {/* Hiển thị thông tin chi tiết của property được chọn */}
+            {selectedProperty && <p>Size:{selectedProperty.value}</p>}
+
             <PriceRow>
               <div>
                 <Price>{isClient ? product.price.toLocaleString() : ""}đ</Price>{" "}
-                
               </div>
 
               <div>

@@ -14,15 +14,12 @@ export default function ProductForm({
   category: assignedCategory,
   properties: assignedProperties,
 }) {
-
   const [title, setTitle] = useState(existingTitle || "");
 
-  const [productProperties, setProductProperties] = useState([
-    assignedProperties || {}
-  ]
-
+  const [productProperties, setProductProperties] = useState(
+    assignedProperties || []
   );
-  console.log(productProperties)
+  console.log(productProperties);
   const [description, setDescription] = useState(existingDescription || "");
   const [category, setCategory] = useState(assignedCategory || "");
   const [price, setPrice] = useState(existingPrice || "");
@@ -33,6 +30,7 @@ export default function ProductForm({
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
+  const [selectedProperties, setSelectedProperties] = useState(new Set());
   const numeral = require("numeral");
   ////load loại sản phẩm lên thanh select
   useEffect(() => {
@@ -124,24 +122,28 @@ export default function ProductForm({
     }
   }
   const [checkedvalues, setValue] = useState([]);
+
   function setProductProp(p, e) {
     e.preventDefault();
 
-    const { value, checked } = e.target
+    const { value, checked } = e.target;
 
     if (checked) {
-      setValue(pre => [...pre, p.name])
-
-    } else (
-      setValue(pre => {
-        return [...pre.filter(check => check !== value)]
-      })
-
-    )
+      setProductProperties((prevProperties) => [
+        ...prevProperties,
+        {
+          name: p.name,
+          value: value, // Use the value from the checkbox
+        },
+      ]);
+    } else {
+      setProductProperties((prevProperties) =>
+        prevProperties.filter((prop) => prop.value !== value)
+      );
+    }
   }
-  console.log(checkedvalues)
+  console.log(checkedvalues);
   // function setProductProp(index, p, value) {
-
 
   //   setProductProperties((prev) => ({ ...prev, [p.name]: value }));
 
@@ -165,8 +167,10 @@ export default function ProductForm({
       <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
         <option value="">Chưa chọn loại sản phẩm</option>
         {categories.length > 0 &&
-          categories.map((category) => (
-            <option value={category._id}>{category.name}</option>
+          categories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
           ))}
       </select>
 
@@ -177,27 +181,25 @@ export default function ProductForm({
           <div className="">
             <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
 
-            <div className="flex gap-2" value={p.name}
+            <div
+              className="flex gap-2"
+              value={p.name}
               // onChange={(ev) => setProductProp(index, p, ev.target.value)}
               onChange={(e) => setProductProp(p, e)}
             >
-
               {p.values.map((item, index) => (
                 <div key={index} className="box-checked">
                   <div>{item}</div>
-                  <input className="box-checked-input" value={item} type="checkbox" />
-
+                  <input
+                    className="box-checked-input"
+                    value={item}
+                    type="checkbox"
+                  />
                 </div>
-
-
-
               ))}
-
-
             </div>
-          </div >
-        ))
-      }
+          </div>
+        ))}
 
       <label>Hình ảnh</label>
       <div className="mb-8 flex flex-wrap gap-2">
@@ -296,6 +298,6 @@ export default function ProductForm({
       <button type="submit" className="btn-primary">
         Lưu
       </button>
-    </form >
+    </form>
   );
 }

@@ -33,7 +33,7 @@ export default async function handle(req, res) {
       qty,
       images,
       category,
-      properties,
+      properties, // Save the properties array directly
     });
     res.json(productDoc);
   }
@@ -51,6 +51,8 @@ export default async function handle(req, res) {
       properties,
       _id,
     } = req.body;
+
+    // Update the properties along with other fields
     await Product.updateOne(
       { _id },
       { title, description, price, qty, images, category, properties }
