@@ -55,10 +55,13 @@ export default function ProductPage({
           <div>
             <Title>{product.title}</Title>
             <p>{product.description}</p>
+            <p>{product.qty} Sản phẩm có sẵn</p>
             <PriceRow>
               <div>
-                <Price>{isClient ? product.price.toLocaleString() : ""}đ</Price>
+                <Price>{isClient ? product.price.toLocaleString() : ""}đ</Price>{" "}
+                
               </div>
+
               <div>
                 <FlyingButton main _id={product._id} src={product.images?.[0]}>
                   <CartIcon />
