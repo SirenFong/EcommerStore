@@ -106,7 +106,7 @@ export default function ProductBox({
   category,
   images,
   wished = false,
-  onRemoveFromWishlist = () => {},
+  onRemoveFromWishlist = () => { },
   props,
 }) {
   const url = "/product/" + _id;
@@ -117,6 +117,7 @@ export default function ProductBox({
   const formatter = new Intl.NumberFormat("en-US");
   const formattedPrice = formatter.format(price);
   const [isWished, setIsWished] = useState(wished);
+  console.log(isWished)
   function addToWishlist(ev) {
     ev.preventDefault();
     ev.stopPropagation();
@@ -128,7 +129,7 @@ export default function ProductBox({
       .post("/api/wishlist", {
         product: _id,
       })
-      .then(() => {});
+      .then(() => { });
     setIsWished(nextValue);
   }
   function addcategoryId(category) {
@@ -152,6 +153,7 @@ export default function ProductBox({
             </div>
           </WhiteBox>
 
+
           <ProductInfoBox>
             <Title onClick={() => addcategoryId(category)}>{title}</Title>
             <PriceRow>
@@ -163,6 +165,7 @@ export default function ProductBox({
           </ProductInfoBox>
         </ProductWrapper>
       )}
+
     </>
   );
 }

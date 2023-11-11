@@ -12,7 +12,7 @@ const ProductSchema = new Schema(
       type: mongoose.Types.ObjectId,
       ref: "Category",
     },
-    properties: { type: Object },
+    properties: [{ type: Object }],
   },
   {
     //Thuộc tính mới thêm vào ở V9
