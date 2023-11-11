@@ -42,10 +42,34 @@ export default function ProductPage({
   const [isClient, setIsClient] = useState(false);
   // Thêm state để theo dõi properties được chọn
   const [selectedProperty, setSelectedProperty] = useState(null);
+  const [selectedProperties, setSelectedProperties] = useState([]);
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  const toggleSelectedProperty = (prop) => {
+    setSelectedProperties((prevSelected) => {
+      const isAlreadySelected = prevSelected.some(
+        (selectedProp) => selectedProp._id === prop._id
+      );
+
+      if (isAlreadySelected) {
+        // If the property is already selected, remove it
+        return prevSelected.filter(
+          (selectedProp) => selectedProp._id !== prop._id
+        );
+      } else {
+        // If the property is not selected, add it
+        return [...prevSelected, prop];
+      }
+    });
+  };
+
+  const isSelectedProperty = (prop) => {
+    return selectedProperties.some(
+      (selectedProp) => selectedProp._id === prop._id
+    );
+  };
   return (
     <>
       <Header />
@@ -63,10 +87,10 @@ export default function ProductPage({
               {product.properties.map((prop, index) => (
                 <button
                   key={index}
-                  onClick={() => setSelectedProperty(prop)}
+                  onClick={() => toggleSelectedProperty(prop)}
                   style={{
-                    background: selectedProperty === prop ? "blue" : "white",
-                    color: selectedProperty === prop ? "white" : "black",
+                    background: isSelectedProperty(prop) ? "blue" : "white",
+                    color: isSelectedProperty(prop) ? "white" : "black",
                     border: "1px solid #ccc",
                     padding: "5px 10px",
                     margin: "5px",
@@ -78,8 +102,22 @@ export default function ProductPage({
               ))}
             </div>
 
-            {/* Hiển thị thông tin chi tiết của property được chọn */}
-            {selectedProperty && <p>Size:{selectedProperty.value}</p>}
+            {/* Hiển thị thông tin chi tiết của các property được chọn */}
+            {selectedProperties.length > 0 && (
+              <div>
+                <p>Thông tin chi tiết:</p>
+                <div style={{ display: "flex" }}>
+                  {selectedProperties.map((selectedProp, index) => (
+                    <div key={index} style={{ marginRight: "20px" }}>
+                      <p>
+                        <strong>{selectedProp.name}:</strong>{" "}
+                        {selectedProp.value}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <PriceRow>
               <div>

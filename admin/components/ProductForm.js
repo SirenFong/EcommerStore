@@ -128,19 +128,13 @@ export default function ProductForm({
 
     const { value, checked } = e.target;
 
-    if (checked) {
-      setProductProperties((prevProperties) => [
-        ...prevProperties,
-        {
-          name: p.name,
-          value: value, // Use the value from the checkbox
-        },
-      ]);
-    } else {
-      setProductProperties((prevProperties) =>
-        prevProperties.filter((prop) => prop.value !== value)
-      );
-    }
+    setProductProperties((prevProperties) => {
+      const updatedProperties = checked
+        ? [...prevProperties, { name: p.name, value }]
+        : prevProperties.filter((prop) => prop.value !== value);
+
+      return updatedProperties;
+    });
   }
   console.log(checkedvalues);
   // function setProductProp(index, p, value) {
@@ -163,43 +157,37 @@ export default function ProductForm({
         onChange={(ev) => setTitle(ev.target.value)}
       />
       <label>Loại sản phẩm</label>
-
       <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
         <option value="">Chưa chọn loại sản phẩm</option>
-        {categories.length > 0 &&
-          categories.map((cat) => (
-            <option key={cat._id} value={cat._id}>
-              {cat.name}
-            </option>
-          ))}
+        {categories.map((cat) => (
+          <option key={cat._id} value={cat._id}>
+            {cat.name}
+          </option>
+        ))}
       </select>
-
       {categoriesLoading && <Spinner />}
 
-      {propertiesToFill.length > 0 &&
-        propertiesToFill.map((p, index) => (
-          <div className="">
-            <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
-
-            <div
-              className="flex gap-2"
-              value={p.name}
-              // onChange={(ev) => setProductProp(index, p, ev.target.value)}
-              onChange={(e) => setProductProp(p, e)}
-            >
-              {p.values.map((item, index) => (
-                <div key={index} className="box-checked">
-                  <div>{item}</div>
-                  <input
-                    className="box-checked-input"
-                    value={item}
-                    type="checkbox"
-                  />
-                </div>
-              ))}
-            </div>
+      {propertiesToFill.map((p, index) => (
+        <div key={index} className="">
+          <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
+          <div
+            className="flex gap-2"
+            value={p.name}
+            onChange={(e) => setProductProp(p, e)}
+          >
+            {p.values.map((item, index) => (
+              <div key={index} className="box-checked">
+                <div>{item}</div>
+                <input
+                  className="box-checked-input"
+                  value={item}
+                  type="checkbox"
+                />
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+      ))}
 
       <label>Hình ảnh</label>
       <div className="mb-8 flex flex-wrap gap-2">
