@@ -125,13 +125,13 @@ function AccountPage({ swal }) {
   }
   async function saveAddress() {
     validate();
-    // const data = { name, phone, email, postalcode, address };
-    // axios.put("/api/address", data);
-    // setIsLoading(false);
-    // await swal.fire({
-    //   title: "Settings saved!",
-    //   icon: "success",
-    // });
+    const data = { name, phone, email, postalcode, address };
+    axios.put("/api/address", data);
+    setIsLoading(false);
+    await swal.fire({
+      title: "Settings saved!",
+      icon: "success",
+    });
   }
 
   useEffect(() => {

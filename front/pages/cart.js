@@ -14,7 +14,8 @@ import { FaGoogle } from "react-icons/fa";
 import Footer from "@component/components/Footer";
 import { Checkbox } from "@mui/material";
 import { CategoryContext } from "@component/components/CategoryContext";
-
+import { validEmail, validPhone, validName, validPostCode, validAddress, validSpace } from '../context/regex.js';
+import { withSwal } from "react-sweetalert2";
 const ErrorMessage = styled.p`
   color: red;
   font-size: 0.8rem;
@@ -108,7 +109,8 @@ const ButtonPayment = styled.div`
   `}
   
 `;
-export default function CartPage() {
+function CartPage({ swal }) {
+
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
 
@@ -261,46 +263,39 @@ export default function CartPage() {
 
   //Đi tới trang web thanh toán
   async function ToPayment() {
-    if (paymentmethod == '653a7e8993659336603d60a9') {
-      goToPayment();
+    if (paymentmethod != "") {
+      if (paymentmethod == '653a7e8993659336603d60a9') {
+        goToPayment();
+      } else {
+
+        await axios.post("/api/checkout", {
+          name,
+          phone,
+          email,
+          postalcode,
+          address,
+          paymentmethod,
+          cartProducts,
+        });
+        setIsSuccess(true);
+        clearCart();
+        localStorage.setItem("cart", JSON.stringify([]));
+
+      }
     } else {
-
-      await axios.post("/api/checkout", {
-        name,
-        phone,
-        email,
-        postalcode,
-        address,
-        paymentmethod,
-        cartProducts,
+      await swal.fire({
+        title: "Vui lòng chọn phương thức thanh toán",
+        icon: "warning",
       });
-      setIsSuccess(true);
-      clearCart();
-      localStorage.setItem("cart", JSON.stringify([]));
-
     }
+
+
 
 
 
   }
-  const handleChange = (e) => {
-    // Destructuring 
-    const { value, checked } = e.target;
 
 
-    console.log(`${value} is ${checked}`);
-
-    // Case 1 : The user checks the box 
-    if (checked) {
-      setService(value);
-      console.log(service)
-    }
-
-    // Case 2  : The user unchecks the box 
-    else {
-      setService(null);
-    }
-  };
   return (
     <>
       <Header />
@@ -474,3 +469,4 @@ export default function CartPage() {
     </>
   );
 }
+export default withSwal(({ swal }, ref) => <CartPage swal={swal} />);
