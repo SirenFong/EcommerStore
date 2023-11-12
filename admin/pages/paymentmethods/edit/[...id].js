@@ -1,6 +1,5 @@
 import Layout from "@/components/Layout";
 import PaymentForm from "@/components/PaymentForm";
-// import ProductForm from "@/components/ProductForm";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import { useRouter } from "next/router";

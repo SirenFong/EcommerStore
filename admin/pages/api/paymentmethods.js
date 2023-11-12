@@ -1,5 +1,4 @@
 import { mongooseConnect } from "@/lib/mongoose";
-
 import { isAdminRequest } from "./auth/[...nextauth]";
 import { PaymentMethod } from "@/models/PaymentMethod";
 

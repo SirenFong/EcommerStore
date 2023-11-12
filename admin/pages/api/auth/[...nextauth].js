@@ -1,9 +1,9 @@
-import NextAuth, { getServerSession } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from "@/lib/mongodb";
 import { Admin } from "@/models/Admin";
 import { mongooseConnect } from "@/lib/mongoose";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
+import NextAuth, { getServerSession } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import clientPromise from "@/lib/mongodb";
 
 async function isAdminEmail(email) {
   mongooseConnect();
@@ -34,7 +34,6 @@ export const authOptions = {
 //Code được hỗ trợ bởi NextAuth
 export default NextAuth(authOptions);
 
-////xác thực cho admin
 export async function isAdminRequest(req, res) {
   const session = await getServerSession(req, res, authOptions);
   if (!(await isAdminEmail(session?.user?.email))) {

@@ -1,9 +1,6 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { isAdminRequest } from "./auth/[...nextauth]";
 import { Advertisement } from "@/models/Advertisement";
-
-
-
 export default async function handle(req, res) {
   await mongooseConnect();
   const { method } = req;
@@ -23,12 +20,4 @@ export default async function handle(req, res) {
       res.json(await Advertisement.create({ name, value }));
     }
   }
-  // if (method === "POST") {
-  //   const { name, value } = req.body;
-  //   const advertisementDoc = await Advertisement.create({
-  //     name, value,
-  //   });
-  //   res.json(advertisementDoc);
-  // }
-
 }

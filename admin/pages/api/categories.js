@@ -1,12 +1,10 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import { Category } from "@/models/Category";
-// import { getServerSession } from "next-auth";
 import { isAdminRequest } from "./auth/[...nextauth]";
 
 export default async function handle(req, res) {
   const { method } = req;
   await mongooseConnect();
-  ////Câu lệnh thêm vô ở admin security
   await isAdminRequest(req, res);
 
   //Hàm lấy giá trị "Get" của HTTP xác nhận giá trị của tất cả loại sản phẩm

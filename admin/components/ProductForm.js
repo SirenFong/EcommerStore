@@ -1,8 +1,8 @@
-import axios from "axios";
+import { ReactSortable } from "react-sortablejs";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Spinner from "./Spinner";
-import { ReactSortable } from "react-sortablejs";
 
 export default function ProductForm({
   _id,
@@ -32,7 +32,7 @@ export default function ProductForm({
   const [categoriesLoading, setCategoriesLoading] = useState(false);
   const [selectedProperties, setSelectedProperties] = useState(new Set());
   const numeral = require("numeral");
-  ////load loại sản phẩm lên thanh select
+
   useEffect(() => {
     setCategoriesLoading(true);
     axios.get("/api/categories").then((result) => {
@@ -64,10 +64,8 @@ export default function ProductForm({
       properties: productProperties,
     };
     if (_id) {
-      //update product
       await axios.put("/api/products", { ...data, _id });
     } else {
-      //create new product
       await axios.post("/api/products", data);
     }
     setGoToProducts(true);
@@ -112,7 +110,6 @@ export default function ProductForm({
       categoryInfo = parentCat;
     }
   }
-  const [checkedvalues, setValue] = useState([]);
 
   function setProductProp(p, e) {
     e.preventDefault();
@@ -125,13 +122,12 @@ export default function ProductForm({
       );
 
       if (checked && !propertyExists) {
-        // If checked and property doesn't exist, add it
+        // Kiểm tra xem properties chọn chưa
         return [...prevProperties, { name: p.name, value }];
       } else if (!checked && propertyExists) {
-        // If unchecked and property exists, remove it
+        // nếu chưua chọn mà tồn tại thì bỏ chọn
         return prevProperties.filter((prop) => prop.value !== value);
       } else {
-        // No change needed
         return prevProperties;
       }
     });

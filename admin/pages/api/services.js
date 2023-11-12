@@ -1,6 +1,4 @@
 import { mongooseConnect } from "@/lib/mongoose";
-
-// import { getServerSession } from "next-auth";
 import { isAdminRequest } from "./auth/[...nextauth]";
 import { Service } from "@/models/Service";
 
