@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "dev",
+			"path": "front",
+			"problemMatcher": [],
+			"label": "npm: dev - front",
+			"detail": "next dev -p 4000",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}

@@ -368,29 +368,7 @@ export default function CartPage() {
                     </tr>
                     <tr className="subtotal">
 
-                      <td colSpan={3}>Dịch vụ khác
-                        <div className="checkbox-container">
 
-                          <div class="flex">
-                            <div class="flex items-center mr-4 ">
-                              {/* {isService && (
-                                <Spinner fullWidth={true} />
-                              )} */}
-                              {serviceCost.map((service) => (
-                                <div className="flex items-center mr-10 " key={service._id}>
-                                  <input type="checkbox" id="some_id" value={service.name}
-                                    name="languages"
-                                    onChange={handleChange} />
-                                  <label htmlFor="some_id">{service.name}:{service.value.toLocaleString()} VNĐ</label>
-
-                                </div>
-
-                              ))}
-
-                            </div>
-                          </div>
-                        </div>
-                      </td>
 
 
 

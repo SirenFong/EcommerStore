@@ -6,16 +6,15 @@ import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
 import Input from "@component/components/Input";
-import ProductBox from "@component/components/ProductBox";
+
 import Spinner from "@component/components/Spinner";
 import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
 import styled from "styled-components";
-import Tabs from "@component/components/Tabs";
-import SingleOrder from "@component/components/SingleOrder";
+
 import { withSwal } from "react-sweetalert2";
 import Footer from "@component/components/Footer";
-
+import { validEmail, validPhone, validName, validPostCode, validAddress, validSpace } from '../context/regex.js';
 const ColsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -58,8 +57,11 @@ const WishedProductsGrid = styled.div`
 `;
 
 const AddressHolder = styled.div`
-  display: flex;
+ display: grid;
+  grid-template-columns: auto auto ;
   gap: 5px;
+  padding:5px 2px;
+  
 `;
 
 const Avatar = styled.div`
@@ -79,12 +81,29 @@ const Avatar = styled.div`
   }
 
 `;
+const Title = styled.div`
+
+margin:0px;
+p{
+  margin:2px;
+}
+`;
+const Wrapper = styled.div`
+
+`;
+const WrapperRow = styled.div`
+ display: flex;
+ p{
+  margin:0px 50px;
+ color:#FD3333;
+ }
+`;
 
 function AccountPage({ swal }) {
   const { data: session } = useSession();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [postalcode, setPostalcode] = useState("");
   const [address, setAddress] = useState("");
   const [addressLoaded, setAddressLoaded] = useState(true);
@@ -105,13 +124,14 @@ function AccountPage({ swal }) {
     await signIn("google");
   }
   async function saveAddress() {
-    const data = { name, phone, email, postalcode, address };
-    axios.put("/api/address", data);
-    setIsLoading(false);
-    await swal.fire({
-      title: "Settings saved!",
-      icon: "success",
-    });
+    validate();
+    // const data = { name, phone, email, postalcode, address };
+    // axios.put("/api/address", data);
+    // setIsLoading(false);
+    // await swal.fire({
+    //   title: "Settings saved!",
+    //   icon: "success",
+    // });
   }
 
   useEffect(() => {
@@ -167,7 +187,45 @@ function AccountPage({ swal }) {
       return [...products.filter((p) => p._id.toString() !== idToRemove)];
     });
   }
+  const [email, setEmail] = useState('');
+  console.log(validPhone)
+  const [emailErr, setEmailErr] = useState(false);
+  const [phoneErr, setPhoneErr] = useState(false);
 
+  const [nameErr, setNameErr] = useState(false);
+  const [postCodeErr, setPostCodeErr] = useState(false);
+  const [space, setSpace] = useState(false);
+  const validate = () => {
+    // if (email == "" || name == "" || phone == "" || postalcode == "") {
+    //   setSpace(true);
+    // }
+
+    if (!validEmail.test(email)) {
+      setEmailErr(true);
+    }
+    if (validEmail.test(email)) {
+      setEmailErr(false);
+    }
+    if (!validPhone.test(phone)) {
+      setPhoneErr(true);
+    }
+    if (validPhone.test(phone)) {
+      setPhoneErr(false);
+    }
+    if (!validName.test(name.toString())) {
+      setNameErr(true);
+    }
+    if (validName.test(name)) {
+      setNameErr(false);
+    }
+    if (!validPostCode.test(postalcode)) {
+      setPostCodeErr(true);
+    }
+    if (validPostCode.test(postalcode)) {
+      setPostCodeErr(false);
+    }
+  };
+  console.log(phoneErr)
   return (
     <>
       <Header key={new Date().getTime()} />
@@ -189,52 +247,93 @@ function AccountPage({ swal }) {
                       loading="lazy"
                     /></Avatar>
                     <AddressHolder>
-                      <Input
-                        type="text"
-                        placeholder="Tên người nhận"
-                        name="name"
-                        value={name}
-                        onChange={(ev) => setName(ev.target.value)}
-                      />
-                      <Input
-                        type="text"
-                        placeholder="Số điện thoại"
-                        name="phone"
-                        value={phone}
-                        onChange={(ev) => setPhone(ev.target.value)}
-                      />
+                      <div>
+                        <Title>Họ tên
+                          {name == "" && <p> họ tên không được để trống</p>}
+                          {nameErr && name != "" && <p> Họ và tên không đúng định dạng</p>}</Title>
+                        <Input
+                          type="text"
+                          placeholder="Tên người nhận"
+                          name="name"
+                          value={name}
+                          onChange={(ev) => setName(ev.target.value)}
+                        />
+
+
+                      </div>
+                      <div>
+                        <Title>Số điện thoại
+                          {phone == "" && <p> số điện thoại khong được để trống</p>}
+                          {phoneErr && phone != "" && <p> số điện thoại không đúng định dạng</p>}
+
+                        </Title>
+                        <Input
+                          type="text"
+                          placeholder="Số điện thoại"
+                          name="phone"
+                          value={phone}
+                          onChange={(ev) => setPhone(ev.target.value)}
+                        />
+                      </div>
                     </AddressHolder>
-                    <Input
-                      type="text"
-                      placeholder="Địa chỉ E-mail"
-                      name="email"
-                      value={email}
-                      onChange={(ev) => setEmail(ev.target.value)}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="Postal Code"
-                      name="postalcode"
-                      value={postalcode}
-                      onChange={(ev) => setPostalcode(ev.target.value)}
-                    />
-                    <Input
-                      type="text"
-                      placeholder="Địa chỉ nhận hàng"
-                      name="address"
-                      value={address}
-                      onChange={(ev) => setAddress(ev.target.value)}
-                    />
-                    <Button primary block onClick={saveAddress}>
-                      Cập nhật
-                    </Button>
+                    <AddressHolder>
+                      <div>
+                        <Title>Email
+                          {email == "" && <p> email không được để trống</p>}
+                          {emailErr && email != "" && <p>Họ và tên không đúng định dạng</p>}
+                        </Title>
+                        <Input
+                          type="text"
+                          placeholder="Địa chỉ E-mail"
+                          name="email"
+                          value={email}
+                          onChange={(ev) => setEmail(ev.target.value)}
+                        />
+
+                      </div>
+                      <div>
+                        <Title>Mã bưu chính
+
+                          {postCodeErr && <p>Mã bưu chính không đúng định dạng</p>}
+                        </Title>
+                        <Input
+                          type="text"
+                          placeholder="Postal Code"
+                          name="postalcode"
+                          value={postalcode}
+                          onChange={(ev) => setPostalcode(ev.target.value)}
+                        />
+                      </div>
+                    </AddressHolder>
+                    <div>
+                      <Title>Địa chỉ
+                        {address == "" && <p> Địa chỉ không được để trống</p>}
+                        <p>Họ và tên không đúng định dạng</p>
+                      </Title>
+                      <Input
+                        type="text"
+                        placeholder="Địa chỉ nhận hàng"
+                        name="address"
+                        value={address}
+                        onChange={(ev) => setAddress(ev.target.value)}
+                      />
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                      <Button style={{ margin: "30px 0px", width: "50%" }} primary block onClick={saveAddress}>
+                        Cập nhật
+                      </Button>
+                    </div>
+
                   </>
                 )}
-                <hr />
+
                 {session && ( //Nếu tồn tại session thì hiện logout
-                  <Button black onClick={logout}>
-                    Đăng xuất
-                  </Button>
+                  <div style={{ display: "flex", justifyContent: "center", }}>
+                    <Button style={{ backgroundColor: "#FD3333" }} black onClick={logout}>
+                      Đăng xuất
+                    </Button>
+                  </div>
+
                 )}
                 {!session && ( //nếu không thì sẽ login
                   <Button primary onClick={login}>
@@ -245,7 +344,7 @@ function AccountPage({ swal }) {
             </WhiteBox>
           </div>
         </ColumnsWrapper>
-      </Center>
+      </Center >
       <Footer />
     </>
   );

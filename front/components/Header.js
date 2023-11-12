@@ -44,7 +44,7 @@ const SideIcons = styled.div`
 `;
 
 export default function Header({ mainCategories }) {
-  console.log(mainCategories)
+
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
   const { data: session } = useSession();
