@@ -11,10 +11,18 @@ import Spinner from "@component/components/Spinner";
 import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
 import styled from "styled-components";
-
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { withSwal } from "react-sweetalert2";
 import Footer from "@component/components/Footer";
-import { validEmail, validPhone, validName, validPostCode, validAddress, validSpace } from '../context/regex.js';
+import {
+  validEmail,
+  validPhone,
+  validName,
+  validPostCode,
+  validAddress,
+  validSpace,
+} from "@component/context/Regex";
 const ColsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -26,7 +34,6 @@ const ColsWrapper = styled.div`
 `;
 
 const ColumnsWrapper = styled.div`
-
   grid-template-columns: 1fr;
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.2fr 0.8fr;
@@ -50,53 +57,40 @@ const ColumnsWrapper = styled.div`
   }
 `;
 
-const WishedProductsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-`;
-
 const AddressHolder = styled.div`
- display: grid;
-  grid-template-columns: auto auto ;
+  display: grid;
+  grid-template-columns: auto auto;
   gap: 5px;
-  padding:5px 2px;
-  
+  padding: 5px 2px;
 `;
 
 const Avatar = styled.div`
-  height:100px;
-  weight:70px;
+  height: 100px;
+  weight: 70px;
   gap: 5px;
-  boder-radius:50px;
-  margin:0px 10px;
+  boder-radius: 50px;
+  margin: 0px 10px;
 
   display: flex;
   justify-content: center;
-  img{
- 
-    height:70px;
-  weight:70px;
-  
+  img {
+    height: 70px;
+    weight: 70px;
   }
-
 `;
 const Title = styled.div`
-
-margin:0px;
-p{
-  margin:2px;
-}
+  margin: 0px;
+  p {
+    margin: 2px;
+  }
 `;
-const Wrapper = styled.div`
-
-`;
+const Wrapper = styled.div``;
 const WrapperRow = styled.div`
- display: flex;
- p{
-  margin:0px 50px;
- color:#FD3333;
- }
+  display: flex;
+  p {
+    margin: 0px 50px;
+    color: #fd3333;
+  }
 `;
 
 function AccountPage({ swal }) {
@@ -124,12 +118,16 @@ function AccountPage({ swal }) {
     await signIn("google");
   }
   async function saveAddress() {
-    validate();
+    if (!validate()) {
+      return;
+    }
+
     const data = { name, phone, email, postalcode, address };
     axios.put("/api/address", data);
+
     setIsLoading(false);
     await swal.fire({
-      title: "Settings saved!",
+      title: "Đã cập nhật thông tin!",
       icon: "success",
     });
   }
@@ -182,75 +180,76 @@ function AccountPage({ swal }) {
       });
   }, [session]);
 
-  function productRemovedFromWishList(idToRemove) {
-    setWishedProducts((products) => {
-      return [...products.filter((p) => p._id.toString() !== idToRemove)];
-    });
-  }
-  const [email, setEmail] = useState('');
-  console.log(validPhone)
+  const [email, setEmail] = useState("");
+  console.log(validPhone);
   const [emailErr, setEmailErr] = useState(false);
   const [phoneErr, setPhoneErr] = useState(false);
 
   const [nameErr, setNameErr] = useState(false);
   const [postCodeErr, setPostCodeErr] = useState(false);
-  const [space, setSpace] = useState(false);
+
   const validate = () => {
-    // if (email == "" || name == "" || phone == "" || postalcode == "") {
-    //   setSpace(true);
-    // }
+    let isValid = true;
 
     if (!validEmail.test(email)) {
       setEmailErr(true);
-    }
-    if (validEmail.test(email)) {
+      isValid = false;
+      toast.error("Email không đúng định dạng");
+    } else {
       setEmailErr(false);
     }
+
     if (!validPhone.test(phone)) {
       setPhoneErr(true);
-    }
-    if (validPhone.test(phone)) {
+      isValid = false;
+      toast.error("Số điện thoại không đúng định dạng");
+    } else {
       setPhoneErr(false);
     }
+
     if (!validName.test(name.toString())) {
       setNameErr(true);
-    }
-    if (validName.test(name)) {
+      isValid = false;
+      toast.error("Tên không đúng định dạng");
+    } else {
       setNameErr(false);
     }
+
     if (!validPostCode.test(postalcode)) {
       setPostCodeErr(true);
-    }
-    if (validPostCode.test(postalcode)) {
+      isValid = false;
+      toast.error("Mã bưu chính không đúng định dạng");
+    } else {
       setPostCodeErr(false);
     }
+    return isValid;
   };
-  console.log(phoneErr)
   return (
     <>
+      <ToastContainer />
       <Header key={new Date().getTime()} />
       <Center>
         <ColumnsWrapper>
-
           <div>
             <WhiteBox className="container">
               <RevealWrapper delay={100}>
-                <h2 className="text-center">{session ? "Thông tin tài khoản" : "Đăng nhập"}</h2>
+                <h2 className="text-center">
+                  {session ? "Thông tin tài khoản" : "Đăng nhập"}
+                </h2>
                 {!addressLoaded && <Spinner fullWidth={true} />}
                 {addressLoaded && session && (
                   <>
-                    <Avatar><img
-                      src={session?.user?.image}
-                      class="rounded-circle"
-                      height="25"
-
-                      loading="lazy"
-                    /></Avatar>
+                    <Avatar>
+                      <img
+                        src={session?.user?.image}
+                        class="rounded-circle"
+                        height="25"
+                        loading="lazy"
+                      />
+                    </Avatar>
                     <AddressHolder>
                       <div>
-                        <Title>Họ tên
-                          {name == "" && <p> họ tên không được để trống</p>}
-                          {nameErr && name != "" && <p> Họ và tên không đúng định dạng</p>}</Title>
+                        <Title>Họ tên</Title>
                         <Input
                           type="text"
                           placeholder="Tên người nhận"
@@ -258,15 +257,9 @@ function AccountPage({ swal }) {
                           value={name}
                           onChange={(ev) => setName(ev.target.value)}
                         />
-
-
                       </div>
                       <div>
-                        <Title>Số điện thoại
-                          {phone == "" && <p> số điện thoại khong được để trống</p>}
-                          {phoneErr && phone != "" && <p> số điện thoại không đúng định dạng</p>}
-
-                        </Title>
+                        <Title>Số điện thoại</Title>
                         <Input
                           type="text"
                           placeholder="Số điện thoại"
@@ -278,10 +271,7 @@ function AccountPage({ swal }) {
                     </AddressHolder>
                     <AddressHolder>
                       <div>
-                        <Title>Email
-                          {email == "" && <p> email không được để trống</p>}
-                          {emailErr && email != "" && <p>Họ và tên không đúng định dạng</p>}
-                        </Title>
+                        <Title>Email</Title>
                         <Input
                           type="text"
                           placeholder="Địa chỉ E-mail"
@@ -289,13 +279,9 @@ function AccountPage({ swal }) {
                           value={email}
                           onChange={(ev) => setEmail(ev.target.value)}
                         />
-
                       </div>
                       <div>
-                        <Title>Mã bưu chính
-
-                          {postCodeErr && <p>Mã bưu chính không đúng định dạng</p>}
-                        </Title>
+                        <Title>Mã bưu chính</Title>
                         <Input
                           type="text"
                           placeholder="Postal Code"
@@ -306,10 +292,7 @@ function AccountPage({ swal }) {
                       </div>
                     </AddressHolder>
                     <div>
-                      <Title>Địa chỉ
-                        {address == "" && <p> Địa chỉ không được để trống</p>}
-                        <p>Họ và tên không đúng định dạng</p>
-                      </Title>
+                      <Title>Địa chỉ</Title>
                       <Input
                         type="text"
                         placeholder="Địa chỉ nhận hàng"
@@ -319,21 +302,28 @@ function AccountPage({ swal }) {
                       />
                     </div>
                     <div style={{ display: "flex", justifyContent: "center" }}>
-                      <Button style={{ margin: "30px 0px", width: "50%" }} primary block onClick={saveAddress}>
+                      <Button
+                        style={{ margin: "30px 0px", width: "50%" }}
+                        primary
+                        block
+                        onClick={saveAddress}
+                      >
                         Cập nhật
                       </Button>
                     </div>
-
                   </>
                 )}
 
                 {session && ( //Nếu tồn tại session thì hiện logout
-                  <div style={{ display: "flex", justifyContent: "center", }}>
-                    <Button style={{ backgroundColor: "#FD3333" }} black onClick={logout}>
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Button
+                      style={{ backgroundColor: "#FD3333" }}
+                      black
+                      onClick={logout}
+                    >
                       Đăng xuất
                     </Button>
                   </div>
-
                 )}
                 {!session && ( //nếu không thì sẽ login
                   <Button primary onClick={login}>
@@ -344,7 +334,7 @@ function AccountPage({ swal }) {
             </WhiteBox>
           </div>
         </ColumnsWrapper>
-      </Center >
+      </Center>
       <Footer />
     </>
   );

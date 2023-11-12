@@ -44,10 +44,10 @@ const SideIcons = styled.div`
 `;
 
 export default function Header({ mainCategories }) {
-
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
   const { data: session } = useSession();
+
   async function logout() {
     await signOut({
       callbackUrl: process.env.NEXT_PUBLIC_URL,
@@ -221,9 +221,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session?.user.email,
-      product: allFetchedProductsId,
-    })
+        userEmail: session?.user.email,
+        product: allFetchedProductsId,
+      })
     : [];
 
   return {
