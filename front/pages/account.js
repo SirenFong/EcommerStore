@@ -104,7 +104,7 @@ function AccountPage({ swal }) {
   const [wishlistLoaded, setWishListLoaded] = useState(true);
   const [orderLoaded, setOrderLoaded] = useState(true);
   const [wishedProducts, setWishedProducts] = useState([]);
-  const [activeTab, setActivetab] = useState("Danh sách yêu thích");
+
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -181,52 +181,57 @@ function AccountPage({ swal }) {
   }, [session]);
 
   const [email, setEmail] = useState("");
-  console.log(validPhone);
-  const [emailErr, setEmailErr] = useState(false);
-  const [phoneErr, setPhoneErr] = useState(false);
 
-  const [nameErr, setNameErr] = useState(false);
-  const [postCodeErr, setPostCodeErr] = useState(false);
 
   const validate = () => {
     let isValid = true;
 
-    if (!validEmail.test(email)) {
-      setEmailErr(true);
+    if (email == "") {
       isValid = false;
-      toast.error("Email không đúng định dạng");
+      toast.error("Email không được để trống");
     } else {
-      setEmailErr(false);
+      if (!validEmail.test(email)) {
+        isValid = false;
+        toast.error("Email không đúng định dạng");
+      }
     }
 
-    if (!validPhone.test(phone)) {
-      setPhoneErr(true);
+    if (phone == "") {
       isValid = false;
-      toast.error("Số điện thoại không đúng định dạng");
+      toast.error("Số điện thoại không được để trống");
     } else {
-      setPhoneErr(false);
+      if (!validPhone.test(phone)) {
+        isValid = false;
+        toast.error("Số điện thoại không đúng định dạng");
+      }
     }
-
-    if (!validName.test(name.toString())) {
-      setNameErr(true);
+    if (name == "") {
       isValid = false;
-      toast.error("Tên không đúng định dạng");
+      toast.error("Tên không được để trống");
     } else {
-      setNameErr(false);
+      if (!validName.test(name)) {
+        isValid = false;
+        toast.error("Tên không đúng định dạng");
+      }
     }
-
-    if (!validPostCode.test(postalcode)) {
-      setPostCodeErr(true);
+    if (postalcode == "") {
       isValid = false;
-      toast.error("Mã bưu chính không đúng định dạng");
+      toast.error("Mã bưu chính được để trống");
     } else {
-      setPostCodeErr(false);
+      if (!validPostCode.test(postalcode)) {
+        isValid = false;
+        toast.error("Mã bưu chính không đúng định dạng");
+      }
+    }
+    if (address == "") {
+      isValid = false;
+      toast.error("Địa chỉ được để trống");
     }
     return isValid;
   };
   return (
     <>
-      <ToastContainer />
+     
       <Header key={new Date().getTime()} />
       <Center>
         <ColumnsWrapper>
