@@ -33,7 +33,7 @@ export default async function handle(req, res) {
       qty,
       images,
       category,
-      properties, // Save the properties array directly
+      properties: properties.map(prop => ({ name: prop.name, values: prop.values })),
     });
     res.json(productDoc);
   }

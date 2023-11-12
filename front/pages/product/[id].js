@@ -43,31 +43,51 @@ export default function ProductPage({
   // Thêm state để theo dõi properties được chọn
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [selectedProperties, setSelectedProperties] = useState([]);
+
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+  {
+    selectedProperties.length > 0 && (
+      <div>
+        <p>Thông tin chi tiết:</p>
+        <div style={{ display: "flex" }}>
+          {selectedProperties.map((selectedProp, index) => (
+            <div key={index} style={{ marginRight: "20px" }}>
+              <p>
+                <strong>{selectedProp.name}:</strong>{" "}
+                {selectedProp.values?.map((value, index) => (
+                  <span key={index}>{value}</span>
+                ))}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  // Thay đổi hàm toggleSelectedProperty
   const toggleSelectedProperty = (prop) => {
     setSelectedProperties((prevSelected) => {
       const isAlreadySelected = prevSelected.some(
-        (selectedProp) => selectedProp._id === prop._id
+        (selectedProp) => selectedProp.name === prop.name
       );
 
       if (isAlreadySelected) {
-        // If the property is already selected, remove it
         return prevSelected.filter(
-          (selectedProp) => selectedProp._id !== prop._id
+          (selectedProp) => selectedProp.name !== prop.name
         );
       } else {
-        // If the property is not selected, add it
         return [...prevSelected, prop];
       }
     });
   };
 
+  // Thay đổi hàm isSelectedProperty
   const isSelectedProperty = (prop) => {
     return selectedProperties.some(
-      (selectedProp) => selectedProp._id === prop._id
+      (selectedProp) => selectedProp.value === prop.value
     );
   };
   return (

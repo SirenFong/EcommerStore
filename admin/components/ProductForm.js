@@ -41,7 +41,7 @@ export default function ProductForm({
     });
   }, []);
 
-  //Xóa theo index :v
+  //Xóa
   const deleteByIndex = (index) => {
     setImages((oldValues) => {
       return oldValues.filter((_, i) => i !== index);
@@ -86,20 +86,12 @@ export default function ProductForm({
       for (const file of files) {
         data.append("file", file);
       }
-      // files.forEach(file => data.append('file', file));
       const res = await axios.post("/api/upload", data);
       setImages((oldImages) => {
         return [...oldImages, ...res.data.links];
       });
       setIsUploading(false);
 
-      // console.log(res.data)
-      // for (const file of files) {
-      //   data.append('file', file)
-      // }
-
-      // const res = await axios.post('/api/upload', data)
-      // console.log(res.data)
     }
   }
   //set image cho form thêm
@@ -136,14 +128,6 @@ export default function ProductForm({
       return updatedProperties;
     });
   }
-  console.log(checkedvalues);
-  // function setProductProp(index, p, value) {
-
-  //   setProductProperties((prev) => ({ ...prev, [p.name]: value }));
-
-  //   console.log(productProperties)
-  // }
-  // console.log(propertiesToFill)
   return (
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
     /**Thằng setTitle sẽ thay đổi thành 1 trạng thái mới của thằng title */
@@ -238,9 +222,6 @@ export default function ProductForm({
           <div>Add image</div>
           <input type="file" onChange={uploadImage} className="hidden" />
         </label>
-        {/* {!images?.length && (
-          <div>Không có hình ảnh cho sản phẩm này</div>
-        )}* */}
       </div>
       <label>Mô tả chi tiết</label>
       <textarea
@@ -250,17 +231,6 @@ export default function ProductForm({
       ></textarea>
 
       <label>Giá tiền ( VNĐ )</label>
-      {/* <input
-        type="text"
-        placeholder="Giá tiền"
-        value={numeral(price).format("0,0")}
-        onChange={(ev) => {
-          const formattedPrice = numeral(
-            ev.target.value.replace(".","")
-          ).value();
-          setPrice(formattedPrice);
-        }}
-      /> */}
       <input
         type="text"
         placeholder="Giá tiền"
@@ -270,12 +240,6 @@ export default function ProductForm({
           setPrice(formattedPrice);
         }}
       />
-      {/* <input
-        type="number"
-        placeholder="price"
-        value={price.toLocaleString("vi-VN")} // Sử dụng 'vi-VN' để định dạng số tiền theo định dạng của Việt Nam
-        onChange={(ev) => setPrice(ev.target.value)}
-      /> */}
       <label>Số lượng sản phẩm</label>
       <input
         type="number"
