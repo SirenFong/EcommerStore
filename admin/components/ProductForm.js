@@ -91,7 +91,6 @@ export default function ProductForm({
         return [...oldImages, ...res.data.links];
       });
       setIsUploading(false);
-
     }
   }
   //set image cho form thêm
@@ -121,11 +120,20 @@ export default function ProductForm({
     const { value, checked } = e.target;
 
     setProductProperties((prevProperties) => {
-      const updatedProperties = checked
-        ? [...prevProperties, { name: p.name, value }]
-        : prevProperties.filter((prop) => prop.value !== value);
+      const propertyExists = prevProperties.some(
+        (prop) => prop.value === value
+      );
 
-      return updatedProperties;
+      if (checked && !propertyExists) {
+        // If checked and property doesn't exist, add it
+        return [...prevProperties, { name: p.name, value }];
+      } else if (!checked && propertyExists) {
+        // If unchecked and property exists, remove it
+        return prevProperties.filter((prop) => prop.value !== value);
+      } else {
+        // No change needed
+        return prevProperties;
+      }
     });
   }
   return (
@@ -154,21 +162,25 @@ export default function ProductForm({
       {propertiesToFill.map((p, index) => (
         <div key={index} className="">
           <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
-          <div
-            className="flex gap-2"
-            value={p.name}
-            onChange={(e) => setProductProp(p, e)}
-          >
-            {p.values.map((item, index) => (
-              <div key={index} className="box-checked">
-                <div>{item}</div>
-                <input
-                  className="box-checked-input"
-                  value={item}
-                  type="checkbox"
-                />
-              </div>
-            ))}
+          <div className="flex gap-2">
+            {p.values.map((item, index) => {
+              const isChecked = productProperties.some(
+                (prop) => prop.value === item
+              );
+
+              return (
+                <div key={index} className="box-checked">
+                  <div>{item}</div>
+                  <input
+                    className="box-checked-input"
+                    value={item}
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={(e) => setProductProp(p, e)}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}
