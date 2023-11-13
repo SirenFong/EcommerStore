@@ -87,7 +87,7 @@ export default function ProductPage({
   // Thay đổi hàm isSelectedProperty
   const isSelectedProperty = (prop) => {
     return selectedProperties.some(
-      (selectedProp) => selectedProp.value === prop.value
+      (selectedProp) => selectedProp._id === prop._id
     );
   };
   return (
@@ -117,7 +117,7 @@ export default function ProductPage({
                     cursor: "pointer",
                   }}
                 >
-                  {prop.name}: {prop.value}
+                  {prop.name}: {prop._id}
                 </button>
               ))}
             </div>
@@ -131,7 +131,7 @@ export default function ProductPage({
                     <div key={index} style={{ marginRight: "20px" }}>
                       <p>
                         <strong>{selectedProp.name}:</strong>{" "}
-                        {selectedProp.value}
+                        {selectedProp._id}
                       </p>
                     </div>
                   ))}
