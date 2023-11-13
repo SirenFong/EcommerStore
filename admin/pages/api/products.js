@@ -31,7 +31,10 @@ export default async function handle(req, res) {
       qty,
       images,
       category,
-      properties: properties.map(prop => ({ name: prop.name, values: prop.values })),
+      properties: properties.map((prop) => ({
+        name: prop.name,
+        values: prop.values,
+      })),
     });
     res.json(productDoc);
   }
