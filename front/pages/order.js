@@ -16,18 +16,10 @@ import SingleOrder from "@component/components/SingleOrder";
 import { withSwal } from "react-sweetalert2";
 import Footer from "@component/components/Footer";
 
-const ColsWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 40px;
-  margin: 40px 0;
-  p {
-    margin: 5px;
-  }
-`;
 
 const ColumnsWrapper = styled.div`
   grid-template-columns: 1fr;
+  height:500px;
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.2fr 0.8fr;
   }
@@ -50,31 +42,6 @@ const ColumnsWrapper = styled.div`
   }
 `;
 
-const WishedProductsGrid = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-`;
-
-const AddressHolder = styled.div`
-  display: flex;
-  gap: 5px;
-`;
-
-const Avatar = styled.div`
-  height: 100px;
-  weight: 70px;
-  gap: 5px;
-  boder-radius: 50px;
-  margin: 0px 10px;
-
-  display: flex;
-  justify-content: center;
-  img {
-    height: 70px;
-    weight: 70px;
-  }
-`;
 
 function OrdersPage({ swal }) {
   const { data: session } = useSession();
@@ -91,24 +58,7 @@ function OrdersPage({ swal }) {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function logout() {
-    await signOut({
-      callbackUrl: process.env.NEXT_PUBLIC_URL,
-    });
-  }
 
-  async function login() {
-    await signIn("google");
-  }
-  async function saveAddress() {
-    const data = { name, phone, email, postalcode, address };
-    axios.put("/api/address", data);
-    setIsLoading(false);
-    await swal.fire({
-      title: "Settings saved!",
-      icon: "success",
-    });
-  }
 
   useEffect(() => {
     if (!session) {
@@ -158,11 +108,7 @@ function OrdersPage({ swal }) {
       });
   }, [session]);
 
-  function productRemovedFromWishList(idToRemove) {
-    setWishedProducts((products) => {
-      return [...products.filter((p) => p._id.toString() !== idToRemove)];
-    });
-  }
+
 
   return (
     <>
@@ -174,15 +120,35 @@ function OrdersPage({ swal }) {
               <RevealWrapper delay={0}>
                 <Tabs
                   tabs={[
-                    "Đơn đặt hàng",
-                    "Đơn chờ xác nhận",
-                    "Đơn chờ giao hàng",
-                    "Đơn đã giao",
+                    "Tất cả",
+                    "Chưa thanh toán",
+                    "Chờ xác nhận",
+                    "Chờ giao hàng",
+                    "Đã giao",
+                    "Đã hủy", "Trả hàng/Hoàn tiền"
                   ]}
                   active={activeTab}
                   onChange={setActivetab}
                 />
                 {activeTab === "Đơn đặt hàng" && (
+                  <>
+                    {!orderLoaded && <Spinner fullWidth={true} />}
+
+                    {orderLoaded && (
+                      <div>
+                        {orders.length === 0 && !session && (
+                          <p>Đăng nhập để xem đơn hàng !!</p>
+                        )}
+                        {orders.length === 0 && session && (
+                          <p>Bạn chưa có đơn hàng nào !!</p>
+                        )}
+                        {orders.length > 0 &&
+                          orders.map((o) => <SingleOrder {...o} />)}
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "Đơn chưa thanh toán" && (
                   <>
                     {!orderLoaded && <Spinner fullWidth={true} />}
 
@@ -254,7 +220,47 @@ function OrdersPage({ swal }) {
                         )}
                         {orders.length > 0 &&
                           orders
-                            .filter((item) => item.status == 4)
+                            .filter((item) => item.status == 3)
+                            .map((o) => <SingleOrder {...o} />)}
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "Đơn hoàn trả" && (
+                  <>
+                    {!orderLoaded && <Spinner fullWidth={true} />}
+
+                    {orderLoaded && (
+                      <div>
+                        {orders.length === 0 && !session && (
+                          <p>Đăng nhập để xem đơn hàng !!</p>
+                        )}
+                        {orders.length === 0 && session && (
+                          <p>Bạn chưa có đơn hàng nào !!</p>
+                        )}
+                        {orders.length > 0 &&
+                          orders
+                            .filter((item) => item.status == 0)
+                            .map((o) => <SingleOrder {...o} />)}
+                      </div>
+                    )}
+                  </>
+                )}
+                {activeTab === "Đơn đã hủy" && (
+                  <>
+                    {!orderLoaded && <Spinner fullWidth={true} />}
+
+                    {orderLoaded && (
+                      <div>
+                        {orders.length === 0 && !session && (
+                          <p>Đăng nhập để xem đơn hàng !!</p>
+                        )}
+                        {orders.length === 0 && session && (
+                          <p>Bạn chưa có đơn hàng nào !!</p>
+                        )}
+                        {orders.length > 0 &&
+                          orders
+                            .filter((item) => item.status == 0)
                             .map((o) => <SingleOrder {...o} />)}
                       </div>
                     )}

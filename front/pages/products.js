@@ -8,17 +8,54 @@ import Header from "@component/components/Header";
 import ProductsGrid from "@component/components/ProductsGrid";
 import Title from "@component/components/Title";
 import Footer from "@component/components/Footer";
+import Filter from "@component/components/Filter";
+import styled from "styled-components";
 
-
+const Wraper = styled.div`
+ display:flex;/* Height of the footer */
+ height:100%;
+ left: 0;
+  bottom: 0;
+  width: 100%;
+ padding:10px 10px;
+ gap:10px;
+ background-color:#FD33;
+`;
+const WrapperColomnLeft = styled.div`
+  width: 15%;
+  height:750px;
+  background-color:gray;
+  left: 0;
+  color: white;
+  text-align: center; 
+ 
+`;
+const WrapperColomnRight = styled.div`
+  width:85%;
+  background-color: #FD3333;
+   right: 0;
+  color: white;
+  text-align: center; 
+ 
+`;
 export default function ProductsPage({ products, wishedProducts }) {
   return (
     <>
       <Header />
       <Center>
+        <Wraper>
+          <WrapperColomnLeft>
+            <Filter />
+          </WrapperColomnLeft>
 
-        <Title>Xem tất cả</Title>
+          <WrapperColomnRight>
+            <Title>Xem tất cả</Title>
 
-        <ProductsGrid products={products} wishedProducts={wishedProducts} />
+            <ProductsGrid products={products} wishedProducts={wishedProducts} />
+          </WrapperColomnRight>
+
+        </Wraper>
+
       </Center>
       <Footer />
     </>

@@ -231,7 +231,7 @@ function AccountPage({ swal }) {
   };
   return (
     <>
-     
+
       <Header key={new Date().getTime()} />
       <Center>
         <ColumnsWrapper>

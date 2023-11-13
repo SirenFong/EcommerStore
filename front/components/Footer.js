@@ -1,8 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 const Footernav = styled.div`
+  position: fixed;
+  left: 0;
+  bottom: 0;
   width: 100%;
-  height: 60px; /* Height of the footer */
+  
+  color: white;
+  text-align: center; /* Height of the footer */
 `;
 const Footer = () => (
   <Footernav>

@@ -23,7 +23,11 @@ const InputWrapper = styled.div`
   top: 68px;
   margin: 25px 0;
   padding: 5px 0;
-  background-color: #eeeeeeaa;
+  background-color: transparent;
+`;
+const Wrapper = styled.div`
+
+  margin:0px 200px;
 `;
 
 export default function SearchPage({ wishedProducts }) {
@@ -57,21 +61,23 @@ export default function SearchPage({ wishedProducts }) {
     <>
       <Header />
       <Center>
-        <InputWrapper>
-          <SearchInput
-            autoFocus
-            value={phrase}
-            onChange={(ev) => setPhrase(ev.target.value)}
-            placeholder="Nhập tên sản phẩm..."
-          />
-        </InputWrapper>
-        {!isLoading && phrase !== "" && products.length === 0 && (
-          <h2>Không có kết quả tìm kiếm &quot;{phrase}&quot;</h2>
-        )}
-        {isLoading && <Spinner fullWidth={true} />}
-        {!isLoading && products.length > 0 && (
-          <ProductsGrid products={products} wishedProducts={wishedProducts} />
-        )}
+        <Wrapper>
+          <InputWrapper>
+            <SearchInput
+              autoFocus
+              value={phrase}
+              onChange={(ev) => setPhrase(ev.target.value)}
+              placeholder="Nhập tên sản phẩm..."
+            />
+          </InputWrapper>
+          {!isLoading && phrase !== "" && products.length === 0 && (
+            <h2>Không có kết quả tìm kiếm &quot;{phrase}&quot;</h2>
+          )}
+          {isLoading && <Spinner fullWidth={true} />}
+          {!isLoading && products.length > 0 && (
+            <ProductsGrid products={products} wishedProducts={wishedProducts} />
+          )}
+        </Wrapper>
       </Center>
     </>
   );

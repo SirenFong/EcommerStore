@@ -2,7 +2,7 @@ import Link from "next/link";
 import styled from "styled-components";
 // import Center from "./Center";
 import Center from "@component/components/Center";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
 import BarsIcon from "./icons/Bars";
 import SearchIcon from "./icons/SearchIcon";
@@ -14,6 +14,8 @@ import Bell from "./icons/Bell";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Button from "./Button";
 import { FaGoogle } from "react-icons/fa";
+import CategoriesPage from "@component/pages/categories";
+import axios from "axios";
 
 const NavButton = styled.button`
   background-color: transparent;
@@ -43,7 +45,7 @@ const SideIcons = styled.div`
   }
 `;
 
-export default function Header({ mainCategories }) {
+export default function Header({ }) {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
   const { data: session } = useSession();
@@ -56,6 +58,17 @@ export default function Header({ mainCategories }) {
 
   async function login() {
     await signIn("google");
+  }
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+  function fetchCategories() {
+
+    axios.get("/api/categories").then((response) => {
+      setCategories(response.data);
+
+    });
   }
 
   return (
@@ -91,26 +104,36 @@ export default function Header({ mainCategories }) {
               </li>
               <li className="nav-item">
                 <Link className="nav-link" href={"/products"}>
-                  Danh sách sản phẩm
+                  Tất cả sản phẩm
                 </Link>
               </li>
               <li className="nav-item dropdown">
                 <Link
                   className="nav-link dropdown-toggle"
-                  href={"/categories"}
+
                   role="button"
-                  data-bs-toggle="dropdown"
+
                   aria-expanded="false"
+                  href={"/categories"}
                 >
                   Danh mục sản phẩm
                 </Link>
-                <ul className="dropdown-menu"></ul>
+                {/* <ul className="dropdown-menu">
+                  {categories.length > 0 &&
+                    categories.map((category) => (
+                      <li style={{ display: "flex", gap: "5px", justifyContent: "center" }} value={category._id}>{category.name}</li>
+                    ))}
+
+
+
+
+                </ul> */}
               </li>
             </ul>
             <SideIcons>
-              <Link href={"/search"}>
-                <SearchIcon />
-              </Link>
+
+              <Link href={'/search'}><SearchIcon /></Link>
+
               <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>
                 <BarsIcon />
               </NavButton>
@@ -182,55 +205,19 @@ export default function Header({ mainCategories }) {
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" href="/logout">
+
+                    <Button className="dropdown-item" onClick={logout}>
                       Đăng xuất
-                    </Link>
+                    </Button>
+
                   </li>
                 </ul>
               </li>
             )}
           </div>
         </div>
-      </nav>
-    </div>
+      </nav >
+    </div >
     ///
   );
-}
-
-//Lấy ra các danh mục cha trong danh mục sản phẩm
-export async function getServerSideProps(ctx) {
-  const categories = await Category.find();
-  const mainCategories = categories.filter((c) => !c.parent);
-  const categoriesProducts = {}; //catId = [products]
-  const allFetchedProductsId = [];
-
-  // for (const mainCat of mainCategories) {
-  //   const mainCatId = mainCat._id.toString();
-  //   const childCatIds = categories
-  //     .filter((c) => c?.parent?.toString() === mainCatId)
-  //     .map((c) => c._id.toString());
-  //   const categoriesIds = [mainCatId, ...childCatIds];
-  //   const products = await Product.find({ category: categoriesIds }, null, {
-  //     limit: 3,
-  //     sort: { _id: -1 },
-  //   });
-  //   allFetchedProductsId.push(...products.map((p) => p._id.toString()));
-  //   categoriesProducts[mainCat._id] = products;
-  // }
-
-  const session = await getServerSession(ctx.req, ctx.res, authOptions);
-  const wishedProducts = session?.user
-    ? await WishedProduct.find({
-        userEmail: session?.user.email,
-        product: allFetchedProductsId,
-      })
-    : [];
-
-  return {
-    props: {
-      mainCategories: JSON.parse(JSON.stringify(categories)),
-      categoriesProducts: JSON.parse(JSON.stringify(categoriesProducts)),
-      wishedProducts: wishedProducts.map((i) => i.product.toString()),
-    },
-  };
 }
