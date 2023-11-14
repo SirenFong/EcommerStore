@@ -39,39 +39,7 @@ const Price = styled.span`
   font-size: 1.4rem;
   color: #f73b3b;
 `;
-const RowQuantity = styled.span`
-  padding: 10px 0px;
-  border: 1.5px solid #818181;
-  border-radius: 5px;
-  input[type="number"] {
-    -moz-appearance: textfield;
-    height: 40px;
-    width: 50px;
-    border: none;
-    text-align: center;
-    appearance: none; /* Firefox */
-  }
-`;
-const QuantityLabel = styled.span`
-  padding: 0 3px;
-`;
 
-const AddressHolder = styled.div`
-  display: flex;
-  gap: 5px;
-`;
-const Payment = styled.div`
-  display: flex;
-  gap: 5px;
-`;
-const ButonQuantity = styled.button`
-  border: 1px solid #818181;
-  background-color: #fff;
-  height: 40px;
-  width: 30px;
-  border: none;
-  border-radius: 5px;
-`;
 export default function ProductPage({
   product,
   category,
@@ -84,6 +52,7 @@ export default function ProductPage({
   const [selectedProperties, setSelectedProperties] = useState([]);
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -95,48 +64,6 @@ export default function ProductPage({
     });
   };
 
-  {
-    selectedProperties.length > 0 && (
-      <div>
-        <p>Thông tin chi tiết:</p>
-        <div style={{ display: "flex" }}>
-          {selectedProperties.map((selectedProp, index) => (
-            <div key={index} style={{ marginRight: "20px" }}>
-              <p>
-                <strong>{selectedProp.name}:</strong>{" "}
-                {/* {selectedProp.values?.map((value, index) => (
-                  <span key={index}>{value}</span>
-                ))} */}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-  // Thay đổi hàm toggleSelectedProperty
-  // const toggleSelectedProperty = (prop) => {
-  //   setSelectedProperties((prevSelected) => {
-  //     const isAlreadySelected = prevSelected.some(
-  //       (selectedProp) => selectedProp.name === prop.name
-  //     );
-
-  //     if (isAlreadySelected) {
-  //       return prevSelected.filter(
-  //         (selectedProp) => selectedProp.name !== prop.name
-  //       );
-  //     } else {
-  //       return [...prevSelected, prop];
-  //     }
-  //   });
-  // };
-
-  // Thay đổi hàm isSelectedProperty
-  const isSelectedProperty = (prop) => {
-    return selectedProperties.some(
-      (selectedProp) => selectedProp.name === prop.name
-    );
-  };
   console.log(product);
   let separatedArray = [];
   if (product.properties.length > 0) {
@@ -151,30 +78,6 @@ export default function ProductPage({
     });
   }
 
-  //Hàm gọi thêm sản phẩm vào giỏ hàng
-  function moreOfThisProduct(id, selectedProperties) {
-    addProduct({
-      id,
-      selectedProperties,
-    });
-  }
-
-  //Hàm gọi xóa sản phẩm vào giỏ hàng
-  function lessOfThisProduct(id, selectedProperties) {
-    removeProduct({
-      id,
-      selectedProperties,
-    });
-  }
-
-  const [selectedNumber, setSelectedNumber] = useState([]);
-  let arr = [];
-  function selectNumber(e) {
-    e.preventDefault();
-
-    setSelectedNumber([e.target.name, e.target.value]);
-  }
-  console.log(selectedNumber);
   return (
     <>
       <Header />
@@ -185,8 +88,14 @@ export default function ProductPage({
           </WhiteBox>
           <div>
             <Title>{product.title}</Title>
-
-            <p>{product.qty} Sản phẩm có sẵn</p>
+            <p
+              dangerouslySetInnerHTML={{
+                __html: product.description.replace(/\n/g, "<br/>"),
+              }}
+            />
+            <p>
+              <strong>{product.qty} Sản phẩm có sẵn</strong>
+            </p>
             <PriceRow>
               <h5>Giá: </h5>
               <div>
@@ -228,40 +137,6 @@ export default function ProductPage({
                 </div>
               ))}
             </div>
-
-            {/* Hiển thị thông tin chi tiết của các property được chọn */}
-            {selectedProperties.length > 0 && (
-              <div>
-                <p>Thông tin chi tiết:</p>
-                <div style={{ display: "flex" }}>
-                  {selectedProperties.map((selectedProp, index) => (
-                    <div key={index} style={{ marginRight: "20px" }}>
-                      <p>
-                        <strong>{selectedProp.name}:</strong> {selectedProp._id}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div className="my-2">
-              <h6>Số lượng</h6>
-              <RowQuantity>
-                <ButonQuantity onClick={() => lessOfThisProduct(product._id)}>
-                  -
-                </ButonQuantity>
-                <QuantityLabel>
-                  {" "}
-                  {cartProducts.filter((id) => id === product._id).length}
-                </QuantityLabel>{" "}
-                <ButonQuantity
-                  onClick={() => moreOfThisProduct(product._id, properties)}
-                >
-                  +
-                </ButonQuantity>
-              </RowQuantity>
-            </div>
-
             <div>
               <FlyingButton main _id={product._id} src={product.images?.[0]}>
                 <CartIcon />

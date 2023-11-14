@@ -16,9 +16,7 @@ export default function ProductForm({
 }) {
   const [title, setTitle] = useState(existingTitle || "");
 
-  const [properties, setProperties] = useState(
-    assignedProperties || []
-  );
+  const [properties, setProperties] = useState(assignedProperties || []);
 
   const [description, setDescription] = useState(existingDescription || "");
   const [category, setCategory] = useState(assignedCategory || "");
@@ -32,7 +30,7 @@ export default function ProductForm({
   const [categoriesLoading, setCategoriesLoading] = useState(false);
 
   const numeral = require("numeral");
-  console.log(assignedProperties)
+  console.log(assignedProperties);
   useEffect(() => {
     setCategoriesLoading(true);
     axios.get("/api/categories").then((result) => {
@@ -105,7 +103,6 @@ export default function ProductForm({
     setImages(images);
   }
 
-
   function addProperty() {
     setProperties((prev) => {
       return [...prev, { name: "", value: "" }];
@@ -136,7 +133,7 @@ export default function ProductForm({
       return properties;
     });
   }
-  console.log(properties)
+  console.log(properties);
   return (
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
     /**Thằng setTitle sẽ thay đổi thành 1 trạng thái mới của thằng title */

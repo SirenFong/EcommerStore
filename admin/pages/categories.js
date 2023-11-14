@@ -42,7 +42,6 @@ function Categories({ swal }) {
     const data = {
       name,
       parentCategory,
-
     };
     if (editedCategory) {
       data._id = editedCategory._id;
@@ -67,8 +66,6 @@ function Categories({ swal }) {
     setEditedCategory(category);
     setName(category.name);
     setParentCategory(category.parent?._id);
-
-
   }
 
   //Hàm xóa loại sản phẩm
@@ -92,21 +89,14 @@ function Categories({ swal }) {
       });
   }
 
-
-
   ///////
 
   const validate = () => {
     let isValid = true;
 
-
     if (name == "") {
       isValid = false;
       toast.error("Tên không được để trống");
-    }
-    if (parentCategory == "") {
-      isValid = false;
-      toast.error("Vui lòng loại sản phẩm chọn để trống");
     }
 
     return isValid;
@@ -149,7 +139,6 @@ function Categories({ swal }) {
                   setEditedCategory(null);
                   setName("");
                   setParentCategory("");
-
                 }}
                 className="btn-default"
               >
@@ -206,7 +195,6 @@ function Categories({ swal }) {
         )}
       </Layout>
     </>
-
   );
 }
 

@@ -45,7 +45,7 @@ const SideIcons = styled.div`
   }
 `;
 
-export default function Header({ }) {
+export default function Header({}) {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
   const { data: session } = useSession();
@@ -64,10 +64,8 @@ export default function Header({ }) {
     fetchCategories();
   }, []);
   function fetchCategories() {
-
     axios.get("/api/categories").then((response) => {
       setCategories(response.data);
-
     });
   }
 
@@ -110,9 +108,7 @@ export default function Header({ }) {
               <li className="nav-item dropdown">
                 <Link
                   className="nav-link dropdown-toggle"
-
                   role="button"
-
                   aria-expanded="false"
                   href={"/categories"}
                 >
@@ -131,8 +127,9 @@ export default function Header({ }) {
               </li>
             </ul>
             <SideIcons>
-
-              <Link href={'/search'}><SearchIcon /></Link>
+              <Link href={"/search"}>
+                <SearchIcon />
+              </Link>
 
               <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>
                 <BarsIcon />
@@ -205,19 +202,17 @@ export default function Header({ }) {
                     </Link>
                   </li>
                   <li>
-
                     <Button className="dropdown-item" onClick={logout}>
                       Đăng xuất
                     </Button>
-
                   </li>
                 </ul>
               </li>
             )}
           </div>
         </div>
-      </nav >
-    </div >
+      </nav>
+    </div>
     ///
   );
 }

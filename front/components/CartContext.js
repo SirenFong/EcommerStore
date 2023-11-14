@@ -28,8 +28,8 @@ export function CartContextProvider({ children }) {
   }, []);
 
   //Thêm sản phẩm trùng với sản phẩm trước theo Id mà không hiển thị thêm sp
-  function addProduct(productId, properties) {
-    setCartProducts((prev) => [...prev, productId, properties]);
+  function addProduct(productId) {
+    setCartProducts((prev) => [...prev, productId]);
   }
   //Xóa sản phẩm
   function removeProduct(productId) {

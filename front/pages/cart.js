@@ -12,9 +12,6 @@ import axios from "axios";
 import styled from "styled-components";
 import { FaGoogle } from "react-icons/fa";
 import Footer from "@component/components/Footer";
-import { Checkbox } from "@mui/material";
-import { CategoryContext } from "@component/components/CategoryContext";
-import { validEmail, validPhone, validName, validPostCode, validAddress, validSpace } from '../context/regex.js';
 import { withSwal } from "react-sweetalert2";
 const ErrorMessage = styled.p`
   color: red;
@@ -85,7 +82,7 @@ const Payment = styled.div`
   gap: 5px;
 `;
 const ButtonPayment = styled.div`
- border:1;
+  border: 1;
 
   padding: 5px 15px;
   border-radius: 5px;
@@ -93,13 +90,13 @@ const ButtonPayment = styled.div`
   display: inline-flex;
   align-items: center;
   text-decoration: none;
-  font-family: 'Poppins', sans-serif;
-  font-weight:500;
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
   font-size: 15px;
   background-color: transparent;
-    color: #000;
-    border: 1px solid #000;
-    ${(props) =>
+  color: #000;
+  border: 1px solid #000;
+  ${(props) =>
     props.wished
       ? `
     color:red;
@@ -107,10 +104,8 @@ const ButtonPayment = styled.div`
       : `
     color:black;
   `}
-  
 `;
 function CartPage({ swal }) {
-
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
 
@@ -187,9 +182,9 @@ function CartPage({ swal }) {
       setPostalcode(response.data?.postalcode || "");
       setAddress(response.data?.address || "");
     });
-    axios.get('/api/paymentmethods').then(result => {
+    axios.get("/api/paymentmethods").then((result) => {
       setPaymentMethods(result.data);
-    })
+    });
   }, [session]);
   async function login() {
     await signIn("google");
@@ -210,10 +205,7 @@ function CartPage({ swal }) {
     total += price;
   }
 
-
-
   async function goToPayment() {
-
     const response = await axios.post("/api/checkout", {
       name,
       phone,
@@ -222,8 +214,7 @@ function CartPage({ swal }) {
       address,
       paymentmethod,
       cartProducts,
-      service
-
+      service,
     });
 
     if (response.data.url) {
@@ -260,14 +251,12 @@ function CartPage({ swal }) {
 
   ///
 
-
   //Đi tới trang web thanh toán
   async function ToPayment() {
     if (paymentmethod != "") {
-      if (paymentmethod == '653a7e8993659336603d60a9') {
+      if (paymentmethod == "653a7e8993659336603d60a9") {
         goToPayment();
       } else {
-
         await axios.post("/api/checkout", {
           name,
           phone,
@@ -280,7 +269,6 @@ function CartPage({ swal }) {
         setIsSuccess(true);
         clearCart();
         localStorage.setItem("cart", JSON.stringify([]));
-
       }
     } else {
       await swal.fire({
@@ -288,13 +276,7 @@ function CartPage({ swal }) {
         icon: "warning",
       });
     }
-
-
-
-
-
   }
-
 
   return (
     <>
@@ -361,13 +343,7 @@ function CartPage({ swal }) {
                       <td colSpan={2}>Tiền ship</td>
                       <td>{shippingFee?.toLocaleString()} đ</td>
                     </tr>
-                    <tr className="subtotal">
-
-
-
-
-
-                    </tr>
+                    <tr className="subtotal"></tr>
 
                     <tr className="subtotal total">
                       <td colSpan={2}>Tổng hóa đơn</td>
@@ -436,36 +412,35 @@ function CartPage({ swal }) {
                     value={address}
                     onChange={(ev) => setAddress(ev.target.value)}
                   />
-
                 </Box>
                 <Box>
                   <h2>Phương thức thanh toán</h2>
                   <Payment>
                     <label>Loại sản phẩm</label>
 
-                    <select value={paymentmethod} onChange={(ev) => setPaymentMethod(ev.target.value)}>
+                    <select
+                      value={paymentmethod}
+                      onChange={(ev) => setPaymentMethod(ev.target.value)}
+                    >
                       <option value="">Chưa chọn loại sản phẩm</option>
                       {paymentmethods.length > 0 &&
                         paymentmethods.map((paymentmethod) => (
-                          <option value={paymentmethod._id}>{paymentmethod.paymentName}</option>
+                          <option value={paymentmethod._id}>
+                            {paymentmethod.paymentName}
+                          </option>
                         ))}
                     </select>
                   </Payment>
-
-
-
                 </Box>
 
                 <Button black block onClick={ToPayment}>
                   Đặt hàng
                 </Button>
               </Box>
-
             </RevealWrapper>
           )}
         </ColumnsWrapper>
       </Center>
-      <Footer />
     </>
   );
 }
