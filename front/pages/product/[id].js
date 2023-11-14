@@ -30,28 +30,27 @@ const PriceRow = styled.div`
   display: flex;
   gap: 20px;
   align-items: center;
-  padding:5px 0px;
-  h5{
-    margin:0px
+  padding: 5px 0px;
+  h5 {
+    margin: 0px;
   }
 `;
 const Price = styled.span`
   font-size: 1.4rem;
-  color:#F73B3B;
+  color: #f73b3b;
 `;
 const RowQuantity = styled.span`
-padding:10px 0px;
-border:1.5px solid #818181;
-border-radius:5px;
-input[type=number] {
-    -moz-appearance:textfield; 
-    height:40px;
-  width:50px;
-  border:none;
-  text-align:center;
-  appearance: none;/* Firefox */
-}
-
+  padding: 10px 0px;
+  border: 1.5px solid #818181;
+  border-radius: 5px;
+  input[type="number"] {
+    -moz-appearance: textfield;
+    height: 40px;
+    width: 50px;
+    border: none;
+    text-align: center;
+    appearance: none; /* Firefox */
+  }
 `;
 const QuantityLabel = styled.span`
   padding: 0 3px;
@@ -66,12 +65,12 @@ const Payment = styled.div`
   gap: 5px;
 `;
 const ButonQuantity = styled.button`
-  border:1px solid #818181;
-  background-color:#fff;
-  height:40px;
-  width:30px;
-  border:none;
-  border-radius:5px;
+  border: 1px solid #818181;
+  background-color: #fff;
+  height: 40px;
+  width: 30px;
+  border: none;
+  border-radius: 5px;
 `;
 export default function ProductPage({
   product,
@@ -81,13 +80,20 @@ export default function ProductPage({
 }) {
   const [isClient, setIsClient] = useState(false);
   // Thêm state để theo dõi properties được chọn
-  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [selectedValues, setSelectedValues] = useState({});
   const [selectedProperties, setSelectedProperties] = useState([]);
   const { cartProducts, addProduct, removeProduct, clearCart } =
     useContext(CartContext);
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const selectValue = (propertyName, selectedValue) => {
+    setSelectedValues({
+      ...selectedValues,
+      [propertyName]: selectedValue,
+    });
+  };
 
   {
     selectedProperties.length > 0 && (
@@ -128,49 +134,45 @@ export default function ProductPage({
   // Thay đổi hàm isSelectedProperty
   const isSelectedProperty = (prop) => {
     return selectedProperties.some(
-      (selectedProp) => selectedProp._id === prop._id
+      (selectedProp) => selectedProp.name === prop.name
     );
   };
-  console.log(product)
+  console.log(product);
   let separatedArray = [];
   if (product.properties.length > 0) {
-    product.properties.forEach(prop => {
+    product.properties.forEach((prop) => {
       prop.values.map((i) => {
         let obj = {
           name: prop.name,
           values: i,
         };
         separatedArray.push(obj);
-      }
-
-      )
-
-
-
-    })
+      });
+    });
   }
 
-
   //Hàm gọi thêm sản phẩm vào giỏ hàng
-  function moreOfThisProduct(id) {
-    addProduct(id);
+  function moreOfThisProduct(id, selectedProperties) {
+    addProduct({
+      id,
+      selectedProperties,
+    });
   }
 
   //Hàm gọi xóa sản phẩm vào giỏ hàng
-  function lessOfThisProduct(id) {
-    removeProduct(id);
+  function lessOfThisProduct(id, selectedProperties) {
+    removeProduct({
+      id,
+      selectedProperties,
+    });
   }
 
-
-
   const [selectedNumber, setSelectedNumber] = useState([]);
-  let arr = []
+  let arr = [];
   function selectNumber(e) {
     e.preventDefault();
 
-    setSelectedNumber([e.target.name, e.target.value])
-
-
+    setSelectedNumber([e.target.name, e.target.value]);
   }
   console.log(selectedNumber);
   return (
@@ -190,84 +192,75 @@ export default function ProductPage({
               <div>
                 <Price>{isClient ? product.price.toLocaleString() : ""}đ</Price>{" "}
               </div>
-
-
             </PriceRow>
             {/* Lựa chọn properties dưới dạng button */}
             <div>
               {product.properties.map((p, i) => (
-                <div key={i} >
-
+                <div key={i}>
                   {p.name}
                   <div style={{ display: "flex" }}>
-                    {separatedArray.map((prop, index) => (
-                      p.name == prop.name &&
-                      <div key={index} >
-
-                        <button
-                          value={prop.values}
-                          name={prop.name}
-
-                          onClick={selectNumber}
-                          style={{
-                            background: isSelectedProperty(prop) ? "blue" : "white",
-                            color: isSelectedProperty(prop) ? "white" : "black",
-                            border: "1px solid #ccc",
-                            padding: "5px 10px",
-                            margin: "5px",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {prop.values}
-                        </button>
-                      </div>
-
-                    ))}
+                    {separatedArray
+                      .filter((prop) => prop.name === p.name)
+                      .map((prop, index) => (
+                        <div key={index}>
+                          <button
+                            onClick={() => selectValue(prop.name, prop.values)}
+                            style={{
+                              background:
+                                selectedValues[prop.name] === prop.values
+                                  ? "blue"
+                                  : "white",
+                              color:
+                                selectedValues[prop.name] === prop.values
+                                  ? "white"
+                                  : "black",
+                              border: "1px solid #ccc",
+                              padding: "5px 10px",
+                              margin: "5px",
+                              cursor: "pointer",
+                            }}
+                          >
+                            {prop.name}: {prop.values}
+                          </button>
+                        </div>
+                      ))}
                   </div>
-
-
                 </div>
-
               ))}
-
             </div>
 
             {/* Hiển thị thông tin chi tiết của các property được chọn */}
-            {/* {selectedProperties.length > 0 && (
+            {selectedProperties.length > 0 && (
               <div>
                 <p>Thông tin chi tiết:</p>
                 <div style={{ display: "flex" }}>
                   {selectedProperties.map((selectedProp, index) => (
                     <div key={index} style={{ marginRight: "20px" }}>
                       <p>
-                        <strong>{selectedProp.name}:</strong>{" "}
-                        {selectedProp._id}
+                        <strong>{selectedProp.name}:</strong> {selectedProp._id}
                       </p>
                     </div>
                   ))}
                 </div>
               </div>
-            )} */}
+            )}
             <div className="my-2">
               <h6>Số lượng</h6>
               <RowQuantity>
-                <ButonQuantity
-                  onClick={() => lessOfThisProduct(product._id)}
-                >-</ButonQuantity>
+                <ButonQuantity onClick={() => lessOfThisProduct(product._id)}>
+                  -
+                </ButonQuantity>
                 <QuantityLabel>
                   {" "}
-                  {
-                    cartProducts.filter((id) => id === product._id)
-                      .length
-                  }
+                  {cartProducts.filter((id) => id === product._id).length}
                 </QuantityLabel>{" "}
-
                 <ButonQuantity
                   onClick={() => moreOfThisProduct(product._id, properties)}
-                >+</ButonQuantity>
+                >
+                  +
+                </ButonQuantity>
               </RowQuantity>
             </div>
-
 
             <div>
               <FlyingButton main _id={product._id} src={product.images?.[0]}>
@@ -275,7 +268,6 @@ export default function ProductPage({
                 Thêm vào giỏ
               </FlyingButton>
             </div>
-
           </div>
         </ColWrapper>
 
@@ -286,7 +278,7 @@ export default function ProductPage({
           suggestedproducts={suggestedProduct}
           wishedProducts={wishedNewProducts}
         />
-      </Center >
+      </Center>
     </>
   );
 }
@@ -301,14 +293,13 @@ export async function getServerSideProps(context) {
   const { id } = context.query;
   const product = await Product.findById(id);
 
-
   const suggestedProduct = await Product.find({ _id: { $ne: product._id } });
   const session = await getServerSession(context.req, context.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
 
   return {
