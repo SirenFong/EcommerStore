@@ -12,7 +12,7 @@ function Categories({ swal }) {
   const [name, setName] = useState("");
   const [parentCategory, setParentCategory] = useState("");
   const [categories, setCategories] = useState([]);
-  const [properties, setProperties] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
 
   /**useEffect gọi tới cái API cũng như trả về data của loại sản phẩm*/
@@ -36,33 +36,30 @@ function Categories({ swal }) {
     ev.preventDefault();
 
     if (!validate()) {
-      const data = {
-        name,
-        parentCategory,
-        properties: properties.map((p) => ({
-          name: p.name,
-          values: p.values.split(","),
-        })),
-      };
-      if (editedCategory) {
-        data._id = editedCategory._id;
-        await axios.put("/api/categories", data);
-        setEditedCategory(null);
-        setParentCategory("");
-      } else {
-        await axios.post("/api/categories", data);
-      }
-      setName("");
-      setParentCategory("");
-      setProperties([]);
-      fetchCategories();
-      await swal.fire({
-        title: "Lưu thành công!",
-        icon: "success",
-      });
+      return;
     }
 
+    const data = {
+      name,
+      parentCategory,
 
+    };
+    if (editedCategory) {
+      data._id = editedCategory._id;
+      await axios.put("/api/categories", data);
+      setEditedCategory(null);
+      setParentCategory("");
+    } else {
+      await axios.post("/api/categories", data);
+    }
+    setName("");
+    setParentCategory("");
+
+    fetchCategories();
+    await swal.fire({
+      title: "Lưu thành công!",
+      icon: "success",
+    });
   }
 
   //Hàm chỉnh sửa Property
@@ -70,16 +67,8 @@ function Categories({ swal }) {
     setEditedCategory(category);
     setName(category.name);
     setParentCategory(category.parent?._id);
-    setProperties(
-      category.properties.map(({ name, values }) => ({
-        name,
-        values: values.join(","),
-      }))
-    );
-    // await swal.fire({
-    //   title: "Settings saved!",
-    //   icon: "success",
-    // });
+
+
   }
 
   //Hàm xóa loại sản phẩm
@@ -103,39 +92,8 @@ function Categories({ swal }) {
       });
   }
 
-  //Hàm thêm 1 property mới
-  function addProperty() {
-    setProperties((prev) => {
-      return [...prev, { name: "", value: "" }];
-    });
-  }
 
-  //Hàm xóa Property theo index
-  function removeProperty(indexToRemove) {
-    setProperties((prev) => {
-      return [...prev].filter((p, pIndex) => {
-        return pIndex !== indexToRemove;
-      });
-    });
-  }
 
-  //Hàm thay đổi tên Property
-  function handlePropertyNameChange(index, property, newName) {
-    setProperties((prev) => {
-      const properties = [...prev];
-      properties[index].name = newName;
-      return properties;
-    });
-  }
-
-  //Hàm thay đổi giá trị values
-  function handlePropertyValuesChange(index, property, newValues) {
-    setProperties((prev) => {
-      const properties = [...prev];
-      properties[index].values = newValues;
-      return properties;
-    });
-  }
   ///////
 
   const validate = () => {
@@ -150,10 +108,7 @@ function Categories({ swal }) {
       isValid = false;
       toast.error("Vui lòng loại sản phẩm chọn để trống");
     }
-    if (properties == "") {
-      isValid = false;
-      toast.error("Vui lòng thêm thuộc tính ");
-    }
+
     return isValid;
   };
   return (
@@ -185,46 +140,7 @@ function Categories({ swal }) {
                 ))}
             </select>
           </div>
-          <div className="mb-2">
-            <label className="block">Properties</label>
-            <button
-              onClick={addProperty}
-              type="button"
-              className="btn-default text-sm mb-2"
-            >
-              Add new property
-            </button>
-            {properties.length > 0 &&
-              properties.map((property, index) => (
-                <div className="flex gap-1 mb-2">
-                  <input
-                    className="mb-0"
-                    type="text"
-                    value={property.name}
-                    onChange={(ev) =>
-                      handlePropertyNameChange(index, property, ev.target.value)
-                    }
-                    placeholder="Property name (example: color)"
-                  />
-                  <input
-                    className="mb-0"
-                    onChange={(ev) =>
-                      handlePropertyValuesChange(index, property, ev.target.value)
-                    }
-                    value={property.values}
-                    type="text"
-                    placeholder="value"
-                  />
-                  <button
-                    onClick={() => removeProperty(index)}
-                    type="button"
-                    className="btn-red"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-          </div>
+
           <div className="flex gap-1">
             {editedCategory && (
               <button
@@ -233,7 +149,7 @@ function Categories({ swal }) {
                   setEditedCategory(null);
                   setName("");
                   setParentCategory("");
-                  setProperties([]);
+
                 }}
                 className="btn-default"
               >

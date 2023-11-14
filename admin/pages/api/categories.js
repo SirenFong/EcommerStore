@@ -20,11 +20,11 @@ export default async function handle(req, res) {
   //Hàm nhập vào "POST" của HTTP dùng để tạo 1 loại sản phẩm mới với
   //Category.create để tạo loại sản phẩm mới
   if (method === "POST") {
-    const { name, parentCategory, properties } = req.body;
+    const { name, parentCategory } = req.body;
     const categoryDoc = await Category.create({
       name,
       parent: parentCategory || undefined,
-      properties,
+
     });
     res.json(categoryDoc);
   }
@@ -35,7 +35,7 @@ export default async function handle(req, res) {
       {
         name,
         parent: parentCategory || undefined,
-        properties,
+
       }
     );
     res.json(categoryDoc);
