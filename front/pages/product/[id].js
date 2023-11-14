@@ -114,24 +114,7 @@ export default function ProductPage({
       </div>
     );
   }
-  // Thay đổi hàm toggleSelectedProperty
-  // const toggleSelectedProperty = (prop) => {
-  //   setSelectedProperties((prevSelected) => {
-  //     const isAlreadySelected = prevSelected.some(
-  //       (selectedProp) => selectedProp.name === prop.name
-  //     );
 
-  //     if (isAlreadySelected) {
-  //       return prevSelected.filter(
-  //         (selectedProp) => selectedProp.name !== prop.name
-  //       );
-  //     } else {
-  //       return [...prevSelected, prop];
-  //     }
-  //   });
-  // };
-
-  // Thay đổi hàm isSelectedProperty
   const isSelectedProperty = (prop) => {
     return selectedProperties.some(
       (selectedProp) => selectedProp.name === prop.name
@@ -175,6 +158,7 @@ export default function ProductPage({
     setSelectedNumber([e.target.name, e.target.value]);
   }
   console.log(selectedNumber);
+  console.log(selectedValues)
   return (
     <>
       <Header />
@@ -220,7 +204,7 @@ export default function ProductPage({
                               cursor: "pointer",
                             }}
                           >
-                            {prop.name}: {prop.values}
+                            {prop.values}
                           </button>
                         </div>
                       ))}
@@ -297,9 +281,9 @@ export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session.user.email,
-        product: newProducts.map((p) => p._id.toString()),
-      })
+      userEmail: session.user.email,
+      product: newProducts.map((p) => p._id.toString()),
+    })
     : [];
 
   return {
