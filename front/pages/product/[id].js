@@ -1,5 +1,9 @@
 import { mongooseConnect } from "@component/lib/mongoose";
 import { Product } from "@component/models/Product";
+import { useEffect, useState } from "react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
+import { WishedProduct } from "@component/models/WishedProduct";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
 import ProductImages from "@component/components/ProductImages";
@@ -9,13 +13,7 @@ import CartIcon from "@component/components/icons/CartIcon";
 import styled from "styled-components";
 import FlyingButton from "@component/components/FlyingButton";
 import ProductReviews from "@component/components/ProductReviews";
-import { useContext, useEffect, useState } from "react";
 import SuggestedProducts from "@component/components/SuggestedProducts";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]";
-import { WishedProduct } from "@component/models/WishedProduct";
-import Button from "@component/components/Button";
-import { CartContext } from "@component/components/CartContext";
 
 const ColWrapper = styled.div`
   display: grid;
@@ -42,7 +40,6 @@ const Price = styled.span`
 
 export default function ProductPage({
   product,
-  category,
   suggestedProduct,
   wishedNewProducts,
 }) {
@@ -50,8 +47,6 @@ export default function ProductPage({
   // Thêm state để theo dõi properties được chọn
   const [selectedValues, setSelectedValues] = useState({});
   const [selectedProperties, setSelectedProperties] = useState([]);
-  const { cartProducts, addProduct, removeProduct, clearCart } =
-    useContext(CartContext);
 
   useEffect(() => {
     setIsClient(true);
@@ -73,9 +68,6 @@ export default function ProductPage({
             <div key={index} style={{ marginRight: "20px" }}>
               <p>
                 <strong>{selectedProp.name}:</strong>{" "}
-                {/* {selectedProp.values?.map((value, index) => (
-                  <span key={index}>{value}</span>
-                ))} */}
               </p>
             </div>
           ))}
@@ -83,30 +75,7 @@ export default function ProductPage({
       </div>
     );
   }
-  // Thay đổi hàm toggleSelectedProperty
-  // const toggleSelectedProperty = (prop) => {
-  //   setSelectedProperties((prevSelected) => {
-  //     const isAlreadySelected = prevSelected.some(
-  //       (selectedProp) => selectedProp.name === prop.name
-  //     );
 
-  //     if (isAlreadySelected) {
-  //       return prevSelected.filter(
-  //         (selectedProp) => selectedProp.name !== prop.name
-  //       );
-  //     } else {
-  //       return [...prevSelected, prop];
-  //     }
-  //   });
-  // };
-
-  // Thay đổi hàm isSelectedProperty
-  const isSelectedProperty = (prop) => {
-    return selectedProperties.some(
-      (selectedProp) => selectedProp.name === prop.name
-    );
-  };
-  console.log(product);
   let separatedArray = [];
   if (product.properties.length > 0) {
     product.properties.forEach((prop) => {
@@ -120,30 +89,13 @@ export default function ProductPage({
     });
   }
 
-  //Hàm gọi thêm sản phẩm vào giỏ hàng
-  function moreOfThisProduct(id, selectedProperties) {
-    addProduct({
-      id,
-      selectedProperties,
-    });
-  }
-
-  //Hàm gọi xóa sản phẩm vào giỏ hàng
-  function lessOfThisProduct(id, selectedProperties) {
-    removeProduct({
-      id,
-      selectedProperties,
-    });
-  }
-
   const [selectedNumber, setSelectedNumber] = useState([]);
   let arr = [];
   function selectNumber(e) {
     e.preventDefault();
-
     setSelectedNumber([e.target.name, e.target.value]);
   }
-  console.log(selectedNumber);
+
   return (
     <>
       <Header />
@@ -159,15 +111,18 @@ export default function ProductPage({
                 __html: product.description.replace(/\n/g, "<br/>"),
               }}
             />
+
             <p>
               <strong>{product.qty} Sản phẩm có sẵn</strong>
             </p>
+
             <PriceRow>
               <h5>Giá: </h5>
               <div>
                 <Price>{isClient ? product.price.toLocaleString() : ""}đ</Price>{" "}
               </div>
             </PriceRow>
+
             {/* Lựa chọn properties dưới dạng button */}
             <div>
               {product.properties.map((p, i) => (
@@ -203,6 +158,7 @@ export default function ProductPage({
                 </div>
               ))}
             </div>
+
             <div>
               <FlyingButton main _id={product._id} src={product.images?.[0]}>
                 <CartIcon />
@@ -238,9 +194,9 @@ export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
 
   return {

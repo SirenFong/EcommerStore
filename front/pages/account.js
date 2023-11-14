@@ -182,7 +182,6 @@ function AccountPage({ swal }) {
 
   const [email, setEmail] = useState("");
 
-
   const validate = () => {
     let isValid = true;
 
@@ -231,7 +230,7 @@ function AccountPage({ swal }) {
   };
   return (
     <>
-
+      <ToastContainer />
       <Header key={new Date().getTime()} />
       <Center>
         <ColumnsWrapper>
