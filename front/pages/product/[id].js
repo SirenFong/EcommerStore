@@ -64,6 +64,48 @@ export default function ProductPage({
     });
   };
 
+  {
+    selectedProperties.length > 0 && (
+      <div>
+        <p>Thông tin chi tiết:</p>
+        <div style={{ display: "flex" }}>
+          {selectedProperties.map((selectedProp, index) => (
+            <div key={index} style={{ marginRight: "20px" }}>
+              <p>
+                <strong>{selectedProp.name}:</strong>{" "}
+                {/* {selectedProp.values?.map((value, index) => (
+                  <span key={index}>{value}</span>
+                ))} */}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  // Thay đổi hàm toggleSelectedProperty
+  // const toggleSelectedProperty = (prop) => {
+  //   setSelectedProperties((prevSelected) => {
+  //     const isAlreadySelected = prevSelected.some(
+  //       (selectedProp) => selectedProp.name === prop.name
+  //     );
+
+  //     if (isAlreadySelected) {
+  //       return prevSelected.filter(
+  //         (selectedProp) => selectedProp.name !== prop.name
+  //       );
+  //     } else {
+  //       return [...prevSelected, prop];
+  //     }
+  //   });
+  // };
+
+  // Thay đổi hàm isSelectedProperty
+  const isSelectedProperty = (prop) => {
+    return selectedProperties.some(
+      (selectedProp) => selectedProp.name === prop.name
+    );
+  };
   console.log(product);
   let separatedArray = [];
   if (product.properties.length > 0) {
@@ -78,6 +120,30 @@ export default function ProductPage({
     });
   }
 
+  //Hàm gọi thêm sản phẩm vào giỏ hàng
+  function moreOfThisProduct(id, selectedProperties) {
+    addProduct({
+      id,
+      selectedProperties,
+    });
+  }
+
+  //Hàm gọi xóa sản phẩm vào giỏ hàng
+  function lessOfThisProduct(id, selectedProperties) {
+    removeProduct({
+      id,
+      selectedProperties,
+    });
+  }
+
+  const [selectedNumber, setSelectedNumber] = useState([]);
+  let arr = [];
+  function selectNumber(e) {
+    e.preventDefault();
+
+    setSelectedNumber([e.target.name, e.target.value]);
+  }
+  console.log(selectedNumber);
   return (
     <>
       <Header />
@@ -129,7 +195,7 @@ export default function ProductPage({
                               cursor: "pointer",
                             }}
                           >
-                            {prop.name}: {prop.values}
+                            {prop.values}
                           </button>
                         </div>
                       ))}
@@ -172,9 +238,9 @@ export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session.user.email,
-        product: newProducts.map((p) => p._id.toString()),
-      })
+      userEmail: session.user.email,
+      product: newProducts.map((p) => p._id.toString()),
+    })
     : [];
 
   return {
