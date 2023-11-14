@@ -26,7 +26,7 @@ export default function Nav({ show }) {
     <aside
       className={
         (show ? "left-0" : "-left-full") +
-        " top-0 text-gray-500 p-4 fixed w-full bg-bgGray h-full md:static md:w-auto transition-all"
+        " top-0 text-gray-500 p-4 fixed w-full bg-white h-full md:static md:w-auto transition-all"
       }
     >
       <Link
