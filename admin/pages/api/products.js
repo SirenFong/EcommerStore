@@ -2,6 +2,8 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { isAdminRequest } from "./auth/[...nextauth]";
 
+import { Category } from "@/models/Category";
+
 export default async function handle(req, res) {
   const { method } = req;
   await mongooseConnect();
@@ -15,7 +17,21 @@ export default async function handle(req, res) {
     if (req.query?.id) {
       res.json(await Product.findOne({ _id: req.query.id }));
     } else {
-      res.json(await Product.find());
+
+      res.json(await Product.aggregate([
+        {
+          $lookup:
+          {
+            from: 'categories',
+            localField: 'category',
+            foreignField: '_id',
+            as: 'category'
+          }
+        }
+      ]));
+
+
+
     }
   }
   //Hàm nhập vào "POST" của HTTP dùng để tạo 1  sản phẩm mới với
