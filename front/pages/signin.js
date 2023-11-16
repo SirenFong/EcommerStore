@@ -3,25 +3,15 @@ import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
 import Input from "@component/components/Input";
-import { useHistory } from "react-router-dom";
 
 import styled from "styled-components";
 
 import "react-toastify/dist/ReactToastify.css";
-import { withSwal } from "react-sweetalert2";
 import Footer from "@component/components/Footer";
-import {
-  validEmail,
-  validPhone,
-  validName,
-  validPostCode,
-  validAddress,
-  validSpace,
-} from "@component/context/Regex";
 import Logo from "@component/components/icons/Logo";
 import FacebookIcon from "@component/components/icons/FbIcon";
 import ZaloIcon from "@component/components/icons/ZaloIcon";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 const ColumnsWrapper = styled.div`
   padding: 40px;
@@ -72,10 +62,11 @@ const ButtonIcon = styled.button`
   }
 `;
 
-function SignInPage({ swal }) {
-  async function logins() {
-    await signIn("google");
+export default function SignInPage({ swal }) {
+  async function login() {
+    await signIn("google", { callbackUrl: process.env.NEXT_PUBLIC_URL });
   }
+
   return (
     <>
       <Header key={new Date().getTime()} />
@@ -142,7 +133,7 @@ function SignInPage({ swal }) {
                   </p>
                   <p>Hoặc đăng nhập bằng:</p>
                   <RowButton>
-                    <ButtonIcon primary onClick={logins}>
+                    <ButtonIcon type="button" primary onClick={login}>
                       <FaGoogle /> Google
                     </ButtonIcon>
                     <Button primary>
@@ -163,5 +154,3 @@ function SignInPage({ swal }) {
     </>
   );
 }
-
-export default withSwal(({ swal }) => <SignInPage swal={swal} />);

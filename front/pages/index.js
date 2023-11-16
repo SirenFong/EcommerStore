@@ -23,11 +23,11 @@ const Column = styled.div`
   align-items: center;
 `;
 export default function HomePage({
-  featuredProduct,
-  featuredProduct2,
-  bannerProduct1,
-  bannerProduct2,
-  bannerProduct3,
+  // featuredProduct,
+  // featuredProduct2,
+  // bannerProduct1,
+  // bannerProduct2,
+  // bannerProduct3,
   newProducts,
   wishedNewProducts,
   suggestedProducts,
@@ -85,7 +85,11 @@ export async function getServerSideProps(ctx) {
   // });
   // const bannerProductId3 = bannerProductSetting3.value;
   // const bannerProduct3 = await Product.findById(bannerProductId3);
+<<<<<<< HEAD
   // ///
+=======
+  ///
+>>>>>>> 42ea6e336dc0a0efa797cdd747e2293858968663
   const newProducts = await Product.find({}, null, {
     sort: { _id: -1 },
     limit: 10,
@@ -95,9 +99,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
   return {
     props: {

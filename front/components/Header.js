@@ -6,15 +6,10 @@ import { useContext, useEffect, useState } from "react";
 import { CartContext } from "./CartContext";
 import BarsIcon from "./icons/Bars";
 import SearchIcon from "./icons/SearchIcon";
-import UsersIcon from "./icons/UsersIcon";
 import Logo from "./icons/Logo";
 import Cart from "./icons/Cart";
-import CartIcon from "./icons/CartIcon";
-import Bell from "./icons/Bell";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Button from "./Button";
-import { FaGoogle } from "react-icons/fa";
-import CategoriesPage from "@component/pages/categories";
 import axios from "axios";
 
 const NavButton = styled.button`
@@ -56,12 +51,9 @@ export default function Header({ }) {
     });
   }
 
-  async function logins() {
+  async function login() {
     const url = "/signin";
     window.location.href = url;
-  }
-  async function login() {
-    await signIn("google");
   }
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -118,16 +110,6 @@ export default function Header({ }) {
                 >
                   Danh mục sản phẩm
                 </Link>
-                {/* <ul className="dropdown-menu">
-                  {categories.length > 0 &&
-                    categories.map((category) => (
-                      <li style={{ display: "flex", gap: "5px", justifyContent: "center" }} value={category._id}>{category.name}</li>
-                    ))}
-
-
-
-
-                </ul> */}
               </li>
             </ul>
             <SideIcons>
@@ -160,13 +142,13 @@ export default function Header({ }) {
             </ul>
 
             {!session && ( //nếu không thì sẽ login
-
               <Button primary onClick={login}>
-                Đăng nhập ko lối
+                Đăng nhập
               </Button>
-            )}<Button primary onClick={logins}>
+            )}
+            {/* <Button primary onClick={logins}>
               Đăng nhập đang lỗi
-            </Button>
+            </Button> */}
             {session && ( //Nếu tồn tại session thì hiện logout
               <li className="navbar-nav nav-item dropdown">
                 <Link
