@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 const Footernav = styled.div`
-  position: fixed;
+
   left: 0;
+
   bottom: 0;
   width: 100%;
   
@@ -10,8 +11,8 @@ const Footernav = styled.div`
   text-align: center; /* Height of the footer */
 `;
 const Footer = () => (
-  <Footernav>
-    <div class="p-3"></div>
+  <>
+    <footer class="p-3"></footer>
     <div class=" bg-white">
       <div class="container">
         <div class="py-3 ">
@@ -46,7 +47,9 @@ const Footer = () => (
         </div>
       </div>
     </div>
-  </Footernav>
+
+  </>
+
 );
 
 export default Footer;

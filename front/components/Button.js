@@ -13,7 +13,7 @@ export const ButtonStyle = css`
   font-weight:500;
   font-size: 15px;
   svg{
-    height: 16px;
+    height: 23px;
     margin-right: 5px;
   }
   ${props => props.block && css`
@@ -61,7 +61,7 @@ const StyledButton = styled.button`
   ${ButtonStyle}
 `;
 
-export default function Button({children,...rest}) {
+export default function Button({ children, ...rest }) {
   return (
     <StyledButton {...rest}>{children}</StyledButton>
   );

@@ -56,8 +56,12 @@ export default function Header({}) {
     });
   }
 
+  async function logins() {
+    const url = "/signin";
+    window.location.href = url;
+  }
   async function login() {
-
+    await signIn("google");
   }
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -156,10 +160,13 @@ export default function Header({}) {
             </ul>
 
             {!session && ( //nếu không thì sẽ login
-              <Link primary href={"/login"}>
-                Đăng nhập
-              </Link>
-            )}
+
+              <Button primary onClick={login}>
+                Đăng nhập ko lối
+              </Button>
+            )}<Button primary onClick={logins}>
+              Đăng nhập đang lỗi
+            </Button>
             {session && ( //Nếu tồn tại session thì hiện logout
               <li className="navbar-nav nav-item dropdown">
                 <Link

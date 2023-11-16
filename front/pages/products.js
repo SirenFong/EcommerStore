@@ -19,20 +19,12 @@ const Wraper = styled.div`
   width: 100%;
  padding:10px 10px;
  gap:10px;
- background-color:#FD33;
+
 `;
-const WrapperColomnLeft = styled.div`
-  width: 15%;
-  height:750px;
-  background-color:gray;
-  left: 0;
-  color: white;
-  text-align: center; 
- 
-`;
+
 const WrapperColomnRight = styled.div`
-  width:85%;
-  background-color: #FD3333;
+
+
    right: 0;
   color: white;
   text-align: center; 
@@ -44,12 +36,9 @@ export default function ProductsPage({ products, wishedProducts }) {
       <Header />
       <Center>
         <Wraper>
-          <WrapperColomnLeft>
-            <Filter />
-          </WrapperColomnLeft>
 
           <WrapperColomnRight>
-            <Title>Xem tất cả</Title>
+            <div>Danh sách sản phẩm</div>
 
             <ProductsGrid products={products} wishedProducts={wishedProducts} />
           </WrapperColomnRight>
