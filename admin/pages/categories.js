@@ -12,32 +12,48 @@ function Categories({ swal }) {
   const [name, setName] = useState("");
   const [parentCategory, setParentCategory] = useState("");
   const [categories, setCategories] = useState([]);
+  const [searchInput, setSearchInput] = useState("");
 
+  const [parentSelected, setParentSelected] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   /**useEffect gọi tới cái API cũng như trả về data của loại sản phẩm*/
   /**dưới đây là trả về api lấy thông tin loại sản phẩm để hiển thị */
   /**hiển thị danh sách loại sản phẩm trong hàm useState */
   useEffect(() => {
-    fetchCategories();
-  }, []);
-  function fetchCategories() {
-    setIsLoading(true);
-    axios.get("/api/categories").then((response) => {
-      setCategories(response.data);
-      setIsLoading(false);
-    });
-  }
+    if (!parentSelected && !searchInput) {
+      setIsLoading(true);
+      axios.get("/api/categories").then((response) => {
+        setCategories(response.data);
+        setIsLoading(false);
+
+
+      });
+    } else {
+      if (parentSelected && searchInput) {
+        setIsLoading(true);
+        axios.get("/api/categories").then((response) => {
+          setCategories(response.data.filter((item) => item.parent == parentSelected))
+          setIsLoading(false);
+
+
+        });
+      } else {
+
+      }
+
+
+    }
+  }, [parentSelected]);
+
+
+
 
   /**Đường link /categories phải trùng với tên file đã đặt */
   /**Tên file ở đây là categories bên trong pages/categories */
   //Lưu Category
   async function saveCategory(ev) {
     ev.preventDefault();
-
-    if (!validate()) {
-      return;
-    }
 
     const data = {
       name,
@@ -65,7 +81,7 @@ function Categories({ swal }) {
   async function editCategory(category) {
     setEditedCategory(category);
     setName(category.name);
-    setParentCategory(category.parent?._id);
+    setParentCategory(category.parent);
   }
 
   //Hàm xóa loại sản phẩm
@@ -89,18 +105,6 @@ function Categories({ swal }) {
       });
   }
 
-  ///////
-
-  const validate = () => {
-    let isValid = true;
-
-    if (name == "") {
-      isValid = false;
-      toast.error("Tên không được để trống");
-    }
-
-    return isValid;
-  };
   return (
     <>
       <ToastContainer />
@@ -124,10 +128,10 @@ function Categories({ swal }) {
               value={parentCategory}
             >
               <option value="0">No parent category</option>
-              {categories.length > 0 &&
-                categories.map((category) => (
-                  <option value={category._id}>{category.name}</option>
-                ))}
+              <option value="Áo">Áo</option>
+              <option value="Quần">Quần</option>
+              <option value="Phụ Kiện">Phụ Kiện</option>
+              <option value="Khác">Khác</option>
             </select>
           </div>
 
@@ -149,103 +153,133 @@ function Categories({ swal }) {
               Save
             </button>
           </div>
-          <div className="bg-white px-2 py-3 ">
-            <div className=" px-2 mb-2 border-b-2">Tất cả loại sản phẩm</div>
-            <div className=" flex gap-3 justify-centerpt-3 pb-0">
-
-              <div>
-                <div className="mb-3 md:w-96">
-                  <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-                    <input
-                      type="search"
-                      className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-                      placeholder="Search"
-                      aria-label="Search"
-                      aria-describedby="button-addon1" />
-
-                    {/* <!--Search button--> */}
-
-                    <button
-                      className="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-                      type="button"
-                      id="button-addon1">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="h-5 w-5">
-                        <path
-                          fillRule="evenodd"
-                          d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                          clipRule="evenodd" />
-                      </svg>
-                    </button>
-
-                  </div>
-                </div>
-
-              </div>
-
-              <div className="flex gap-3 align-items-center ">
-
-                <div>
-                  <div className="relative max-w-sm">
-                    <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                      <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                      </svg>
-                    </div>
-                    <input datepicker type="date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Select date" />
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
         </form>
         {!editedCategory && (
-          <table className="basic mt-2">
-            <thead>
-              <tr>
-                <td>Loại Sản Phẩm</td>
-                <td>Danh mục</td>
-                <td></td>
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading && (
-                <tr>
-                  <td colSpan={4}>
-                    <div className="py-4">
-                      <Spinner fullWidth={true} />
-                    </div>
-                  </td>
-                </tr>
-              )}
+          <div>
+            <form className="bg-white px-2 py-3 ">
+              <div className=" px-2 mb-2 border-b-2">Tất cả loại sản phẩm</div>
+              <div className=" flex gap-3 justify-centerpt-3 pb-0">
+                <div>
+                  <div className="mb-3 md:w-96">
+                    <div className="relative mb-4 flex w-full flex-wrap items-stretch">
+                      <input
+                        type="search"
+                        className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                        placeholder="Search"
+                        aria-label="Search"
+                        aria-describedby="button-addon1"
+                        onChange={(ev) => setSearchInput(ev.target.value)}
+                      />
 
-              {categories.length > 0 &&
-                categories.map((category, properties) => (
-                  <tr key={category._id}>
-                    <td>{category.name}</td>
-                    <td>{category?.parent?.name}</td>
-                    <td>
+                      {/* <!--Search button--> */}
+
                       <button
-                        onClick={() => editCategory(category)}
-                        className="btn-default mr-1"
+                        className="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
+                        type="button"
+                        id="button-addon1"
                       >
-                        Edit
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="h-5 w-5"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                       </button>
-                      <button
-                        onClick={() => deleteCategory(category)}
-                        className="btn-red"
-                      >
-                        Delete
-                      </button>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div className="flex gap-3 align-items-center ">
+
+                  <div>
+                    <select
+                      onChange={(ev) => setParentSelected(ev.target.value)}
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                      <option value="0">Chọn danh mục </option>
+                      <option value="Áo">Áo</option>
+                      <option value="Quần">Quần</option>
+                      <option value="Phụ Kiện">Phụ Kiện</option>
+                      <option value="Khác">Khác</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div className="relative max-w-sm">
+                      <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                        <svg
+                          class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                        </svg>
+                      </div>
+                      <input
+                        datepicker
+                        type="date"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Select date"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <table className="basic mt-2">
+              <thead>
+                <tr>
+                  <td>Loại Sản Phẩm</td>
+                  <td>Danh mục</td>
+                  <td>Ngày tạo</td>
+                  <td>Ngày cập nhật</td>
+                  <td></td>
+                </tr>
+              </thead>
+              <tbody>
+                {isLoading && (
+                  <tr>
+                    <td colSpan={4}>
+                      <div className="py-4">
+                        <Spinner fullWidth={true} />
+                      </div>
                     </td>
                   </tr>
-                ))}
-            </tbody>
-          </table>
+                )}
+
+                {categories.length > 0 &&
+                  categories.map((category) => (
+                    <tr key={category._id}>
+                      <td>{category.name}</td>
+                      <td>{category.parent}</td>
+                      <td>{category.createdAt}</td>
+                      <td>{category.updatedAt}</td>
+                      <td>
+                        <button
+                          onClick={() => editCategory(category)}
+                          className="btn-default mr-1"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => deleteCategory(category)}
+                          className="btn-red"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </Layout>
     </>

@@ -37,10 +37,10 @@ export default function HomePage({
   return (
     <div>
       <Header />
-      <Featured product={featuredProduct} />
+      {/* <Featured product={featuredProduct} />
 
       <Featured2 product={featuredProduct2} />
-      <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} />
+      <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} /> */}
       <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
       <SuggestedProducts
         suggestedproducts={suggestedProducts}
@@ -55,37 +55,37 @@ export async function getServerSideProps(ctx) {
   await mongooseConnect();
   ///
 
-  const featuredProductSetting = await Advertisement.findOne({
-    name: "featuredProductId1",
-  });
-  const featuredProductId = featuredProductSetting.value;
-  const featuredProduct = await Product.findById(featuredProductId);
-  ///
-  const featuredProductSetting2 = await Advertisement.findOne({
-    name: "featuredProductId2",
-  });
-  const featuredProductId2 = featuredProductSetting2.value;
-  const featuredProduct2 = await Product.findById(featuredProductId2);
-  ///
-  const bannerProductSetting1 = await Advertisement.findOne({
-    name: "bannerProductId1",
-  });
-  const bannerProductId1 = bannerProductSetting1.value;
-  const bannerProduct1 = await Product.findById(bannerProductId1);
-  ///
+  // const featuredProductSetting = await Advertisement.findOne({
+  //   name: "featuredProductId1",
+  // });
+  // const featuredProductId = featuredProductSetting.value;
+  // const featuredProduct = await Product.findById(featuredProductId);
+  // ///
+  // const featuredProductSetting2 = await Advertisement.findOne({
+  //   name: "featuredProductId2",
+  // });
+  // const featuredProductId2 = featuredProductSetting2.value;
+  // const featuredProduct2 = await Product.findById(featuredProductId2);
+  // ///
+  // const bannerProductSetting1 = await Advertisement.findOne({
+  //   name: "bannerProductId1",
+  // });
+  // const bannerProductId1 = bannerProductSetting1.value;
+  // const bannerProduct1 = await Product.findById(bannerProductId1);
+  // ///
 
-  const bannerProductSetting2 = await Advertisement.findOne({
-    name: "bannerProductId2",
-  });
-  const bannerProductId2 = bannerProductSetting2.value;
-  const bannerProduct2 = await Product.findById(bannerProductId2);
-  ///
-  const bannerProductSetting3 = await Advertisement.findOne({
-    name: "bannerProductId3",
-  });
-  const bannerProductId3 = bannerProductSetting3.value;
-  const bannerProduct3 = await Product.findById(bannerProductId3);
-  ///
+  // const bannerProductSetting2 = await Advertisement.findOne({
+  //   name: "bannerProductId2",
+  // });
+  // const bannerProductId2 = bannerProductSetting2.value;
+  // const bannerProduct2 = await Product.findById(bannerProductId2);
+  // ///
+  // const bannerProductSetting3 = await Advertisement.findOne({
+  //   name: "bannerProductId3",
+  // });
+  // const bannerProductId3 = bannerProductSetting3.value;
+  // const bannerProduct3 = await Product.findById(bannerProductId3);
+  // ///
   const newProducts = await Product.find({}, null, {
     sort: { _id: -1 },
     limit: 10,
@@ -101,11 +101,11 @@ export async function getServerSideProps(ctx) {
     : [];
   return {
     props: {
-      featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),
-      featuredProduct2: JSON.parse(JSON.stringify(featuredProduct2)),
-      bannerProduct1: JSON.parse(JSON.stringify(bannerProduct1)),
-      bannerProduct2: JSON.parse(JSON.stringify(bannerProduct2)),
-      bannerProduct3: JSON.parse(JSON.stringify(bannerProduct3)),
+      // featuredProduct: JSON.parse(JSON.stringify(featuredProduct)),
+      // featuredProduct2: JSON.parse(JSON.stringify(featuredProduct2)),
+      // bannerProduct1: JSON.parse(JSON.stringify(bannerProduct1)),
+      // bannerProduct2: JSON.parse(JSON.stringify(bannerProduct2)),
+      // bannerProduct3: JSON.parse(JSON.stringify(bannerProduct3)),
       newProducts: JSON.parse(JSON.stringify(newProducts)),
       suggestedProducts: JSON.parse(JSON.stringify(suggestedProduct)),
       wishedNewProducts: wishedNewProducts.map((i) => i.product.toString()),

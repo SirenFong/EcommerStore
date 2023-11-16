@@ -9,34 +9,34 @@ export default function Products() {
   const [products, setProducts] = useState([]);
   const [dataExport, setdataExport] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [category, setCategory] = useState();
+  const [categorySelected, setCategorySelected] = useState();
   const [categories, setCategories] = useState([]);
-  console.log(products)
-  const [categorySelect, setCategorySelect] = useState("0");
-  console.log(categorySelect)
+
+
+
   /**useEffect gọi tới cái API cũng như trả về data */
   /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
   /**hiển thị danh sách sản phẩm trong hàm useState */
   useEffect(() => {
 
-    if (categorySelect == "0") {
+    if (!categorySelected) {
       setIsLoading(true);
       axios.get("/api/products").then((response) => {
         setProducts(response.data);
         setIsLoading(false);
       });
     } else {
-      if (categorySelect != null)
+      if (categorySelected)
         setIsLoading(true);
       axios.get("/api/products").then((response) => {
-        setProducts(response.data.filter((item) => item.category[0].name == categorySelect))
+        setProducts(response.data.filter((item) => item.category[0].name == categorySelected))
         setIsLoading(false);
       });
     }
 
 
 
-  }, [categorySelect]);
+  }, [categorySelected]);
 
   useEffect(() => {
     axios.get("/api/categories").then((result) => {
@@ -48,7 +48,7 @@ export default function Products() {
     let result = [];
     console.log(result);
     if (products && products.length > 0) {
-      result.push(["Title", "Quantity", "Price", "Category"]);
+      result.push(["Tên sản phẩm", "Số lượng còn lại", "Giá tiền", "Loại sản phẩm", "danh mục", "thuộc tính"]);
       products.map((item, index) => {
 
 
@@ -57,6 +57,9 @@ export default function Products() {
         arr[1] = item.qty;
         arr[2] = item.price;
         arr[3] = item.category[0].name;
+        arr[4] = item.category[0].parent;
+        arr[5] = item.properties;
+
         result.push(arr);
       });
       setdataExport(result);
@@ -201,7 +204,9 @@ export default function Products() {
 
           <div className="flex gap-3 align-items-center ">
             <div>
-              <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <select
+                onChange={(ev) => setCategorySelected(ev.target.value)}
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option selected>Chọn loại sản phẩm</option>
                 {
                   categories.map((category) => (
@@ -241,6 +246,7 @@ export default function Products() {
               <td>Hình ảnh sản phẩm</td>
               <td>Tên sản phẩm</td>
               <td>Loại sản phẩm</td>
+
               <td>Giá bán</td>
               <td>Số lượng</td>
               <td></td>
@@ -259,9 +265,9 @@ export default function Products() {
 
             {products.map((product) => (
               <tr key={product._id}>
-                {/* <td>{product.images && (<img src={product.images} alt="" className="w-12 h-12" />)}</td> */}
+                <td>{product.images && (<img src={product.images} alt="" className="w-12 h-12" />)}</td>
                 <td>{product.title}</td>
-
+                <td>{product.category[0].name}</td>
 
                 <td>{product.price}</td>
                 <td>{product.qty}</td>

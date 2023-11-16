@@ -45,7 +45,7 @@ const SideIcons = styled.div`
   }
 `;
 
-export default function Header({}) {
+export default function Header({ }) {
   const { cartProducts } = useContext(CartContext);
   const [mobileNavActive, setMobileNavActive] = useState(false);
   const { data: session } = useSession();
@@ -72,7 +72,7 @@ export default function Header({}) {
       setCategories(response.data);
     });
   }
-
+  console.log(categories)
   return (
     ///
     <div>

@@ -2,7 +2,6 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { isAdminRequest } from "./auth/[...nextauth]";
 
-import { Category } from "@/models/Category";
 
 export default async function handle(req, res) {
   const { method } = req;
@@ -40,7 +39,7 @@ export default async function handle(req, res) {
   if (method === "POST") {
     const { title, description, price, qty, images, category, properties } =
       req.body;
-    console.log(properties)
+
     const productDoc = await Product.create({
       title,
       description,
