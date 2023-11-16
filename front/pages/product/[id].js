@@ -159,6 +159,42 @@ export default function ProductPage({
               ))}
             </div>
 
+<<<<<<< HEAD
+=======
+            {/* Hiển thị thông tin chi tiết của các property được chọn */}
+            {selectedProperties.length > 0 && (
+              <div>
+                <p>Thông tin chi tiết:</p>
+                <div style={{ display: "flex" }}>
+                  {selectedProperties.map((selectedProp, index) => (
+                    <div key={index} style={{ marginRight: "20px" }}>
+                      <p>
+                        <strong>{selectedProp.name}:</strong> {selectedProp._id}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="my-2">
+              <h6>Số lượng</h6>
+              <RowQuantity>
+                <ButonQuantity onClick={() => lessOfThisProduct(product._id)}>
+                  -
+                </ButonQuantity>
+                <QuantityLabel>
+                  {" "}
+                  {cartProducts.filter((id) => id === product._id).length}
+                </QuantityLabel>{" "}
+                <ButonQuantity
+                  onClick={() => moreOfThisProduct(product._id)}
+                >
+                  +
+                </ButonQuantity>
+              </RowQuantity>
+            </div>
+
+>>>>>>> acc7414 (aaa)
             <div>
               <FlyingButton main _id={product._id} src={product.images?.[0]}>
                 <CartIcon />

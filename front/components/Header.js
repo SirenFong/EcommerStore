@@ -57,7 +57,7 @@ export default function Header({}) {
   }
 
   async function login() {
-    await signIn("google");
+
   }
   const [categories, setCategories] = useState([]);
   useEffect(() => {
@@ -156,9 +156,9 @@ export default function Header({}) {
             </ul>
 
             {!session && ( //nếu không thì sẽ login
-              <Button primary onClick={login}>
-                Đăng nhập với Google <FaGoogle />
-              </Button>
+              <Link primary href={"/login"}>
+                Đăng nhập
+              </Link>
             )}
             {session && ( //Nếu tồn tại session thì hiện logout
               <li className="navbar-nav nav-item dropdown">

@@ -8,6 +8,7 @@ import { authOptions } from "./auth/[...nextauth]";
 import { Setting } from "@component/models/Advertisement";
 import { PaymentMethod } from "@component/models/PaymentMethod";
 import { Service } from "@component/models/Service";
+import { useState } from "react";
 
 const stripe = require("stripe")(process.env.STRIPE_SK);
 
@@ -53,10 +54,18 @@ export default async function handle(req, res) {
 
   const session = await getServerSession(req, res, authOptions);
   ///
+////Hfàm tạo mã sản phẩm ngẫu nhiên
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomId = '';
+  for (let i = 0; i < 8; i++) {
+    randomId += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+ 
 
   //Tạo một đơn hàng mới trong
   //cơ sở dữ liệu với thông tin của người mua và danh sách các mặt hàng (line_items):
   const orderDoc = await Order.create({
+    _id: randomId,
     line_items,
     name,
     phone,
