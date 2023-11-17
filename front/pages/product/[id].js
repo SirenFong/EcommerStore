@@ -136,13 +136,23 @@ export default function ProductPage({
             <PriceRow>
               <h5>Giá:</h5>
               <div>
-                <Price>
-                  {isClient ? product.finalPrice.toLocaleString() : ""}đ
-                </Price>
-                <DiscountedPrice>
-                  {isClient ? product.price.toLocaleString() : ""}đ
-                </DiscountedPrice>
-                <DiscountPercentage>-{product.discount}%</DiscountPercentage>
+                {product.discount > 0 ? (
+                  <>
+                    <Price>
+                      {isClient ? product.finalPrice.toLocaleString() : ""}đ
+                    </Price>
+                    <DiscountedPrice>
+                      {isClient ? product.price.toLocaleString() : ""}đ
+                    </DiscountedPrice>
+                    <DiscountPercentage>
+                      -{product.discount}%
+                    </DiscountPercentage>
+                  </>
+                ) : (
+                  <Price>
+                    {isClient ? product.price.toLocaleString() : ""}đ
+                  </Price>
+                )}
               </div>
             </PriceRow>
 
