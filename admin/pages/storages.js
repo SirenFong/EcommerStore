@@ -1,11 +1,13 @@
 import Layout from "@/components/Layout";
+import Modal from "@/components/Modal";
+import ModalForm from "@/components/Modal";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CSVLink, CSVDownload } from "react-csv";
 
-export default function Storages() {
+export default function Products() {
     const [products, setProducts] = useState([]);
     const [dataExport, setdataExport] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -67,6 +69,15 @@ export default function Storages() {
         }
     };
 
+    const [open, setOpen] = useState(false);
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
     return (
         <Layout>
             <div className="bg-white mt-2  text-gray-700 py-2 m-2 text-2xl">
@@ -141,26 +152,10 @@ export default function Storages() {
                     </Link>
                 </div>
                 <div className="flex">
-                    <Link
-                        className="bg-primary text-white rounded-md my-1 mx-2 p-2 text-base flex"
-                        href={"/products/newProduct"}
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            class="w-6 h-6"
-                        >
-                            <path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                        </svg>
-                        Thêm sản phẩm
-                    </Link>
+
+                    <button type="button" onClick={handleOpen}>
+                        Click Me to Open Modal
+                    </button>
                 </div>
             </div>
 
@@ -180,7 +175,7 @@ export default function Storages() {
 
                                 {/* <!--Search button--> */}
 
-                                <button
+                                {/* <button
                                     className="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
                                     type="button"
                                     id="button-addon1"
@@ -197,7 +192,7 @@ export default function Storages() {
                                             clipRule="evenodd"
                                         />
                                     </svg>
-                                </button>
+                                </button> */}
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { Button } from "reactstrap";
 
 
 export default function Nav({ show }) {
@@ -179,7 +180,7 @@ export default function Nav({ show }) {
 
           Quảng cáo
         </Link>
-
+   
         <Link
           className={
             pathname.includes("/cost") ? activeLink : inactiveLink
