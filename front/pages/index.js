@@ -85,11 +85,7 @@ export async function getServerSideProps(ctx) {
   // });
   // const bannerProductId3 = bannerProductSetting3.value;
   // const bannerProduct3 = await Product.findById(bannerProductId3);
-<<<<<<< HEAD
-  // ///
-=======
-  ///
->>>>>>> 42ea6e336dc0a0efa797cdd747e2293858968663
+
   const newProducts = await Product.find({}, null, {
     sort: { _id: -1 },
     limit: 10,

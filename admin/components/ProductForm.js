@@ -10,17 +10,18 @@ export default function ProductForm({
   description: existingDescription,
   qty: existingQty,
   price: existingPrice,
+  discount: existingDiscount,
+  finalPrice: existingFinalPrice,
   images: existingImages,
   category: assignedCategory,
   properties: assignedProperties,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
-
   const [properties, setProperties] = useState(assignedProperties || []);
-
   const [description, setDescription] = useState(existingDescription || "");
   const [category, setCategory] = useState(assignedCategory || "");
   const [price, setPrice] = useState(existingPrice || "");
+  const [discount, setDiscount] = useState(Number(existingDiscount) || 0);
   const [qty, setQty] = useState(existingQty || "");
   const [images, setImages] = useState(existingImages || []);
   const [categories, setCategories] = useState([]);
@@ -28,9 +29,9 @@ export default function ProductForm({
   const [goToProducts, setGoToProducts] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [categoriesLoading, setCategoriesLoading] = useState(false);
-
+  const [finalPrice, setFinalPrice] = useState(existingFinalPrice);
   const numeral = require("numeral");
-  console.log(assignedProperties);
+
   useEffect(() => {
     setCategoriesLoading(true);
     axios.get("/api/categories").then((result) => {
@@ -44,6 +45,18 @@ export default function ProductForm({
       );
     });
   }, []);
+
+  function handlePriceChange(ev) {
+    const formattedPrice = numeral(ev.target.value).value();
+    setPrice(formattedPrice);
+
+    // Tính giá tiền cuối cùng khi giá trị discount thay đổi
+    const calculatedFinalPrice =
+      discount > 0
+        ? formattedPrice - formattedPrice * (discount / 100)
+        : formattedPrice;
+    setFinalPrice(calculatedFinalPrice);
+  }
 
   //Xóa
   const deleteByIndex = (index) => {
@@ -63,6 +76,8 @@ export default function ProductForm({
       description,
       price,
       qty,
+      discount: Number(discount), // Ensure it's a number
+      finalPrice,
       images,
       category,
       properties: properties.map((p) => ({
@@ -133,7 +148,7 @@ export default function ProductForm({
       return properties;
     });
   }
-  console.log(properties);
+
   return (
     /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
     /**Thằng setTitle sẽ thay đổi thành 1 trạng thái mới của thằng title */
@@ -156,7 +171,6 @@ export default function ProductForm({
         ))}
       </select>
       {categoriesLoading && <Spinner />}
-
       <div className="mb-2">
         <label className="block">Properties</label>
         <button
@@ -259,11 +273,24 @@ export default function ProductForm({
         type="text"
         placeholder="Giá tiền"
         value={numeral(price).format("0,0")}
-        onChange={(ev) => {
-          const formattedPrice = numeral(ev.target.value).value();
-          setPrice(formattedPrice);
-        }}
+        onChange={handlePriceChange}
       />
+
+      <label>Giảm giá (%) </label>
+      <input
+        type="text"
+        placeholder="Giảm x%"
+        value={discount}
+        onChange={(ev) => setDiscount(Number(ev.target.value))}
+      />
+
+      <div>
+        <label>
+          Giá tiền sau khi giảm <span>{numeral(finalPrice).format("0,0")}</span>{" "}
+          ( VNĐ )
+        </label>
+      </div>
+
       <label>Số lượng sản phẩm</label>
       <input
         type="number"

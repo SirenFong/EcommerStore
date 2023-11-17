@@ -12,12 +12,7 @@ import axios from "axios";
 import styled from "styled-components";
 import { FaGoogle } from "react-icons/fa";
 import Footer from "@component/components/Footer";
-<<<<<<< HEAD
-=======
-import { Checkbox } from "@mui/material";
-import { CategoryContext } from "@component/components/CategoryContext";
 
->>>>>>> 3dbc862 (âsdsa)
 import { withSwal } from "react-sweetalert2";
 const ErrorMessage = styled.p`
   color: red;
