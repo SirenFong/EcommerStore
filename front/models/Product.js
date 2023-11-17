@@ -9,6 +9,7 @@ const ProductSchema = new Schema(
     views: { type: Number, require: true },
     purchases: { type: Number, require: true },
     price: { type: Number, require: true },
+    discount: Number,
     images: [{ type: String }],
     category: {
       type: mongoose.Types.ObjectId,

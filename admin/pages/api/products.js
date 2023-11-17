@@ -2,7 +2,6 @@ import { mongooseConnect } from "@/lib/mongoose";
 import { Product } from "@/models/Product";
 import { isAdminRequest } from "./auth/[...nextauth]";
 
-
 export default async function handle(req, res) {
   const { method } = req;
   await mongooseConnect();
@@ -16,34 +15,42 @@ export default async function handle(req, res) {
     if (req.query?.id) {
       res.json(await Product.findOne({ _id: req.query.id }));
     } else {
-
-      res.json(await Product.aggregate([
-        {
-          $lookup:
+      res.json(
+        await Product.aggregate([
           {
-            from: 'categories',
-            localField: 'category',
-            foreignField: '_id',
-            as: 'category'
-          }
-        }
-      ]));
-
-
-
+            $lookup: {
+              from: "categories",
+              localField: "category",
+              foreignField: "_id",
+              as: "category",
+            },
+          },
+        ])
+      );
     }
   }
   //Hàm nhập vào "POST" của HTTP dùng để tạo 1  sản phẩm mới với
   //Product.create để tạo  sản phẩm mới
   //res.json để xác định hàm POST  sản phẩm có thành công hay không
   if (method === "POST") {
-    const { title, description, price, qty, images, category, properties } =
-      req.body;
+    const {
+      title,
+      description,
+      price,
+      discount,
+      finalPrice,
+      qty,
+      images,
+      category,
+      properties,
+    } = req.body;
 
     const productDoc = await Product.create({
       title,
       description,
       price,
+      discount,
+      finalPrice,
       qty,
       images,
       category,
@@ -59,6 +66,8 @@ export default async function handle(req, res) {
       title,
       description,
       price,
+      discount,
+      finalPrice,
       qty,
       images,
       category,
@@ -69,7 +78,17 @@ export default async function handle(req, res) {
     // Update the properties along with other fields
     await Product.updateOne(
       { _id },
-      { title, description, price, qty, images, category, properties }
+      {
+        title,
+        description,
+        price,
+        qty,
+        discount,
+        finalPrice,
+        images,
+        category,
+        properties,
+      }
     );
     res.json(true);
   }

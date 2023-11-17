@@ -24,18 +24,35 @@ const ColWrapper = styled.div`
   gap: 40px;
   margin: 40px 0;
 `;
+const DiscountedPrice = styled.span`
+  font-size: 1.4rem;
+  padding: 15px 0px;
+  text-decoration: line-through;
+  color: #999;
+`;
+
+const DiscountPercentage = styled.span`
+  font-size: 1.4rem;
+  padding: 15px;
+  color: #f73b3b;
+`;
 const PriceRow = styled.div`
   display: flex;
-  gap: 20px;
+  gap: 0px;
   align-items: center;
-  padding: 5px 0px;
   h5 {
     margin: 0px;
   }
+  > div {
+    display: flex;
+    gap: 10px;
+  }
 `;
 const Price = styled.span`
+  display: flex;
+  margin: 15px;
   font-size: 1.4rem;
-  color: #f73b3b;
+  color: #000;
 `;
 
 export default function ProductPage({
@@ -117,9 +134,25 @@ export default function ProductPage({
             </p>
 
             <PriceRow>
-              <h5>Giá: </h5>
+              <h5>Giá:</h5>
               <div>
-                <Price>{isClient ? product.price.toLocaleString() : ""}đ</Price>{" "}
+                {product.discount > 0 ? (
+                  <>
+                    <Price>
+                      {isClient ? product.finalPrice.toLocaleString() : ""}đ
+                    </Price>
+                    <DiscountedPrice>
+                      {isClient ? product.price.toLocaleString() : ""}đ
+                    </DiscountedPrice>
+                    <DiscountPercentage>
+                      -{product.discount}%
+                    </DiscountPercentage>
+                  </>
+                ) : (
+                  <Price>
+                    {isClient ? product.price.toLocaleString() : ""}đ
+                  </Price>
+                )}
               </div>
             </PriceRow>
 
