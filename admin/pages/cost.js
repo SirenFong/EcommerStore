@@ -101,14 +101,13 @@ function CostsPage({ swal }) {
           </button>
         </div>
       </form>
-      <h2>Danh sách tài khoản người dùng</h2>
+      <h2>Danh sách dịch vụ</h2>
       <table className="basic">
         <thead>
           <tr>
             <th className="text-left">Tên dịch vụ</th>
-            <th> giá diền</th>
+            <th>Phí giao hàng</th>
             <th>Thời gian tạo</th>
-            <th>Thời gian cập nhật</th>
             <th></th>
           </tr>
         </thead>
@@ -128,8 +127,8 @@ function CostsPage({ swal }) {
                 <td className="text-center">{service.name}</td>
                 <td className="text-center">{service.value}</td>
 
-                <td>{service.createdAt}</td>
-                <td>{service.updatedAt}</td>
+                <td>{new Date(service.createdAt).toLocaleDateString()}</td>
+
                 <td>
                   <button
                     onClick={() => editService(service)}

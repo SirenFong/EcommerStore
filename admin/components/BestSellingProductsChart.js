@@ -64,7 +64,7 @@ export default function BestSellingProductsChart({ ordersLast12Months }) {
 
       const topProduct = sortedProducts[0];
 
-      monthlySales.push(topProduct ? topProduct.totalQuantity : 0);
+      monthlySales.push(topProduct ? parseInt(topProduct.totalQuantity) : 0);
     }
 
     const ctx = document

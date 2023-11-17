@@ -1,12 +1,8 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { RevealWrapper } from "next-reveal";
 import { useEffect, useState } from "react";
-import { FaGoogle } from "react-icons/fa";
-import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
-import Input from "@component/components/Input";
-import ProductBox from "@component/components/ProductBox";
 import Spinner from "@component/components/Spinner";
 import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
@@ -16,10 +12,9 @@ import SingleOrder from "@component/components/SingleOrder";
 import { withSwal } from "react-sweetalert2";
 import Footer from "@component/components/Footer";
 
-
 const ColumnsWrapper = styled.div`
   grid-template-columns: 1fr;
-  height:500px;
+  height: 500px;
   @media screen and (min-width: 768px) {
     grid-template-columns: 1.2fr 0.8fr;
   }
@@ -42,7 +37,6 @@ const ColumnsWrapper = styled.div`
   }
 `;
 
-
 function OrdersPage({ swal }) {
   const { data: session } = useSession();
   const [name, setName] = useState("");
@@ -57,8 +51,6 @@ function OrdersPage({ swal }) {
   const [activeTab, setActivetab] = useState("Đơn đặt hàng");
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-
 
   useEffect(() => {
     if (!session) {
@@ -108,8 +100,6 @@ function OrdersPage({ swal }) {
       });
   }, [session]);
 
-
-
   return (
     <>
       <Header key={new Date().getTime()} />
@@ -118,18 +108,19 @@ function OrdersPage({ swal }) {
           <div>
             <WhiteBox className="container">
               <RevealWrapper delay={0}>
-                <Tabs
+                {/* <Tabs
                   tabs={[
                     "Tất cả",
                     "Chưa thanh toán",
                     "Chờ xác nhận",
                     "Chờ giao hàng",
                     "Đã giao",
-                    "Đã hủy", "Trả hàng/Hoàn tiền"
+                    "Đã hủy",
+                    "Trả hàng/Hoàn tiền",
                   ]}
                   active={activeTab}
                   onChange={setActivetab}
-                />
+                /> */}
                 {activeTab === "Đơn đặt hàng" && (
                   <>
                     {!orderLoaded && <Spinner fullWidth={true} />}
@@ -271,7 +262,7 @@ function OrdersPage({ swal }) {
           </div>
         </ColumnsWrapper>
       </Center>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

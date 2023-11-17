@@ -61,7 +61,6 @@ export default function Linechart({ ordersLast12Months }) {
           {
             data: monthlySales,
             label: "Doanh thu",
-            borderColor: "rgb(75, 192, 192)",
             backgroundColor: colors,
             borderWidth: 2,
           },
@@ -70,22 +69,17 @@ export default function Linechart({ ordersLast12Months }) {
     });
 
     // Biểu đồ thứ hai (doanh thu dự báo theo quý)
-    const quarterlySales = [0, 0, 0, 0];
+    const recentMonths = 3; // Số tháng gần đây để tính tăng trưởng
+    const growthRate =
+      (monthlySales[11] - monthlySales[11 - recentMonths]) / recentMonths;
+
+    const forecastedSales = [0, 0, 0, 0];
 
     for (let i = 0; i < 12; i++) {
       const quarterIndex = Math.floor(i / 3);
-      quarterlySales[quarterIndex] += monthlySales[i];
+      forecastedSales[quarterIndex] +=
+        monthlySales[i] + growthRate * (i - 11 + recentMonths);
     }
-
-    const forecastedSales = quarterlySales.map((quarter, index) => {
-      // Dự báo doanh thu cho quý tiếp theo dựa trên 3 quý trước đó
-      if (index >= 3) {
-        const previousQuarters = quarterlySales.slice(index - 3, index);
-        const average = previousQuarters.reduce((sum, q) => sum + q, 0) / 3;
-        return Math.round(average); // Làm tròn giá trị
-      }
-      return Math.round(quarter); // Làm tròn giá trị
-    });
 
     const ctx2 = document.getElementById("myChart2").getContext("2d");
 
@@ -97,7 +91,6 @@ export default function Linechart({ ordersLast12Months }) {
           {
             data: forecastedSales,
             label: "Doanh thu dự báo (VNĐ)",
-            borderColor: "rgb(75, 192, 192)",
             backgroundColor: colors,
             borderWidth: 2,
           },
