@@ -15,7 +15,7 @@ export default function PromotionForm({
     end: existingEnd,
     condition: existingCondition,
 }) {
-
+    const numeral = require("numeral");
     const router = useRouter();
     const [goToProducts, setGoToProducts] = useState(false);
     const [titlePromotions, setTitlePromotions] = useState(existingTitle || "");
@@ -31,6 +31,7 @@ export default function PromotionForm({
     const [categories, setCategories] = useState([])
     const [products, setProducts] = useState([])
     const [values, setValues] = useState({})
+    const formatter = new Intl.NumberFormat("en-US");
     const [selectedValueProducts, setselectedValueProducts] = useState(null);
     const [selectedValueCategories, setselectedValueCategories] = useState(null);
     const handleClose = () => {
@@ -211,7 +212,8 @@ export default function PromotionForm({
                                     <tr key={i.index}>
                                         <td>{index + 1}</td>
                                         <td>{i.type == 1 ? "Danh mục" : i.type == 2 ? "Sản phẩm" : "Hóa đơn"}</td>
-                                        <td>{i.reducedbymoney}</td>
+
+                                        <td>{formatter.format(i.reducedbymoney)}</td>
                                         <td >
                                             <button id="btnId" type="button" onClick={() => editdata(i)}>
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -269,12 +271,16 @@ export default function PromotionForm({
                                     Giá trị giảm
                                     <input
 
-                                        type="number"
+                                        type="text"
                                         placeholder="Nhập giá tiền giảm"
                                         name="reducedbymoney "
                                         id="reducedbymoney"
-                                        onChange={(ev) => setReducedbymoney(ev.target.value)}
-                                        value={reducedbymoney === null ? "" : reducedbymoney}
+                                        onChange={(ev) => {
+                                            const formattedPrice = numeral(ev.target.value).value();
+                                            setReducedbymoney(formattedPrice);
+                                        }}
+
+                                        value={reducedbymoney === null ? "" : numeral(reducedbymoney).format("0,0")}
                                     />
 
                                 </div>

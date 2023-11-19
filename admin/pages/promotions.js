@@ -138,13 +138,10 @@ function Promotions({ swal }) {
                 <table className="basic mt-2 py-1 px-2 ">
                     <thead className="border-t-2">
                         <tr>
-                            <td>Hình ảnh sản phẩm</td>
-                            <td>Tên sản phẩm</td>
-                            <td>Loại sản phẩm</td>
-
-                            <td>Giá bán</td>
-                            <td>Số lượng</td>
-                            <td></td>
+                            <td>Tên chương trình khuyến mãi</td>
+                            <td>Ngày bắt đầu</td>
+                            <td>Ngày kết thúc</td>
+                            <td>Tác vụ</td>
                         </tr>
                     </thead>
                     <tbody>
