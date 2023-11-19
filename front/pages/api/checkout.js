@@ -19,7 +19,16 @@ export default async function handle(req, res) {
     return;
   }
   //Hàm nhận các thông tin truyền vào từ form điền ở trang thanh toán
-  const { name, phone, email, postalcode, address, paymentmethod, cartProducts, service } = req.body;
+  const {
+    name,
+    phone,
+    email,
+    postalcode,
+    address,
+    paymentmethod,
+    cartProducts,
+    service,
+  } = req.body;
   // await mongooseConnect();
 
   //Lấy thông tin sản phẩm từ cơ sở dữ liệu sau đó hiện danh sách sản phẩm và
@@ -54,13 +63,15 @@ export default async function handle(req, res) {
 
   const session = await getServerSession(req, res, authOptions);
   ///
-////Hfàm tạo mã sản phẩm ngẫu nhiên
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let randomId = '';
+  ////Hfàm tạo mã sản phẩm ngẫu nhiên
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let randomId = "";
   for (let i = 0; i < 8; i++) {
-    randomId += characters.charAt(Math.floor(Math.random() * characters.length));
+    randomId += characters.charAt(
+      Math.floor(Math.random() * characters.length)
+    );
   }
- 
 
   //Tạo một đơn hàng mới trong
   //cơ sở dữ liệu với thông tin của người mua và danh sách các mặt hàng (line_items):
@@ -72,15 +83,19 @@ export default async function handle(req, res) {
     email,
     postalcode,
     address,
-    paymentmethods: { id: paymentInfos._id, name: paymentInfos.paymentName, key: paymentInfos.paymentKey },
+    paymentmethods: {
+      id: paymentInfos._id,
+      name: paymentInfos.paymentName,
+      key: paymentInfos.paymentKey,
+    },
     status: 1,
     paid: false,
     userEmail: session?.user?.email,
   });
-  const shippingFeeSetting = await Service.findOne({ name: 'shippingFee' });
-  const shippingFeeCents = parseInt(shippingFeeSetting.value || '0');
-  const servicerFee = await Service.findOne({ name: 'shippingFee' });
-  const servicerFeeCents = parseInt(servicerFee.value || '0');
+  const shippingFeeSetting = await Service.findOne({ name: "shippingFee" });
+  const shippingFeeCents = parseInt(shippingFeeSetting.value || "0");
+  const servicerFee = await Service.findOne({ name: "shippingFee" });
+  const servicerFeeCents = parseInt(servicerFee.value || "0");
   //session theo thông tin tài khoản đang đăng nhập
   //Nếu không có session thì sẽ không thanh toán được
   //Lưu thông tin email của khách hàng đã điền
@@ -97,16 +112,16 @@ export default async function handle(req, res) {
     shipping_options: [
       {
         shipping_rate_data: {
-          display_name: 'shipping fee',
-          type: 'fixed_amount',
-          fixed_amount: { amount: shippingFeeCents, currency: 'VND' },
+          display_name: "shipping fee",
+          type: "fixed_amount",
+          fixed_amount: { amount: shippingFeeCents, currency: "VND" },
         },
         shipping_rate_data: {
-          display_name: 'service fee',
-          type: 'fixed_amount',
-          fixed_amount: { amount: servicerFeeCents, currency: 'VND' },
+          display_name: "service fee",
+          type: "fixed_amount",
+          fixed_amount: { amount: servicerFeeCents, currency: "VND" },
         },
-      }
+      },
     ],
   });
 

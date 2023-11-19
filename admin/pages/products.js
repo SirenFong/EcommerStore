@@ -3,6 +3,7 @@ import Spinner from "@/components/Spinner";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Select from "react-select";
 import { CSVLink, CSVDownload } from "react-csv";
 
 export default function Products() {
@@ -11,6 +12,9 @@ export default function Products() {
   const [isLoading, setIsLoading] = useState(false);
   const [categorySelected, setCategorySelected] = useState();
   const [categories, setCategories] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   /**useEffect gọi tới cái API cũng như trả về data */
   /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
@@ -27,7 +31,8 @@ export default function Products() {
       axios.get("/api/products").then((response) => {
         setProducts(
           response.data.filter(
-            (item) => item.category[0].name == categorySelected
+            (item) =>
+              item.category[0] && item.category[0].name === categorySelected
           )
         );
         setIsLoading(false);
@@ -36,10 +41,13 @@ export default function Products() {
   }, [categorySelected]);
 
   useEffect(() => {
-    axios.get("/api/categories").then((result) => {
-      setCategories(result.data);
-    });
-  }, []);
+    const filtered = products.filter(
+      (item) =>
+        item.title &&
+        item.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setFilteredProducts(filtered);
+  }, [products, searchValue]);
 
   const getUsersExport = (event, done) => {
     let result = [];
@@ -53,7 +61,14 @@ export default function Products() {
         "danh mục",
         "thuộc tính",
       ]);
-      products.map((item, index) => {
+
+      const filteredProducts =
+        selectedProduct && selectedProduct.value !== "Tất cả sản phẩm"
+          ? products.filter((item) =>
+              item.title.toLowerCase().includes(searchValue.toLowerCase())
+            )
+          : products; // If "Tất cả sản phẩm" is selected, use all products
+      filteredProducts.forEach((item, index) => {
         let arr = [];
         arr[0] = item.title;
         arr[1] = item.qty;
@@ -124,7 +139,7 @@ export default function Products() {
             Nhập file
           </CSVLink>
           <p>|</p>
-          <Link className="link text-base flex gap-1" href={"/categories"}>
+          {/* <Link className="link text-base flex gap-1" href={"/categories"}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -140,7 +155,7 @@ export default function Products() {
               />
             </svg>
             Loại sản phẩm
-          </Link>
+          </Link> */}
         </div>
         <div className="flex">
           <Link
@@ -172,12 +187,20 @@ export default function Products() {
           <div>
             <div className="mb-3 md:w-96">
               <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-                <input
-                  type="search"
-                  className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-                  placeholder="Search"
-                  aria-label="Search"
-                  aria-describedby="button-addon1"
+                <Select
+                  value={selectedProduct}
+                  onChange={(selectedOption) =>
+                    setSelectedProduct(selectedOption)
+                  }
+                  options={[
+                    { value: "Tất cả sản phẩm", label: "Tất cả sản phẩm" },
+                    ...products.map((product) => ({
+                      value: product._id,
+                      label: product.title,
+                    })),
+                  ]}
+                  isSearchable
+                  placeholder="Search for a product"
                 />
 
                 {/* <!--Search button--> */}
@@ -185,7 +208,9 @@ export default function Products() {
                 <button
                   className="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
                   type="button"
-                  id="button-addon1"
+                  onClick={() =>
+                    setSearchValue(selectedProduct ? selectedProduct.label : "")
+                  }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +231,7 @@ export default function Products() {
 
           <div className="flex gap-3 align-items-center ">
             <div>
-              <select
+              {/* <select
                 onChange={(ev) => setCategorySelected(ev.target.value)}
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
@@ -214,11 +239,11 @@ export default function Products() {
                 {categories.map((category) => (
                   <option value={category._id}>{category.name}</option>
                 ))}
-              </select>
+              </select> */}
             </div>
             <div>
               <div className="relative max-w-sm">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                {/* <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
                   <svg
                     class="w-4 h-4 text-gray-500 dark:text-gray-400"
                     aria-hidden="true"
@@ -228,13 +253,13 @@ export default function Products() {
                   >
                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                   </svg>
-                </div>
-                <input
+                </div> */}
+                {/* <input
                   datepicker
                   type="date"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Select date"
-                />
+                /> */}
               </div>
             </div>
           </div>
@@ -245,10 +270,9 @@ export default function Products() {
               <td>Hình ảnh sản phẩm</td>
               <td>Tên sản phẩm</td>
               <td>Loại sản phẩm</td>
-
               <td>Giá bán</td>
               <td>Giảm giá (%)</td>
-              <td>Số lượng</td>
+              {/* <td>Số lượng</td> */}
               <td></td>
             </tr>
           </thead>
@@ -263,7 +287,7 @@ export default function Products() {
               </tr>
             )}
 
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <tr key={product._id}>
                 <td>
                   {product.images && (
@@ -275,7 +299,7 @@ export default function Products() {
 
                 <td>{product.price}</td>
                 <td>{product.discount}</td>
-                <td>{product.qty}</td>
+                {/* <td>{product.qty}</td> */}
                 <td>
                   <Link
                     className="btn-default"

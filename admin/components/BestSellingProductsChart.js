@@ -18,7 +18,6 @@ export default function BestSellingProductsChart({ ordersLast12Months }) {
       "Tháng 11",
       "Tháng 12",
     ];
-
     const colors = [
       "rgba(255, 99, 132, 0.7)",
       "rgba(54, 162, 235, 0.7)",
@@ -64,7 +63,7 @@ export default function BestSellingProductsChart({ ordersLast12Months }) {
 
       const topProduct = sortedProducts[0];
 
-      monthlySales.push(topProduct ? topProduct.totalQuantity : 0);
+      monthlySales.push(topProduct ? parseFloat(topProduct.totalQuantity) : 0);
     }
 
     const ctx = document
@@ -83,6 +82,16 @@ export default function BestSellingProductsChart({ ordersLast12Months }) {
             borderWidth: 2,
           },
         ],
+      },
+      options: {
+        scales: {
+          yAxes: [
+            {
+              beginAtZero: true,
+              stepSize: 1,
+            },
+          ],
+        },
       },
     });
   }, [ordersLast12Months]);

@@ -4,11 +4,44 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CSVLink, CSVDownload } from "react-csv";
+import { withSwal } from "react-sweetalert2";
+function Promotions({ swal }) {
 
-export default function Promotions() {
-
+    const [promotions, setPromotions] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    useEffect(() => {
+        fetchAll();
+    }, []);
+    async function fetchAll() {
+        setIsLoading(true);
+        await axios.get("/api/promotions").then((res) => {
+            setPromotions(res.data);
+            setIsLoading(false);
+        });
+    }
+    //Hàm xóa loại sản phẩm
+    function deletePromotion(promotion) {
+        console.log(promotion)
+        swal
+            .fire({
+                title: "Xóa chương trình khuyến mãi",
+                text: `Bạn có muốn xóa ${promotion.title}?`,
+                showCancelButton: true,
+                cancelButtonText: "Cancel",
+                confirmButtonText: "Yes, Delete!",
+                confirmButtonsColor: "#d55",
+                reverseButtons: true,
+            })
+            .then(async (result) => {
+                if (result.isConfirmed) {
+                    await axios.delete("/api/promotions?id=" + promotion._id);
+                    fetchAll();
+                }
+            });
+    }
 
     return (
+
         <Layout>
 
             <div className="bg-gray-100 mt-2  text-gray-700  m-2 text-2xl flex justify-between">
@@ -115,17 +148,54 @@ export default function Promotions() {
                         </tr>
                     </thead>
                     <tbody>
+                        {isLoading && (
+                            <tr>
+                                <td colSpan={2}>
+                                    <div className="py-4">
+                                        <Spinner fullWidth={true} />
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
+                        {promotions.map((promotion) => (
+                            <tr key={promotion._id}>
 
-                        <tr>
-                            <td colSpan={2}>
-                                <div className="py-4">
+                                <td>{promotion.title}</td>
+                                <td>{promotion.start}</td>
 
-                                </div>
-                            </td>
-                        </tr>
+                                <td>{promotion.end}</td>
 
 
-
+                                <td>
+                                    <Link
+                                        className="btn-default"
+                                        href={"/promotions/edit/" + promotion._id}
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke-width="1.5"
+                                            stroke="currentColor"
+                                            class="w-4 h-4"
+                                        >
+                                            <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                                            />
+                                        </svg>
+                                        Edit Product
+                                    </Link>
+                                    <button
+                                        onClick={() => deletePromotion(promotion)}
+                                        className="btn-red"
+                                    >
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -134,3 +204,4 @@ export default function Promotions() {
         </Layout>
     );
 }
+export default withSwal(({ swal }, ref) => <Promotions swal={swal} />);

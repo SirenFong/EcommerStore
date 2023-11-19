@@ -34,6 +34,15 @@ export default function Linechart({ ordersLast12Months }) {
       "rgba(255, 159, 64, 0.7)",
     ];
 
+    {
+      /**Đầu tiên, trong vòng lặp for đầu tiên, 
+  code tính tổng doanh thu từng tháng (monthlySales). 
+  Đối với mỗi tháng, nó lọc ra các đơn hàng (ordersLast12Months) 
+  tương ứng và tính tổng doanh thu 
+  của từng đơn hàng bằng cách nhân số lượng (quantity) 
+  với giá (price_data.unit_amount) của từng sản phẩm và sau đó cộng tổng lên. */
+    }
+
     for (let i = 0; i < 12; i++) {
       const salesOfMonth = ordersLast12Months.filter(
         (order) => new Date(order.createdAt).getMonth() === i
@@ -54,52 +63,58 @@ export default function Linechart({ ordersLast12Months }) {
     const ctx = document.getElementById("myChart").getContext("2d");
 
     new Chart(ctx, {
-      type: "bar",
+      type: "line",
       data: {
         labels: months,
         datasets: [
           {
             data: monthlySales,
-            label: "Doanh thu",
-            borderColor: "rgb(75, 192, 192)",
+            label: "Tổng doanh thu",
             backgroundColor: colors,
             borderWidth: 2,
+            fill: false,
           },
         ],
       },
     });
 
     // Biểu đồ thứ hai (doanh thu dự báo theo quý)
-    const quarterlySales = [0, 0, 0, 0];
+    const quarterlySales = [];
+    const quarters = ["Q1", "Q2", "Q3", "Q4"];
 
-    for (let i = 0; i < 12; i++) {
-      const quarterIndex = Math.floor(i / 3);
-      quarterlySales[quarterIndex] += monthlySales[i];
+    for (let i = 0; i < 4; i++) {
+      const salesOfQuarter = monthlySales.slice(i * 3, (i + 1) * 3);
+
+      const totalQuarterSales = salesOfQuarter.reduce(
+        (sum, quarter) => sum + quarter,
+        0
+      );
+
+      const growthRate =
+        i > 0
+          ? (totalQuarterSales - quarterlySales[i - 1]) / quarterlySales[i - 1]
+          : 0;
+
+      const nextQuarterForecast = Math.round(
+        totalQuarterSales + totalQuarterSales * growthRate
+      );
+
+      quarterlySales.push(nextQuarterForecast);
     }
-
-    const forecastedSales = quarterlySales.map((quarter, index) => {
-      // Dự báo doanh thu cho quý tiếp theo dựa trên 3 quý trước đó
-      if (index >= 3) {
-        const previousQuarters = quarterlySales.slice(index - 3, index);
-        const average = previousQuarters.reduce((sum, q) => sum + q, 0) / 3;
-        return Math.round(average); // Làm tròn giá trị
-      }
-      return Math.round(quarter); // Làm tròn giá trị
-    });
 
     const ctx2 = document.getElementById("myChart2").getContext("2d");
 
     new Chart(ctx2, {
-      type: "pie",
+      type: "line",
       data: {
-        labels: ["Q1", "Q2", "Q3", "Q4"],
+        labels: quarters,
         datasets: [
           {
-            data: forecastedSales,
+            data: quarterlySales,
             label: "Doanh thu dự báo (VNĐ)",
-            borderColor: "rgb(75, 192, 192)",
             backgroundColor: colors,
             borderWidth: 2,
+            fill: false,
           },
         ],
       },
