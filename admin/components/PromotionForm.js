@@ -300,7 +300,7 @@ export default function PromotionForm({
                   <div className="w-3/3 p-7">
                     Nhập {type == "2" ? "Sản phẩm" : "Danh mục"}
                     <div>
-                      Sản phẩm đã chọn:{" "}
+                      Sản phẩm đã chọn:
                       {values.map((item) => item.name?.title).join(", ")}
                     </div>
                     <Multiselect
