@@ -15,7 +15,8 @@ export default function Products() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
-
+  const formatter = new Intl.NumberFormat("en-US");
+ 
   /**useEffect gọi tới cái API cũng như trả về data */
   /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
   /**hiển thị danh sách sản phẩm trong hàm useState */
@@ -65,8 +66,8 @@ export default function Products() {
       const filteredProducts =
         selectedProduct && selectedProduct.value !== "Tất cả sản phẩm"
           ? products.filter((item) =>
-              item.title.toLowerCase().includes(searchValue.toLowerCase())
-            )
+            item.title.toLowerCase().includes(searchValue.toLowerCase())
+          )
           : products; // If "Tất cả sản phẩm" is selected, use all products
       filteredProducts.forEach((item, index) => {
         let arr = [];
@@ -296,8 +297,8 @@ export default function Products() {
                 </td>
                 <td>{product.title}</td>
                 <td>{product.category[0].name}</td>
-
-                <td>{product.price}</td>
+                
+                <td>{formatter.format(product.price)}</td>
                 <td>{product.discount}</td>
                 {/* <td>{product.qty}</td> */}
                 <td>
