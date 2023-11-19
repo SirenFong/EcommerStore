@@ -32,8 +32,6 @@ export default function PromotionForm({
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [values, setValues] = useState([]);
-  const [selectedValueProducts, setselectedValueProducts] = useState(null);
-  const [selectedValueCategories, setselectedValueCategories] = useState(null);
   const [selectedValuesDisplay, setSelectedValuesDisplay] = useState([]);
   const handleClose = () => {
     setOpen(false);
