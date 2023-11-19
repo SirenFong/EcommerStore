@@ -31,9 +31,10 @@ export default function PromotionForm({
   const [myArray, setMyArray] = useState(existingCondition || []);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
-  const [values, setValues] = useState({});
+  const [values, setValues] = useState([]);
   const [selectedValueProducts, setselectedValueProducts] = useState(null);
   const [selectedValueCategories, setselectedValueCategories] = useState(null);
+  const [selectedValuesDisplay, setSelectedValuesDisplay] = useState([]);
   const handleClose = () => {
     setOpen(false);
   };
@@ -308,8 +309,8 @@ export default function PromotionForm({
                       options={type == "1" ? categories : products} // Options to display in the dropdown
                       // Preselected value to persist in dropdown
                       onSelect={(e) => {
-                        setValues([...e]);
-                      }} // Function will trigger on select eventF
+                        setValues([e]);
+                      }} // Function will trigger on select event
                       onRemove={(e) => {
                         setValues(e);
                       }} // Function will trigger on remove event
