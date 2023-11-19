@@ -3,6 +3,7 @@ import { Product } from "@component/models/Product";
 import { useEffect, useState } from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
+import { useSession } from "next-auth/react";
 import { WishedProduct } from "@component/models/WishedProduct";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
@@ -60,6 +61,7 @@ export default function ProductPage({
   suggestedProduct,
   wishedNewProducts,
 }) {
+  const { data: session } = useSession();
   const [isClient, setIsClient] = useState(false);
   // Thêm state để theo dõi properties được chọn
   const [selectedValues, setSelectedValues] = useState({});
@@ -201,7 +203,11 @@ export default function ProductPage({
           </div>
         </ColWrapper>
 
-        <ProductReviews product={product} />
+        {session ? (
+          <ProductReviews product={product} />
+        ) : (
+          <p>Bạn vui lòng đăng nhập để đánh giá sản phẩm.</p>
+        )}
 
         <SuggestedProducts
           productId={product._id}
