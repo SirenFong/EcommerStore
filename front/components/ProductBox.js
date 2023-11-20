@@ -148,12 +148,26 @@ export default function ProductBox({
 
     });
   }, []);
+  console.log(promotions);
+  const [pro, setPro] = useState([]);
+  const [id, setid] = useState([]);
+  useEffect(() => {
+    promotions.map((p) => {
+      p.condition.map((i) => {
+        setPro(i.values)
+      })
 
-  function promotion(category) {
-    clearCategory();
-    addCategory(category);
-    window.location.href = url;
-  }
+    }
+    )
+    pro.map((i, index) => {
+      setid(index)
+    })
+  }, []);
+
+  const [sales, setSales] = useState();
+  console.log(id)
+
+  console.log(pro)
   return (
     <>
       {domLoaded && (

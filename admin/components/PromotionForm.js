@@ -61,7 +61,7 @@ export default function PromotionForm({
       reducedbymoney,
       decreasebypercentage,
       values: values[0].map((p) => ({
-        name: p,
+        p,
       })),
     };
     setMyArray([...myArray, data]);
@@ -194,8 +194,8 @@ export default function PromotionForm({
                       {i.type == 1
                         ? "Danh mục"
                         : i.type == 2
-                        ? "Sản phẩm"
-                        : "Hóa đơn"}
+                          ? "Sản phẩm"
+                          : "Hóa đơn"}
                     </td>
                     <td>{i.reducedbymoney}</td>
                     <td>
