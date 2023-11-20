@@ -82,7 +82,7 @@ export default function SignInPage({ swal }) {
 
               <form className="container ">
                 <InputFlied>
-                  <labelInput>Tài khoản</labelInput>
+                  <labelInput>Email:</labelInput>
 
                   <input
                     type="email"
@@ -92,7 +92,7 @@ export default function SignInPage({ swal }) {
                 </InputFlied>
 
                 <InputFlied>
-                  <labelInput>Tài khoản</labelInput>
+                  <labelInput>Mật khẩu:</labelInput>
                   <Input
                     type="password"
                     id="form2Example2"

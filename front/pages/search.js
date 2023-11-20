@@ -26,8 +26,7 @@ const InputWrapper = styled.div`
   background-color: transparent;
 `;
 const Wrapper = styled.div`
-
-  margin:0px 200px;
+  margin: 0px 200px;
 `;
 
 export default function SearchPage({ wishedProducts }) {
@@ -90,9 +89,9 @@ export async function getServerSideProps(ctx) {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   const wishedProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session?.user.email,
-      product: products.map((p) => p._id.toString()),
-    })
+        userEmail: session?.user.email,
+        product: products.map((p) => p._id.toString()),
+      })
     : [];
 
   return {
