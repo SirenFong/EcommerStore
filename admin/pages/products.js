@@ -2,20 +2,55 @@ import Layout from "@/components/Layout";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import Select from "react-select";
+import { debounce } from "lodash";
+import { useCallback, useEffect, useState } from "react";
 import { CSVLink, CSVDownload } from "react-csv";
 
 export default function Products() {
+  const [phrase, setPhrase] = useState("");
   const [products, setProducts] = useState([]);
   const [dataExport, setdataExport] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [categorySelected, setCategorySelected] = useState();
-  const [categories, setCategories] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const formatter = new Intl.NumberFormat("en-US");
+
+  const debouncedSearch = useCallback(debounce(searchProducts, 500), []);
+  useEffect(() => {
+    if (phrase.length > 0) {
+      setIsLoading(true);
+      debouncedSearch(phrase);
+    } else {
+      if (!categorySelected) {
+        setIsLoading(true);
+        axios.get("/api/products").then((response) => {
+          setProducts(response.data);
+          setIsLoading(false);
+        });
+      } else {
+        if (categorySelected) setIsLoading(true);
+        axios.get("/api/products").then((response) => {
+          setProducts(
+            response.data.filter(
+              (item) =>
+                item.category[0] && item.category[0].name === categorySelected
+            )
+          );
+          setIsLoading(false);
+        });
+      }
+    }
+  }, [phrase, categorySelected]);
+  function searchProducts(phrase) {
+    axios
+      .get("/api/productsphrase?phrase=" + encodeURIComponent(phrase))
+      .then((response) => {
+        setProducts(response.data);
+        setIsLoading(false);
+      });
+  }
 
   /**useEffect gọi tới cái API cũng như trả về data */
   /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
@@ -188,20 +223,14 @@ export default function Products() {
           <div>
             <div className="mb-3 md:w-96">
               <div className="relative mb-4 flex w-full flex-wrap items-stretch">
-                <Select
-                  value={selectedProduct}
-                  onChange={(selectedOption) =>
-                    setSelectedProduct(selectedOption)
-                  }
-                  options={[
-                    { value: "Tất cả sản phẩm", label: "Tất cả sản phẩm" },
-                    ...products.map((product) => ({
-                      value: product._id,
-                      label: product.title,
-                    })),
-                  ]}
-                  isSearchable
-                  placeholder="Search for a product"
+                <input
+                  type="search"
+                  className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
+                  placeholder="Nhập vào tên sản phẩm"
+                  aria-label="Search"
+                  aria-describedby="button-addon1"
+                  value={phrase}
+                  onChange={(ev) => setPhrase(ev.target.value)}
                 />
 
                 {/* <!--Search button--> */}
@@ -209,9 +238,7 @@ export default function Products() {
                 <button
                   className="relative z-[2] flex items-center rounded-r bg-primary px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
                   type="button"
-                  onClick={() =>
-                    setSearchValue(selectedProduct ? selectedProduct.label : "")
-                  }
+                  id="button-addon1"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

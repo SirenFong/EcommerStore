@@ -2,15 +2,52 @@ import Layout from "@/components/Layout";
 import Spinner from "@/components/Spinner";
 import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { debounce } from "lodash";
+import { useCallback, useEffect, useState } from "react";
 import { CSVLink, CSVDownload } from "react-csv";
 
 export default function Storage() {
+  const [phrase, setPhrase] = useState("");
   const [products, setProducts] = useState([]);
   const [dataExport, setdataExport] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [categorySelected, setCategorySelected] = useState();
   const [categories, setCategories] = useState([]);
+
+  const debouncedSearch = useCallback(debounce(searchProducts, 500), []);
+  useEffect(() => {
+    if (phrase.length > 0) {
+      setIsLoading(true);
+      debouncedSearch(phrase);
+    } else {
+      if (!categorySelected) {
+        setIsLoading(true);
+        axios.get("/api/products").then((response) => {
+          setProducts(response.data);
+          setIsLoading(false);
+        });
+      } else {
+        if (categorySelected) setIsLoading(true);
+        axios.get("/api/products").then((response) => {
+          setProducts(
+            response.data.filter(
+              (item) =>
+                item.category[0] && item.category[0].name === categorySelected
+            )
+          );
+          setIsLoading(false);
+        });
+      }
+    }
+  }, [phrase, categorySelected]);
+  function searchProducts(phrase) {
+    axios
+      .get("/api/productsphrase?phrase=" + encodeURIComponent(phrase))
+      .then((response) => {
+        setProducts(response.data);
+        setIsLoading(false);
+      });
+  }
 
   /**useEffect gọi tới cái API cũng như trả về data */
   /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
@@ -158,16 +195,18 @@ export default function Storage() {
                 <input
                   type="search"
                   className="relative m-0 -mr-0.5 block w-[1px] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary"
-                  placeholder="Search"
+                  placeholder="Nhập tên sản phẩm"
                   aria-label="Search"
                   aria-describedby="button-addon1"
+                  value={phrase}
+                  onChange={(ev) => setPhrase(ev.target.value)}
                 />
               </div>
             </div>
           </div>
 
           <div className="flex gap-3 align-items-center ">
-            <div>
+            {/* <div>
               <select
                 onChange={(ev) => setCategorySelected(ev.target.value)}
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -177,10 +216,10 @@ export default function Storage() {
                   <option value={category._id}>{category.name}</option>
                 ))}
               </select>
-            </div>
+            </div> */}
             <div>
               <div className="relative max-w-sm">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+                {/* <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
                   <svg
                     class="w-4 h-4 text-gray-500 dark:text-gray-400"
                     aria-hidden="true"
@@ -190,13 +229,13 @@ export default function Storage() {
                   >
                     <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
                   </svg>
-                </div>
-                <input
+                </div> */}
+                {/* <input
                   datepicker
                   type="date"
                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Select date"
-                />
+                /> */}
               </div>
             </div>
           </div>
