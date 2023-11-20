@@ -106,14 +106,15 @@ export default function ProductBox({
   category,
   images,
   wished = false,
-  onRemoveFromWishlist = () => {},
+  saled,
+  onRemoveFromWishlist = () => { },
   props,
 }) {
   const url = "/product/" + _id;
-
+  console.log(saled)
   const { addCategory, clearCategory } = useContext(CategoryContext);
+  const [promotions, setPromotions] = useState([]);
   const [domLoaded, setDomLoaded] = useState(false);
-
   const formatter = new Intl.NumberFormat("en-US");
   const formattedPrice = formatter.format(price);
   const [isWished, setIsWished] = useState(wished);
@@ -129,9 +130,10 @@ export default function ProductBox({
       .post("/api/wishlist", {
         product: _id,
       })
-      .then(() => {});
+      .then(() => { });
     setIsWished(nextValue);
   }
+
   function addcategoryId(category) {
     clearCategory();
     addCategory(category);
@@ -140,6 +142,18 @@ export default function ProductBox({
   useEffect(() => {
     setDomLoaded(true);
   }, []);
+  useEffect(() => {
+    axios.get("/api/promotions").then((response) => {
+      setPromotions(response.data);
+
+    });
+  }, []);
+
+  function promotion(category) {
+    clearCategory();
+    addCategory(category);
+    window.location.href = url;
+  }
   return (
     <>
       {domLoaded && (

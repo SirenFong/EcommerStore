@@ -23,10 +23,11 @@ export default function SuggestedProducts({
   suggestedproducts,
   wishedProducts = [],
   productId,
+  salesProducts
 }) {
   const url = "/product/" + productId;
   const router = useRouter();
-
+  console.log(salesProducts)
   const { lastViewCategory } = useContext(CategoryContext);
 
   const filtered = suggestedproducts.filter(
@@ -50,7 +51,7 @@ export default function SuggestedProducts({
       router.events.off("routeChangeComplete");
     };
   }, [router]);
-
+  console.log(filtered)
   return (
     <Center>
       <Title>Các sản phẩm tương tự</Title>
@@ -65,6 +66,7 @@ export default function SuggestedProducts({
               <ProductBox
                 {...filtered}
                 wished={wishedProducts.includes(filtered._id)}
+
               />
             </RevealWrapper>
           ))}

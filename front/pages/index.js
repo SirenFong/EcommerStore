@@ -17,6 +17,7 @@ import Banner from "@component/components/Banner";
 import { CategoryContext } from "@component/components/CategoryContext";
 import axios from "axios";
 import GetCategory from "@component/components/GetCategory";
+import { Promotion } from "@component/models/Promotion";
 
 const Column = styled.div`
   display: flex;
@@ -30,7 +31,7 @@ export default function HomePage({
   // bannerProduct3,
   newProducts,
   wishedNewProducts,
-  suggestedProducts,
+  suggestedProducts, saleProducts
 }) {
   const [isClient, setIsClient] = useState(false);
 
@@ -41,10 +42,11 @@ export default function HomePage({
 
       <Featured2 product={featuredProduct2} />
       <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} /> */}
-      <NewProducts products={newProducts} wishedProducts={wishedNewProducts} />
+      <NewProducts products={newProducts} wishedProducts={wishedNewProducts} saleProducts={saleProducts} />
       <SuggestedProducts
         suggestedproducts={suggestedProducts}
         wishedProducts={wishedNewProducts}
+        saleProducts={saleProducts}
       />
     </div>
   );
@@ -90,14 +92,16 @@ export async function getServerSideProps(ctx) {
     sort: { _id: -1 },
     limit: 10,
   });
+
   //hàm random
   const suggestedProduct = await Product.find({});
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
+  const salesProduct = await Promotion.find({});
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-        userEmail: session.user.email,
-        product: newProducts.map((p) => p._id.toString()),
-      })
+      userEmail: session.user.email,
+      product: newProducts.map((p) => p._id.toString()),
+    })
     : [];
   return {
     props: {
@@ -105,7 +109,7 @@ export async function getServerSideProps(ctx) {
       // featuredProduct2: JSON.parse(JSON.stringify(featuredProduct2)),
       // bannerProduct1: JSON.parse(JSON.stringify(bannerProduct1)),
       // bannerProduct2: JSON.parse(JSON.stringify(bannerProduct2)),
-      // bannerProduct3: JSON.parse(JSON.stringify(bannerProduct3)),
+      salesProduct: JSON.parse(JSON.stringify(salesProduct)),
       newProducts: JSON.parse(JSON.stringify(newProducts)),
       suggestedProducts: JSON.parse(JSON.stringify(suggestedProduct)),
       wishedNewProducts: wishedNewProducts.map((i) => i.product.toString()),
