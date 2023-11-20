@@ -225,8 +225,9 @@ function CartPage({ swal }) {
   //tinhs tong tien hoa don
   let productsTotal = 0;
   for (const productId of cartProducts) {
-    const price = products.find((p) => p._id === productId)?.price || 0;
-    productsTotal += price;
+    const finalPrice =
+      products.find((p) => p._id === productId)?.finalPrice || 0;
+    productsTotal += finalPrice;
   }
 
   //Lấy giá trị từ url của cửa sổ thanh toán nếu succes trả về thông báo
@@ -330,7 +331,7 @@ function CartPage({ swal }) {
                           {" "}
                           {(
                             cartProducts.filter((id) => id === product._id)
-                              .length * product.price
+                              .length * product.finalPrice
                           ).toLocaleString()}{" "}
                           đ
                         </td>

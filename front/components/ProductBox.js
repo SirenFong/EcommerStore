@@ -38,6 +38,19 @@ const WhiteBox = styled.button`
   }
 `;
 
+const DiscountedPrice = styled.span`
+  font-size: 1.2rem;
+  padding: 15px 0px;
+  text-decoration: line-through;
+  color: #999;
+`;
+
+const DiscountPercentage = styled.span`
+  font-size: 1.2rem;
+  padding: 15px;
+  color: #f73b3b;
+`;
+
 const Title = styled.button`
   background: transparent;
   border: none;
@@ -65,7 +78,7 @@ const PriceRow = styled.div`
 `;
 
 const Price = styled.div`
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 400;
   text-align: right;
   @media screen and (min-width: 768px) {
@@ -103,20 +116,22 @@ export default function ProductBox({
   title,
   description,
   price,
+  discount,
+  finalPrice,
   category,
   images,
   wished = false,
   saled,
-  onRemoveFromWishlist = () => { },
+  onRemoveFromWishlist = () => {},
   props,
 }) {
   const url = "/product/" + _id;
-  console.log(saled)
+  console.log(saled);
   const { addCategory, clearCategory } = useContext(CategoryContext);
   const [promotions, setPromotions] = useState([]);
   const [domLoaded, setDomLoaded] = useState(false);
   const formatter = new Intl.NumberFormat("en-US");
-  const formattedPrice = formatter.format(price);
+  const formattedPrice = formatter.format(finalPrice);
   const [isWished, setIsWished] = useState(wished);
   console.log(isWished);
   function addToWishlist(ev) {
@@ -130,7 +145,7 @@ export default function ProductBox({
       .post("/api/wishlist", {
         product: _id,
       })
-      .then(() => { });
+      .then(() => {});
     setIsWished(nextValue);
   }
 
@@ -145,7 +160,6 @@ export default function ProductBox({
   useEffect(() => {
     axios.get("/api/promotions").then((response) => {
       setPromotions(response.data);
-
     });
   }, []);
   console.log(promotions);
@@ -154,20 +168,18 @@ export default function ProductBox({
   useEffect(() => {
     promotions.map((p) => {
       p.condition.map((i) => {
-        setPro(i.values)
-      })
-
-    }
-    )
+        setPro(i.values);
+      });
+    });
     pro.map((i, index) => {
-      setid(index)
-    })
+      setid(index);
+    });
   }, []);
 
   const [sales, setSales] = useState();
-  console.log(id)
+  console.log(id);
 
-  console.log(pro)
+  console.log(pro);
   return (
     <>
       {domLoaded && (
@@ -184,11 +196,19 @@ export default function ProductBox({
           <ProductInfoBox>
             <Title onClick={() => addcategoryId(category)}>{title}</Title>
             <PriceRow>
-              <Price>{formattedPrice} đ</Price>
-              <FlyingButton _id={_id} src={images?.[0]}>
-                Thêm vào giỏ hàng
-              </FlyingButton>
+              {discount > 0 ? (
+                <>
+                  <Price>{formattedPrice} đ</Price>
+                  <DiscountedPrice>{price} đ</DiscountedPrice>
+                  <DiscountPercentage>-{discount}%</DiscountPercentage>
+                </>
+              ) : (
+                <Price>{formattedPrice} đ</Price>
+              )}
             </PriceRow>
+            <FlyingButton _id={_id} src={images?.[0]}>
+              Thêm vào giỏ hàng
+            </FlyingButton>
           </ProductInfoBox>
         </ProductWrapper>
       )}

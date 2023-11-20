@@ -16,7 +16,7 @@ export default function Products() {
   const [searchValue, setSearchValue] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const formatter = new Intl.NumberFormat("en-US");
- 
+
   /**useEffect gọi tới cái API cũng như trả về data */
   /**dưới đây là trả về api lấy thông tin sản phẩm để hiển thị */
   /**hiển thị danh sách sản phẩm trong hàm useState */
@@ -66,8 +66,8 @@ export default function Products() {
       const filteredProducts =
         selectedProduct && selectedProduct.value !== "Tất cả sản phẩm"
           ? products.filter((item) =>
-            item.title.toLowerCase().includes(searchValue.toLowerCase())
-          )
+              item.title.toLowerCase().includes(searchValue.toLowerCase())
+            )
           : products; // If "Tất cả sản phẩm" is selected, use all products
       filteredProducts.forEach((item, index) => {
         let arr = [];
@@ -268,9 +268,10 @@ export default function Products() {
         <table className="basic mt-2 py-1 px-2 ">
           <thead className="border-t-2">
             <tr>
+              <td>STT</td>
               <td>Hình ảnh sản phẩm</td>
               <td>Tên sản phẩm</td>
-              <td>Loại sản phẩm</td>
+              {/* <td>Loại sản phẩm</td> */}
               <td>Giá bán</td>
               <td>Giảm giá (%)</td>
               {/* <td>Số lượng</td> */}
@@ -288,16 +289,17 @@ export default function Products() {
               </tr>
             )}
 
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product, index) => (
               <tr key={product._id}>
+                <td>{index + 1}</td>
                 <td>
                   {product.images && (
                     <img src={product.images} alt="" className="w-12 h-12" />
                   )}
                 </td>
                 <td>{product.title}</td>
-                <td>{product.category[0].name}</td>
-                
+                {/* <td>{product.category[0].name}</td> */}
+
                 <td>{formatter.format(product.price)}</td>
                 <td>{product.discount}</td>
                 {/* <td>{product.qty}</td> */}
