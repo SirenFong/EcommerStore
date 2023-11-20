@@ -125,11 +125,16 @@ export default function ProductPage({
           </WhiteBox>
           <div>
             <Title>{product.title}</Title>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: product.description.replace(/\n/g, "<br/>"),
-              }}
-            />
+            <div>
+              <h5>
+                <strong>Đặc điểm nôi bật</strong>
+              </h5>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: product.description.replace(/\n/g, "<br/>"),
+                }}
+              />
+            </div>
 
             <p>
               <strong>{product.qty} Sản phẩm có sẵn</strong>
