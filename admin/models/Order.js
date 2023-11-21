@@ -1,7 +1,9 @@
 import mongoose, { model, Schema, models } from "mongoose";
 
 /**Tạo cấu trúc Json để lưu vào Database thông qua mongoose */
-const OrderSchema = new Schema({
+const OrderSchema = new Schema(
+  {
+    _id: { type: String, unique: true },
     line_items: Object,
     name: String,
     phone: String,
@@ -11,13 +13,14 @@ const OrderSchema = new Schema({
     paid: Boolean,
     paymentmethods: { type: Object },
     status: {
-        type: Number,
-        default: "1",
-        enum: ["0", "1", "2", "3", "4"]
-
+      type: Number,
+      default: "1",
+      enum: ["0", "1", "2", "3", "4"],
     },
-}, {
+  },
+  {
     timestamps: true,
-});
+  }
+);
 
 export const Order = models?.Order || model("Order", OrderSchema);
