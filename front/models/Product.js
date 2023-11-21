@@ -9,6 +9,7 @@ const ProductSchema = new Schema(
     views: { type: Number, require: true },
     purchases: { type: Number, require: true },
     price: { type: Number, require: true },
+    finalPrice: { type: Number },
     discount: Number,
     images: [{ type: String }],
     category: {

@@ -66,9 +66,14 @@ export default function ProductPage({
   // Thêm state để theo dõi properties được chọn
   const [selectedValues, setSelectedValues] = useState({});
   const [selectedProperties, setSelectedProperties] = useState([]);
+  const [isOutOfStock, setIsOutOfStock] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    // Check if the product is out of stock
+    if (product.qty <= 0) {
+      setIsOutOfStock(true);
+    }
   }, []);
 
   const selectValue = (propertyName, selectedValue) => {
@@ -198,12 +203,24 @@ export default function ProductPage({
                 </div>
               ))}
             </div>
-
             <div>
-              <FlyingButton main _id={product._id} src={product.images?.[0]}>
-                <CartIcon />
-                Thêm vào giỏ
-              </FlyingButton>
+              {isOutOfStock ? (
+                <p style={{ color: "red" }}>Hết hàng</p>
+              ) : (
+                <>
+                  <div>
+                    <FlyingButton
+                      main
+                      _id={product._id}
+                      src={product.images?.[0]}
+                      disabled={isOutOfStock}
+                    >
+                      <CartIcon />
+                      Thêm vào giỏ
+                    </FlyingButton>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </ColWrapper>

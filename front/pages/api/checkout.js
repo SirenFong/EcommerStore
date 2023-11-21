@@ -1,14 +1,11 @@
 import { mongooseConnect } from "@component/lib/mongoose";
-
 //2 cái import đại diện cho models trong cơ sở dữ liệu
 import { Order } from "@component/models/Order";
 import { Product } from "@component/models/Product";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
-import { Setting } from "@component/models/Advertisement";
 import { PaymentMethod } from "@component/models/PaymentMethod";
 import { Service } from "@component/models/Service";
-import { useState } from "react";
 
 const stripe = require("stripe")(process.env.STRIPE_SK);
 
@@ -27,7 +24,6 @@ export default async function handle(req, res) {
     address,
     paymentmethod,
     cartProducts,
-    service,
   } = req.body;
   // await mongooseConnect();
 

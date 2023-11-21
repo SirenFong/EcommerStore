@@ -1,6 +1,13 @@
 import axios from "axios";
 import styled from "styled-components";
 
+const PaymentStatus = styled.strong`
+  span {
+    color: ${(props) =>
+      props.paid ? "#4CAF50" : "#F44336"}; // Green for paid, red for unpaid
+  }
+`;
+
 const StyledOrder = styled.div`
   margin: 10px 0;
   padding: 10px 0;
@@ -60,6 +67,7 @@ export default function SingleOrder({
   line_items,
   status,
   createdAt,
+  paid,
   ...rest
 }) {
   function cancer(_id) {
@@ -98,12 +106,21 @@ export default function SingleOrder({
       ))}
 
       <div>
+        {paid ? (
+          <PaymentStatus>Đã thanh toán</PaymentStatus>
+        ) : (
+          <PaymentStatus>Chưa thanh toán</PaymentStatus>
+        )}
+      </div>
+
+      <div>
         {(status === 0 && <TitleCancel>Đơn hàng đã hủy </TitleCancel>) ||
           (status === 1 && "Đang chờ xác nhận") ||
           (status === 2 && "Đã xác nhận") ||
           (status === 3 && "Đang giao hàng") ||
           (status === 4 && "Đã nhận hàng")}
       </div>
+
       <div>
         {status === 1 ? (
           <ButtonCancer onClick={() => cancer(_id)}> hủy đơn hàng</ButtonCancer>

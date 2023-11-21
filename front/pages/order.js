@@ -7,10 +7,9 @@ import Spinner from "@component/components/Spinner";
 import WhiteBox from "@component/components/WhiteBox";
 import axios from "axios";
 import styled from "styled-components";
-import Tabs from "@component/components/Tabs";
 import SingleOrder from "@component/components/SingleOrder";
+
 import { withSwal } from "react-sweetalert2";
-import Footer from "@component/components/Footer";
 
 const ColumnsWrapper = styled.div`
   grid-template-columns: 1fr;
@@ -108,19 +107,6 @@ function OrdersPage({ swal }) {
           <div>
             <WhiteBox className="container">
               <RevealWrapper delay={0}>
-                {/* <Tabs
-                  tabs={[
-                    "Tất cả",
-                    "Chưa thanh toán",
-                    "Chờ xác nhận",
-                    "Chờ giao hàng",
-                    "Đã giao",
-                    "Đã hủy",
-                    "Trả hàng/Hoàn tiền",
-                  ]}
-                  active={activeTab}
-                  onChange={setActivetab}
-                /> */}
                 {activeTab === "Đơn đặt hàng" && (
                   <>
                     {!orderLoaded && <Spinner fullWidth={true} />}

@@ -95,7 +95,6 @@ export default function Products() {
         "Giá tiền",
         "Loại sản phẩm",
         "danh mục",
-        "thuộc tính",
       ]);
 
       const filteredProducts =
@@ -111,8 +110,6 @@ export default function Products() {
         arr[2] = item.price;
         arr[3] = item.category[0].name;
         arr[4] = item.category[0].parent;
-        arr[5] = item.properties;
-
         result.push(arr);
       });
       setdataExport(result);
@@ -145,7 +142,7 @@ export default function Products() {
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
               />
             </svg>
             Xuất file
@@ -169,29 +166,11 @@ export default function Products() {
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
               />
             </svg>
             Nhập file
           </CSVLink>
-          <p>|</p>
-          {/* <Link className="link text-base flex gap-1" href={"/categories"}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
-              />
-            </svg>
-            Loại sản phẩm
-          </Link> */}
         </div>
         <div className="flex">
           <Link
@@ -320,8 +299,15 @@ export default function Products() {
               <tr key={product._id}>
                 <td>{index + 1}</td>
                 <td>
-                  {product.images && (
-                    <img src={product.images} alt="" className="w-12 h-12" />
+                  {Array.isArray(product.images) &&
+                  product.images.length > 0 ? (
+                    <img
+                      src={product.images[0]}
+                      alt={`Product Image`}
+                      className="w-12 h-12"
+                    />
+                  ) : (
+                    <span>Không có hình ảnh</span>
                   )}
                 </td>
                 <td>{product.title}</td>
