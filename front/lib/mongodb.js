@@ -1,5 +1,5 @@
 // This approach is taken from https://github.com/vercel/next.js/tree/canary/examples/with-mongodb
-import { MongoClient } from 'mongodb';
+import { MongoClient } from "mongodb";
 
 //Kết nối với MongoDB code được hỗ trợ bởi Next-Auth
 

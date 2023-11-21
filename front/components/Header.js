@@ -165,7 +165,7 @@ export default function Header({}) {
                   />
                 </Link>
                 <ul className="dropdown-menu dropdown-menu-end">
-                  {session ? (
+                  {session && session.user.credentials ? (
                     <li>
                       <Link className="dropdown-item" href="/account">
                         Thông tin tài khoản

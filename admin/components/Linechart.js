@@ -83,20 +83,35 @@ export default function Linechart({ ordersLast12Months }) {
     const quarters = ["Q1", "Q2", "Q3", "Q4"];
 
     for (let i = 0; i < 4; i++) {
+      // Fix the issue here
       const salesOfQuarter = monthlySales.slice(i * 3, (i + 1) * 3);
 
+      //Tính tổng doanh thu từng quý
       const totalQuarterSales = salesOfQuarter.reduce(
         (sum, quarter) => sum + quarter,
         0
       );
 
-      const growthRate =
-        i > 0
-          ? (totalQuarterSales - quarterlySales[i - 1]) / quarterlySales[i - 1]
-          : 0;
+      //Giả sử "Q1" năm đầu tiên Q2 tăng trưởng 15% so với Q1
+      let growthRate = 0;
 
+      //Tính tốc độ tăng trưởng bằng =
+      //(Quý trước - quý trước đó / quý trước đó) * 100
+      if (i === 0) {
+        growthRate = 15;
+      } else {
+        growthRate =
+          i > 0
+            ? ((totalQuarterSales - quarterlySales[i - 1]) /
+                quarterlySales[i - 1]) *
+              100
+            : 0;
+      }
+
+      // Tính doanh thu Quý tiếp theo =
+      //Tổng quý hiện tại + (quý hiện tai * tốc độ tăng trưởng) / 100
       const nextQuarterForecast = Math.round(
-        totalQuarterSales + totalQuarterSales * growthRate
+        totalQuarterSales + (totalQuarterSales * growthRate) / 100
       );
 
       quarterlySales.push(nextQuarterForecast);
@@ -111,7 +126,7 @@ export default function Linechart({ ordersLast12Months }) {
         datasets: [
           {
             data: quarterlySales,
-            label: "Doanh thu dự báo (VNĐ)",
+            label: "Dự báo cho quý kế (VNĐ)",
             backgroundColor: colors,
             borderWidth: 2,
             fill: false,

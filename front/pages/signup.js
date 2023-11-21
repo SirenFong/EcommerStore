@@ -2,7 +2,6 @@ import { FaGoogle } from "react-icons/fa";
 import Button from "@component/components/Button";
 import Center from "@component/components/Center";
 import Header from "@component/components/Header";
-import Input from "@component/components/Input";
 import styled from "styled-components";
 import "react-toastify/dist/ReactToastify.css";
 import { withSwal } from "react-sweetalert2";
@@ -11,6 +10,10 @@ import Logo from "@component/components/icons/Logo";
 import FacebookIcon from "@component/components/icons/FbIcon";
 import ZaloIcon from "@component/components/icons/ZaloIcon";
 import { signIn } from "next-auth/react";
+import { useFormik } from "formik";
+import { useState } from "react";
+import register_validate from "@component/lib/validate";
+import { useRouter } from "next/router";
 
 const ColumnsWrapper = styled.div`
   background-color: #222;
@@ -19,6 +22,14 @@ const ColumnsWrapper = styled.div`
   justify-content: center;
 `;
 
+const StyledInput = styled.input`
+  /* Add your input styles here */
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+`;
+const InputField = styled.div``;
 const WhiteBoxLogin = styled.div`
   background-color: #fff;
   border-radius: 10px;
@@ -66,6 +77,34 @@ function SignUpPage({ swal }) {
   async function logins() {
     await signIn("google");
   }
+  const [show, setShow] = useState({ password: false, cfpassword: false });
+  const router = useRouter();
+  //formik hook
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      cfpassword: "",
+    },
+    validate: register_validate,
+    onSubmit,
+  });
+
+  async function onSubmit(values) {
+    const option = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    };
+
+    //Lưu ý có thể sẽ thay đổi khi up lên vercel
+    await fetch("http://localhost:4000/api/auth/signup", option)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) router.push("http://localhost:4000/signin");
+      });
+  }
   return (
     <>
       <Header key={new Date().getTime()} />
@@ -79,51 +118,70 @@ function SignUpPage({ swal }) {
 
               <p className="h3 text-center">Đăng Ký </p>
 
-              <form className="container ">
-                <InputFlied>
-                  <labelInput>Tên tài khoản</labelInput>
+              <form className="container" onSubmit={formik.handleSubmit}>
+                <InputField>
+                  <label htmlFor="name">Họ và tên:</label>
+                  <StyledInput
+                    type="name"
+                    id="name"
+                    {...formik.getFieldProps("name")}
+                    className="form-control"
+                  />
+                  {formik.errors.name && formik.touched.name ? (
+                    <span>{formik.errors.name}</span>
+                  ) : (
+                    <></>
+                  )}
+                </InputField>
 
-                  <input
+                <InputField>
+                  <label htmlFor="email">Email:</label>
+                  <StyledInput
                     type="email"
-                    id="form2Example1"
+                    id="email"
+                    {...formik.getFieldProps("email")}
                     className="form-control"
                   />
-                </InputFlied>
+                  {formik.errors.email && formik.touched.email ? (
+                    <span>{formik.errors.email}</span>
+                  ) : (
+                    <></>
+                  )}
+                </InputField>
 
-                <InputFlied>
-                  <labelInput>Email</labelInput>
-                  <Input
-                    type="password"
-                    id="form2Example2"
+                <InputField>
+                  <label htmlFor="password">Mật khẩu:</label>
+                  <StyledInput
+                    type={show.password ? "text" : "password"}
+                    name="password"
+                    id="password"
+                    placeholder="password"
+                    {...formik.getFieldProps("password")}
                     className="form-control"
                   />
-                </InputFlied>
-                <InputFlied>
-                  <labelInput>Số điện thoại</labelInput>
-                  <Input
-                    type="password"
-                    id="form2Example2"
-                    className="form-control"
-                  />
-                </InputFlied>
+                  {formik.errors.password && formik.touched.password ? (
+                    <span>{formik.errors.password}</span>
+                  ) : (
+                    <></>
+                  )}
+                </InputField>
 
-                <InputFlied>
-                  <labelInput>Mật khẩu</labelInput>
-                  <Input
-                    type="password"
-                    id="form2Example2"
+                <InputField>
+                  <label htmlFor="cfpassword">Xác nhận mật khẩu:</label>
+                  <StyledInput
+                    type={show.cfpassword ? "text" : "password"}
+                    name="cfpassword"
+                    id="cfpassword"
+                    placeholder="Confirm Password"
+                    {...formik.getFieldProps("cfpassword")}
                     className="form-control"
                   />
-                </InputFlied>
-
-                <InputFlied>
-                  <labelInput>Xác nhận lại mật khẩu</labelInput>
-                  <Input
-                    type="password"
-                    id="form2Example2"
-                    className="form-control"
-                  />
-                </InputFlied>
+                  {formik.errors.cfpassword && formik.touched.cfpassword ? (
+                    <span>{formik.errors.cfpassword}</span>
+                  ) : (
+                    <></>
+                  )}
+                </InputField>
 
                 <RowCheckbox>
                   <div>
@@ -146,7 +204,7 @@ function SignUpPage({ swal }) {
                   </div>
                 </RowCheckbox>
                 <div className="d-flex justify-content-center pb-3">
-                  <button type="button" className="btn btn-primary px-3 ">
+                  <button type="submit" className="btn btn-primary px-3 ">
                     Tạo tài khoản
                   </button>
                 </div>
