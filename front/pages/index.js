@@ -31,7 +31,8 @@ export default function HomePage({
   // bannerProduct3,
   newProducts,
   wishedNewProducts,
-  suggestedProducts, saleProducts
+  suggestedProducts,
+  saleProducts,
 }) {
   const [isClient, setIsClient] = useState(false);
 
@@ -42,7 +43,11 @@ export default function HomePage({
 
       <Featured2 product={featuredProduct2} />
       <Banner product={[bannerProduct1, bannerProduct2, bannerProduct3]} /> */}
-      <NewProducts products={newProducts} wishedProducts={wishedNewProducts} saleProducts={saleProducts} />
+      <NewProducts
+        products={newProducts}
+        wishedProducts={wishedNewProducts}
+        saleProducts={saleProducts}
+      />
       <SuggestedProducts
         suggestedproducts={suggestedProducts}
         wishedProducts={wishedNewProducts}
@@ -90,7 +95,7 @@ export async function getServerSideProps(ctx) {
 
   const newProducts = await Product.find({}, null, {
     sort: { _id: -1 },
-    limit: 10,
+    limit: 8,
   });
 
   //hàm random
@@ -99,9 +104,9 @@ export async function getServerSideProps(ctx) {
   const salesProduct = await Promotion.find({});
   const wishedNewProducts = session?.user
     ? await WishedProduct.find({
-      userEmail: session.user.email,
-      product: newProducts.map((p) => p._id.toString()),
-    })
+        userEmail: session.user.email,
+        product: newProducts.map((p) => p._id.toString()),
+      })
     : [];
   return {
     props: {

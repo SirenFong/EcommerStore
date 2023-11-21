@@ -5,6 +5,7 @@ import Link from "next/link";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import { CSVLink, CSVDownload } from "react-csv";
+import { useRouter } from "next/router";
 
 export default function Products() {
   const [phrase, setPhrase] = useState("");
@@ -16,6 +17,18 @@ export default function Products() {
   const [searchValue, setSearchValue] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const formatter = new Intl.NumberFormat("en-US");
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 5;
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   const debouncedSearch = useCallback(debounce(searchProducts, 500), []);
   useEffect(() => {
@@ -237,37 +250,9 @@ export default function Products() {
           </div>
 
           <div className="flex gap-3 align-items-center ">
+            <div></div>
             <div>
-              {/* <select
-                onChange={(ev) => setCategorySelected(ev.target.value)}
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              >
-                <option selected>Chọn loại sản phẩm</option>
-                {categories.map((category) => (
-                  <option value={category._id}>{category.name}</option>
-                ))}
-              </select> */}
-            </div>
-            <div>
-              <div className="relative max-w-sm">
-                {/* <div class="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-                  <svg
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-                  </svg>
-                </div> */}
-                {/* <input
-                  datepicker
-                  type="date"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Select date"
-                /> */}
-              </div>
+              <div className="relative max-w-sm"></div>
             </div>
           </div>
         </div>
@@ -277,10 +262,8 @@ export default function Products() {
               <td>STT</td>
               <td>Hình ảnh sản phẩm</td>
               <td>Tên sản phẩm</td>
-              {/* <td>Loại sản phẩm</td> */}
               <td>Giá bán</td>
               <td>Giảm giá (%)</td>
-              {/* <td>Số lượng</td> */}
               <td></td>
             </tr>
           </thead>
@@ -361,10 +344,9 @@ export default function Products() {
               </tr>
             ))}
           </tbody>
+          
         </table>
       </div>
-
-      {/* <button className="bg-primary text-white rounded-md py-1 px-2" onClick={() => handleExcelExport()}></button> */}
     </Layout>
   );
 }

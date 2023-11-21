@@ -1,12 +1,10 @@
 import styled from "styled-components";
-import Link from "next/link";
 import { useContext, useState } from "react";
 import FlyingButton from "./FlyingButton";
 import HeartOutlineIcon from "./icons/HeartOutlineIcon";
 import HeartSolidIcon from "./icons/HeartSolidIcon";
 import axios from "axios";
 
-import Button from "./Button";
 import { CategoryContext } from "@component/components/CategoryContext";
 import { useEffect } from "react";
 
@@ -39,14 +37,14 @@ const WhiteBox = styled.button`
 `;
 
 const DiscountedPrice = styled.span`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   padding: 15px 0px;
   text-decoration: line-through;
   color: #999;
 `;
 
 const DiscountPercentage = styled.span`
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   padding: 15px;
   color: #f73b3b;
 `;
@@ -55,7 +53,6 @@ const Title = styled.button`
   background: transparent;
   border: none;
   font-weight: normal;
-
   font-size: 1rem;
   color: inherit;
   text-decoration: none;
@@ -76,7 +73,6 @@ const PriceRow = styled.div`
   justify-content: space-between;
   margin-top: 2px;
 `;
-
 const Price = styled.div`
   font-size: 1.2rem;
   font-weight: 400;

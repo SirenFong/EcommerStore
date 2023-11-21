@@ -91,14 +91,13 @@ export default function ProductForm({
       await axios.put("/api/products", { ...data, _id });
     } else {
       await axios.post("/api/products", data);
-
     }
     setSwalProps({
       show: true,
-      title: 'Basic Usage',
-      text: 'Hello World',
+      title: "Success",
+      text: "Thêm thành công",
     });
-    
+
     setGoToProducts(true);
   }
   /**router dùng để redirect về trang products sau khi thêm mới 1 sản phẩm */
@@ -158,7 +157,8 @@ export default function ProductForm({
     });
   }
 
-  return (  /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
+  return (
+    /**useState dùng để thay đổi trạng thái khi thêm sản phẩm */
     /**Thằng setTitle sẽ thay đổi thành 1 trạng thái mới của thằng title */
     /**Dùng axios để xử lý các vấn đề liên quan đến API */
     <>
@@ -172,7 +172,10 @@ export default function ProductForm({
           onChange={(ev) => setTitle(ev.target.value)}
         />
         <label>Loại sản phẩm</label>
-        <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
+        <select
+          value={category}
+          onChange={(ev) => setCategory(ev.target.value)}
+        >
           <option value="">Chưa chọn loại sản phẩm</option>
           {categories.map((cat) => (
             <option key={cat._id} value={cat._id}>
@@ -296,8 +299,8 @@ export default function ProductForm({
 
         <div>
           <label>
-            Giá tiền sau khi giảm <span>{numeral(finalPrice).format("0,0")}</span>{" "}
-            ( VNĐ )
+            Giá tiền sau khi giảm{" "}
+            <span>{numeral(finalPrice).format("0,0")}</span> ( VNĐ )
           </label>
         </div>
 
@@ -313,7 +316,5 @@ export default function ProductForm({
         </button>
       </form>
     </>
-
-
   );
 }
